@@ -4,7 +4,7 @@ const { processImage } = require("../helpers/imageProcessor");
 async function generateText(prompt) {
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
   try {
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent(prompt, { maxTokens: 100 });
     const response = await result.response;
     const text = response.text();
 
