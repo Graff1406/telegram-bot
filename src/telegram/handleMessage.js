@@ -24,7 +24,7 @@ module.exports = function () {
         if (data.is_counter)
           bot.sendMessage(
             chatId,
-            `${aiName}
+            `DEV - ${aiName}
           №: ${data.number};
           Показатель: ${data.value};
           Тип: ${data.type}`
@@ -32,7 +32,7 @@ module.exports = function () {
         else
           bot.sendMessage(
             chatId,
-            `${aiName}
+            `DEV - ${aiName}
              На фото не изабражен счетчик
           `
           );
@@ -47,7 +47,7 @@ module.exports = function () {
     }
 
     if (photo) {
-      bot.sendMessage(chatId, "Запуще процесс анализа изображения");
+      bot.sendMessage(chatId, "Запущен процесс анализа изображения");
 
       Promise.all([
         sendResponseForImg(photo, openaiService, "ChatGPT"),
