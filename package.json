@@ -4,19 +4,22 @@
   "description": "Backend for make request'",
   "main": "src/index.js",
   "scripts": {
-    "dev": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "firebase deploy --only functions:api"
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google/generative-ai": "^0.1.3",
     "axios": "^1.5.1",
     "cors": "^2.8.5",
-    "deepl-node": "^1.10.2",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "firebase-admin": "^11.11.1",
-    "firebase-functions": "^4.5.0"
+    "firebase-functions": "^4.5.0",
+    "node-fetch": "^2.7.0",
+    "node-telegram-bot-api": "^0.64.0",
+    "openai": "^4.24.1",
+    "tesseract.js": "^4.1.1"
   }
 }
