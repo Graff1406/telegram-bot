@@ -19,23 +19,28 @@ module.exports = function () {
       if (photo) {
         const pathInfo = await bot.getFileLink(photo.file_id);
 
-        const generatedAnswerGemini = await geminiService.vision(pathInfo);
         const generatedAnswerGPT = await openaiService.vision(pathInfo);
+        console.log(333333, dataGemini);
         try {
           const data = JSON.parse(generatedAnswerGPT);
           bot.sendMessage(
             chatId,
             `ChatGPT
               №: ${data.number};
-              Показатель: ${data.value}`
+              Показатель: ${data.value};
+              Тип: ${data.type}`
           );
 
+          const generatedAnswerGemini = await geminiService.vision(pathInfo);
+
           const dataGemini = JSON.parse(generatedAnswerGemini);
+          console.log(666666, dataGemini);
           bot.sendMessage(
             chatId,
             `Google Gemini
               №: ${dataGemini.number};
-              Показатель: ${dataGemini.value}`
+              Показатель: ${dataGemini.value};
+              Тип: ${data.type}`
           );
 
           // if (data.number) {
