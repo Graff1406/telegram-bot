@@ -19,9 +19,7 @@ module.exports = function () {
       try {
         const pathInfo = await bot.getFileLink(photo.file_id);
 
-        const answer = await service.vision(pathInfo);
-
-        const data = JSON.parse(answer);
+        const data = await service.vision(pathInfo);
 
         if (data.is_counter)
           bot.sendMessage(
@@ -43,7 +41,7 @@ module.exports = function () {
           chatId,
           ` "${aiName} не смог распознать данные на изображении"`
         );
-        console.error("Error generating sendMessage:", err);
+        console.error(`Error generating sendMessage for ${aiName}:`, err);
         throw new Error("Failed to generate Google Gemini response");
       }
     }

@@ -1,5 +1,5 @@
 const openaiInstance = require("./config");
-
+const extractJsonSubstring = require("../helpers/extractJsonSubstring");
 async function generateText(prompt, maxTokens = 150) {
   try {
     const response = await openaiInstance.chat.completions.create({
@@ -40,7 +40,13 @@ async function vision(
       max_tokens: maxTokens,
     });
 
-    return response.choices[0].message.content;
+    const jsonString = extractJsonSubstring(
+      response.choices[0].message.content
+    );
+
+    const data = jsonString ? JSON.parse(jsonString) : {};
+
+    return data;
   } catch (error) {
     console.error("Error generating response from OpenAI:", error);
     throw new Error("Failed to generate OpenAI response");

@@ -1,6 +1,8 @@
 const genAI = require("./config");
 const { processImage } = require("../helpers/imageProcessor");
 
+const extractJsonSubstring = require("../helpers/extractJsonSubstring");
+
 async function generateText(prompt) {
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
   try {
@@ -20,10 +22,7 @@ async function generateText(prompt) {
   }
 }
 
-async function vision(
-  filePath,
-  prompt = 'If there is a meter displayed in the received image, please read the meter readings and provide them in the response. Ensure leading zeros are included in the "value" field. If unclear, provide any information indirectly indicating a set of digits. Only consider clearly discernible digits for determining the values of the meter readings. Exclude any artifacts or faint representations that may appear alongside digits on the same vertical line. Specify the type of meter for which the readings are intended, indicating whether it is for water, electricity, gas, or heating'
-) {
+async function vision(filePath) {
   async function fileToGenerativePart(mimeType = "image/png") {
     return {
       inlineData: {
@@ -49,8 +48,10 @@ async function vision(
     ]);
     const response = await result.response;
     const text = response.text();
+    const jsonString = extractJsonSubstring(text);
+    const data = jsonString ? JSON.parse(extractJsonSubstring(jsonString)) : {};
 
-    return text;
+    return data;
   } catch (error) {
     console.error("Error generating response from Google Gemini:", error);
     throw new Error("Failed to generate Google Gemini response");
