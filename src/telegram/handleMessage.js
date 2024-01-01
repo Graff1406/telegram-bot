@@ -2,6 +2,28 @@ const bot = require("./botConfig");
 const openaiService = require("../openai/openaiService");
 const geminiService = require("../gemini/geminiService");
 
+async function sendResponseForImg(photo, service, aiName) {
+  try {
+    const pathInfo = await bot.getFileLink(photo.file_id);
+
+    const answer = await service.vision(pathInfo);
+
+    const data = JSON.parse(answer);
+    bot.sendMessage(
+      chatId,
+      `${aiName}
+      №: ${data.number};
+      Показатель: ${data.value};
+      Тип: ${data.type}`
+    );
+  } catch (err) {
+    bot.sendMessage(
+      chatId,
+      ` "${aiName} не смог распознать данные на изображении"`
+    );
+  }
+}
+
 module.exports = function () {
   // bot.onText(/\/echo (.+)/, (msg, match) => {
   //   const chatId = msg.chat.id;
@@ -15,63 +37,18 @@ module.exports = function () {
     const userMessage = msg.text;
     const photo = msg.photo ? msg.photo[msg.photo.length - 1] : null;
 
-    try {
-      if (photo) {
-        const pathInfo = await bot.getFileLink(photo.file_id);
-
-        const generatedAnswerGPT = await openaiService.vision(pathInfo);
-        try {
-          const data = JSON.parse(generatedAnswerGPT);
-          bot.sendMessage(
-            chatId,
-            `ChatGPT
-              №: ${data.number};
-              Показатель: ${data.value};
-              Тип: ${data.type}`
-          );
-
-          const generatedAnswerGemini = await geminiService.vision(pathInfo);
-
-          const dataGemini = JSON.parse(generatedAnswerGemini);
-          bot.sendMessage(
-            chatId,
-            `Google Gemini
-              №: ${dataGemini.number};
-              Показатель: ${dataGemini.value};
-              Тип: ${data.type}`
-          );
-
-          // if (data.number) {
-          //   bot.sendMessage(chatId, "Ниже номер счетчика");
-          //   setTimeout(() => {
-          //     bot.sendMessage(chatId, data.number);
-          //   }, 100);
-          // }
-
-          // if (data.value) {
-          //   setTimeout(() => {
-          //     bot.sendMessage(chatId, "Ниже показатель счетчика");
-          //   }, 200);
-
-          //   setTimeout(() => {
-          //     bot.sendMessage(chatId, data.value);
-          //   }, 300);
-          // }
-        } catch (error) {
-          bot.sendMessage(chatId, "Error handling message:", error);
-        }
-      } else {
+    if (photo) {
+      sendResponseForImg(photo, openaiService, "ChatGPT");
+      sendResponseForImg(photo, geminiService, "Google Gemini");
+    } else {
+      try {
         const generatedAnswer = await geminiService.generateText(userMessage);
         // const generatedAnswer = await openaiService.generateText(userMessage);
 
         bot.sendMessage(chatId, generatedAnswer);
+      } catch (e) {
+        bot.sendMessage(chatId, "Я не смог для Вас сгенерировать ответ");
       }
-    } catch (error) {
-      console.error("Error handling message:", error);
-      bot.sendMessage(
-        chatId,
-        `Sorry, I couldn't generate a response at the moment.`
-      );
     }
   });
 };
