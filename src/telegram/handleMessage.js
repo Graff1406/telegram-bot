@@ -20,9 +20,9 @@ module.exports = function () {
         const pathInfo = await bot.getFileLink(photo.file_id);
 
         const generatedAnswerGPT = await openaiService.vision(pathInfo);
-        console.log(333333, dataGemini);
         try {
           const data = JSON.parse(generatedAnswerGPT);
+          console.log(333333, data);
           bot.sendMessage(
             chatId,
             `ChatGPT
@@ -40,7 +40,7 @@ module.exports = function () {
             `Google Gemini
               №: ${dataGemini.number};
               Показатель: ${dataGemini.value};
-              Тип: ${data.type}`
+              Тип: ${dataGemini.type}`
           );
 
           // if (data.number) {
@@ -60,13 +60,12 @@ module.exports = function () {
           //   }, 300);
           // }
         } catch (e) {
-          bot.sendMessage(chatId, generatedAnswer);
+          const res = await openaiService.generateText(userMessage);
+          bot.sendMessage(chatId, res);
         }
       } else {
-        // const generatedAnswer = await geminiService.generateText(userMessage);
-        const generatedAnswer = await openaiService.generateText(userMessage);
-
-        bot.sendMessage(chatId, generatedAnswer);
+        const res = await openaiService.generateText(userMessage);
+        bot.sendMessage(chatId, res);
       }
     } catch (error) {
       console.error("Error handling message:", error);
