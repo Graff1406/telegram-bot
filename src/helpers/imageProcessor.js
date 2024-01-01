@@ -1,32 +1,11 @@
 const axios = require("axios");
-const fs = require("fs");
-const path = require("path");
 
-async function processImage(fileLink) {
+async function processImage(fileUrl) {
   try {
-    const fileId = path.basename(fileLink);
-    const localPath = path.join(__dirname, "images", `${fileId}.jpg`);
-
-    const imageStream = fs.createWriteStream(localPath);
-    await axios({
-      url: fileLink,
-      method: "GET",
-      responseType: "stream",
-    }).then((response) => {
-      response.data.pipe(imageStream);
-    });
-
-    const base64String = Buffer.from(fs.readFileSync(localPath)).toString(
+    const response = await axios.get(fileUrl, { responseType: "arraybuffer" });
+    const base64String = Buffer.from(response.data, "binary").toString(
       "base64"
     );
-
-    fs.unlink(localPath, (err) => {
-      if (err) {
-        console.error("Error deleting image:", err);
-      } else {
-        console.log("Image deleted successfully");
-      }
-    });
 
     return base64String;
   } catch (error) {
