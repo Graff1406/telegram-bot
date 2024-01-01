@@ -24,7 +24,7 @@ module.exports = function () {
         if (data.is_counter)
           bot.sendMessage(
             chatId,
-            `DEV - ${aiName}
+            `${aiName}
           №: ${data.number};
           Показатель: ${data.value};
           Тип: ${data.type}`
@@ -32,7 +32,7 @@ module.exports = function () {
         else
           bot.sendMessage(
             chatId,
-            `DEV - ${aiName}
+            `${aiName}
              На фото не изабражен счетчик
           `
           );
