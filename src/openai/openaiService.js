@@ -17,7 +17,7 @@ async function generateText(prompt, maxTokens = 150) {
 
 async function vision(
   url,
-  prompt = 'If there is a meter displayed in the received image, please read the meter readings and provide them in the response. The expected response format is JSON: {"number": meter_number, "value": meter_readings}. If unclear, provide any information that indirectly indicates a set of digits.',
+  prompt = 'If there is a meter displayed in the received image, please read the meter readings and provide them in the response. The expected response format is JSON without double quotes around values: {"number": meter_number, "value": meter_readings}. Please ensure that leading zeros are included in the "value" field, and if unclear, provide any information that indirectly indicates a set of digits',
   maxTokens = 150
 ) {
   try {
