@@ -1,5 +1,5 @@
 const genAI = require("./config");
-const fs = require("fs");
+const { processImage } = require("../helpers/imageProcessor");
 
 async function generateText(prompt) {
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
@@ -19,10 +19,10 @@ async function vision(
   filePath,
   prompt = 'If there is a meter displayed in the received image, please read the meter readings and provide them in the response. The expected response format is JSON without double quotes around values: {"number": meter_number, "value": meter_readings}. Please ensure that leading zeros are included in the "value" field, and if unclear, provide any information that indirectly indicates a set of digits'
 ) {
-  function fileToGenerativePart(path, mimeType = "image/png") {
+  async function fileToGenerativePart(mimeType = "image/png") {
     return {
       inlineData: {
-        data: Buffer.from(fs.readFileSync(path)).toString("base64"),
+        data: await processImage(filePath),
         mimeType,
       },
     };
@@ -31,7 +31,7 @@ async function vision(
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
 
-    const imageParts = [fileToGenerativePart("src/telegram/img/counter-3.jpg")];
+    const imageParts = [await fileToGenerativePart()];
 
     const result = await model.generateContent([prompt, ...imageParts]);
     const response = await result.response;

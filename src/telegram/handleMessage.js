@@ -1,6 +1,6 @@
 const bot = require("./botConfig");
 const openaiService = require("../openai/openaiService");
-// const geminiService = require("../gemini/geminiService");
+const geminiService = require("../gemini/geminiService");
 
 module.exports = function () {
   // bot.onText(/\/echo (.+)/, (msg, match) => {
@@ -17,33 +17,43 @@ module.exports = function () {
 
     try {
       if (photo) {
-        const fileInfo = await bot.getFile(photo.file_id);
-        const fileUrl = `https://api.telegram.org/file/bot${"6049321677:AAF9v6XTI_qmgh__cG4LHQkTqHpYatZH0xI"}/${
-          fileInfo.file_path
-        }`;
+        const pathInfo = await bot.getFileLink(photo.file_id);
 
-        // const geminiPathInfo = await bot.getFileLink(photo.file_id);
-
-        // const generatedAnswer = await geminiService.vision(geminiPathInfo);
-        const generatedAnswer = await openaiService.vision(fileUrl);
+        const generatedAnswerGemini = await geminiService.vision(pathInfo);
+        const generatedAnswerGPT = await openaiService.vision(pathInfo);
         try {
-          const data = JSON.parse(generatedAnswer);
-          if (data.number) {
-            bot.sendMessage(chatId, "Ниже номер счетчика");
-            setTimeout(() => {
-              bot.sendMessage(chatId, data.number);
-            }, 100);
-          }
+          const data = JSON.parse(generatedAnswerGPT);
+          bot.sendMessage(
+            chatId,
+            `ChatGPT
+              №: ${data.number};
+              Показатель: ${data.value}`
+          );
 
-          if (data.value) {
-            setTimeout(() => {
-              bot.sendMessage(chatId, "Ниже показатель счетчика");
-            }, 200);
+          const dataGemini = JSON.parse(generatedAnswerGemini);
+          bot.sendMessage(
+            chatId,
+            `Google Gemini
+              №: ${dataGemini.number};
+              Показатель: ${dataGemini.value}`
+          );
 
-            setTimeout(() => {
-              bot.sendMessage(chatId, data.value);
-            }, 300);
-          }
+          // if (data.number) {
+          //   bot.sendMessage(chatId, "Ниже номер счетчика");
+          //   setTimeout(() => {
+          //     bot.sendMessage(chatId, data.number);
+          //   }, 100);
+          // }
+
+          // if (data.value) {
+          //   setTimeout(() => {
+          //     bot.sendMessage(chatId, "Ниже показатель счетчика");
+          //   }, 200);
+
+          //   setTimeout(() => {
+          //     bot.sendMessage(chatId, data.value);
+          //   }, 300);
+          // }
         } catch (e) {
           bot.sendMessage(chatId, generatedAnswer);
         }
