@@ -2,28 +2,6 @@ const bot = require("./botConfig");
 const openaiService = require("../openai/openaiService");
 const geminiService = require("../gemini/geminiService");
 
-async function sendResponseForImg(photo, service, aiName) {
-  try {
-    const pathInfo = await bot.getFileLink(photo.file_id);
-
-    const answer = await service.vision(pathInfo);
-
-    const data = JSON.parse(answer);
-    bot.sendMessage(
-      chatId,
-      `${aiName}
-      №: ${data.number};
-      Показатель: ${data.value};
-      Тип: ${data.type}`
-    );
-  } catch (err) {
-    bot.sendMessage(
-      chatId,
-      ` "${aiName} не смог распознать данные на изображении"`
-    );
-  }
-}
-
 module.exports = function () {
   // bot.onText(/\/echo (.+)/, (msg, match) => {
   //   const chatId = msg.chat.id;
@@ -36,6 +14,28 @@ module.exports = function () {
     const chatId = msg.chat.id;
     const userMessage = msg.text;
     const photo = msg.photo ? msg.photo[msg.photo.length - 1] : null;
+
+    async function sendResponseForImg(photo, service, aiName) {
+      try {
+        const pathInfo = await bot.getFileLink(photo.file_id);
+
+        const answer = await service.vision(pathInfo);
+
+        const data = JSON.parse(answer);
+        bot.sendMessage(
+          chatId,
+          `${aiName}
+          №: ${data.number};
+          Показатель: ${data.value};
+          Тип: ${data.type}`
+        );
+      } catch (err) {
+        bot.sendMessage(
+          chatId,
+          ` "${aiName} не смог распознать данные на изображении"`
+        );
+      }
+    }
 
     if (photo) {
       sendResponseForImg(photo, openaiService, "ChatGPT");
