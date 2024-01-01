@@ -22,18 +22,29 @@ module.exports = function () {
         const answer = await service.vision(pathInfo);
 
         const data = JSON.parse(answer);
-        bot.sendMessage(
-          chatId,
-          `${aiName}
+
+        if (data.is_counter)
+          bot.sendMessage(
+            chatId,
+            `${aiName}
           №: ${data.number};
           Показатель: ${data.value};
           Тип: ${data.type}`
-        );
+          );
+        else
+          bot.sendMessage(
+            chatId,
+            `${aiName}
+             На фото не изабражен счетчик
+          `
+          );
       } catch (err) {
         bot.sendMessage(
           chatId,
           ` "${aiName} не смог распознать данные на изображении"`
         );
+        console.error("Error generating sendMessage:", err);
+        throw new Error("Failed to generate Google Gemini response");
       }
     }
 
@@ -48,6 +59,8 @@ module.exports = function () {
         bot.sendMessage(chatId, generatedAnswer);
       } catch (e) {
         bot.sendMessage(chatId, "Я не смог для Вас сгенерировать ответ");
+        console.error("Error generating sendMessage:", err);
+        throw new Error("Failed to generate Google Gemini response");
       }
     }
   });
