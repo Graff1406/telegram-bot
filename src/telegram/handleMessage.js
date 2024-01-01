@@ -22,7 +22,6 @@ module.exports = function () {
         const generatedAnswerGPT = await openaiService.vision(pathInfo);
         try {
           const data = JSON.parse(generatedAnswerGPT);
-          console.log(333333, data);
           bot.sendMessage(
             chatId,
             `ChatGPT
@@ -34,13 +33,12 @@ module.exports = function () {
           const generatedAnswerGemini = await geminiService.vision(pathInfo);
 
           const dataGemini = JSON.parse(generatedAnswerGemini);
-          console.log(666666, dataGemini);
           bot.sendMessage(
             chatId,
             `Google Gemini
               №: ${dataGemini.number};
               Показатель: ${dataGemini.value};
-              Тип: ${dataGemini.type}`
+              Тип: ${data.type}`
           );
 
           // if (data.number) {
@@ -59,19 +57,20 @@ module.exports = function () {
           //     bot.sendMessage(chatId, data.value);
           //   }, 300);
           // }
-        } catch (e) {
-          const res = await openaiService.generateText(userMessage);
-          bot.sendMessage(chatId, res);
+        } catch (error) {
+          bot.sendMessage(chatId, "Error handling message:", error);
         }
       } else {
-        const res = await openaiService.generateText(userMessage);
-        bot.sendMessage(chatId, res);
+        const generatedAnswer = await geminiService.generateText(userMessage);
+        // const generatedAnswer = await openaiService.generateText(userMessage);
+
+        bot.sendMessage(chatId, generatedAnswer);
       }
     } catch (error) {
       console.error("Error handling message:", error);
       bot.sendMessage(
         chatId,
-        `Sorry, I couldn't generate a response at the moment. Chat id: ${chatId}`
+        `Sorry, I couldn't generate a response at the moment.`
       );
     }
   });
