@@ -44,6 +44,8 @@ async function vision(filePath) {
       "you need to determine the counter indicators on the counter and write them in the value field. Ignore gray numbers",
       "you need to determine the meter number on the meter and write it in the number field. Ignore gray numbers",
       "you need to determine the type of meter, for example: for water, for gas, for electricity. The value must be written in the type field.",
+      "Only consider clearly discernible digits for determining the values of the meter readings.",
+      "Exclude any artifacts or faint representations that may appear alongside digits on the same vertical line.",
       ...imageParts,
     ]);
     const response = await result.response;
