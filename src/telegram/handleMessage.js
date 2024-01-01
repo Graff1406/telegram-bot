@@ -24,7 +24,7 @@ module.exports = function () {
         if (data.is_counter)
           bot.sendMessage(
             chatId,
-            `DEV - ${aiName}
+            `${aiName}
           №: ${data.number};
           Показатель: ${data.value};
           Тип: ${data.type}`
@@ -32,7 +32,7 @@ module.exports = function () {
         else
           bot.sendMessage(
             chatId,
-            `DEV - ${aiName}
+            `${aiName}
              На фото не изабражен счетчик
           `
           );
@@ -47,8 +47,17 @@ module.exports = function () {
     }
 
     if (photo) {
-      sendResponseForImg(photo, openaiService, "ChatGPT");
-      sendResponseForImg(photo, geminiService, "Google Gemini");
+      bot.sendMessage(chatId, "Запуще процесс анализа изображения");
+
+      Promise.all([
+        sendResponseForImg(photo, openaiService, "ChatGPT"),
+        sendResponseForImg(photo, geminiService, "Google Gemini"),
+      ]).then(() =>
+        bot.sendMessage(
+          chatId,
+          "Если данные не соответствуют, тогда стоит сделать фото под другим ракурсом, чтобы провести более точный анализ"
+        )
+      );
     } else {
       try {
         const generatedAnswer = await geminiService.generateText(userMessage);
