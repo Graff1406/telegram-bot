@@ -20,12 +20,17 @@ module.exports = function () {
   //   });
   // });
 
+  bot.setMyCommands([
+    { command: "start", description: "Запустить бота" },
+    { command: "help", description: "Помощь" },
+  ]);
+
   bot.on("message", async (msg) => {
     const chatId = msg.chat.id;
     const userMessage = msg.text;
     const photo = msg.photo ? msg.photo[msg.photo.length - 1] : null;
 
-    if (userMessage.toLocaleLowerCase().includes("hi")) {
+    if (userMessage.toLocaleLowerCase().includes("menu")) {
       function mainMenuKeyboard() {
         return {
           keyboard: [["Пункт 1", "Пункт 2"], ["Пункт 3", "Пункт 4"], ["Выход"]],
