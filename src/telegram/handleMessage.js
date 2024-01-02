@@ -3,17 +3,42 @@ const openaiService = require("../openai/openaiService");
 const geminiService = require("../gemini/geminiService");
 
 module.exports = function () {
-  // bot.onText(/\/echo (.+)/, (msg, match) => {
+  // bot.onText(/\/start/, (msg, match) => {
   //   const chatId = msg.chat.id;
   //   const resp = match[1];
+  //   console.log(22222222222);
 
-  //   bot.sendMessage(chatId, resp);
+  //   function mainMenuKeyboard() {
+  //     return {
+  //       keyboard: [["Пункт 1", "Пункт 2"], ["Пункт 3", "Пункт 4"], ["Выход"]],
+  //       resize_keyboard: true,
+  //     };
+  //   }
+
+  //   bot.sendMessage(chatId, "Hello", {
+  //     reply_markup: mainMenuKeyboard(),
+  //   });
   // });
 
   bot.on("message", async (msg) => {
     const chatId = msg.chat.id;
     const userMessage = msg.text;
     const photo = msg.photo ? msg.photo[msg.photo.length - 1] : null;
+
+    if (userMessage.toLocaleLowerCase().includes("hi")) {
+      function mainMenuKeyboard() {
+        return {
+          keyboard: [["Пункт 1", "Пункт 2"], ["Пункт 3", "Пункт 4"], ["Выход"]],
+          resize_keyboard: true,
+        };
+      }
+
+      bot.sendMessage(chatId, "Hello", {
+        reply_markup: mainMenuKeyboard(),
+      });
+
+      return;
+    }
 
     async function sendResponseForImg(photo, service, aiName) {
       try {
@@ -66,7 +91,7 @@ module.exports = function () {
         bot.sendMessage(chatId, generatedAnswer);
       } catch (e) {
         bot.sendMessage(chatId, "Я не смог для Вас сгенерировать ответ");
-        console.error("Error generating sendMessage:", err);
+        console.error("Error generating sendMessage:", e);
         throw new Error("Failed to generate Google Gemini response");
       }
     }
