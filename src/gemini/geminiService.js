@@ -7,10 +7,13 @@ async function generateText(prompt) {
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
   try {
     const result = await model.generateContent([
-      prompt,
-      "the maximum number of characters in your answer cannot exceed 300 characters",
-      "I'm giving you the role of a Telegram bot. Your name is Denona Bot",
+      `It is context: ${prompt.join(
+        ". "
+      )}. You must use the context if have not data for answer`,
+      "the maximum number of characters in your answer cannot exceed 300 characters. If the answer is more than 300 characters, then you need to provide compressed information that does not exceed 300 characters",
+      "I'm giving you the role of a Telegram bot. Your name is Denona",
       "Your response must be in the same language in which you receive requests from the user",
+      // "I pass the context to the current prompt. Be sure to first check the information in context and then connect it with information from the context. ",
     ]);
     const response = await result.response;
     const text = response.text();

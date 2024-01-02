@@ -20,30 +20,32 @@ module.exports = function () {
   //   });
   // });
 
-  bot.setMyCommands([
-    { command: "start", description: "Запустить бота" },
-    { command: "help", description: "Помощь" },
-  ]);
+  // bot.setMyCommands([
+  //   { command: "start", description: "Запустить бота" },
+  //   { command: "help", description: "Помощь" },
+  // ]);
+
+  // if (userMessage.toLocaleLowerCase().includes("menu")) {
+  //   function mainMenuKeyboard() {
+  //     return {
+  //       keyboard: [["Пункт 1", "Пункт 2"], ["Пункт 3", "Пункт 4"], ["Выход"]],
+  //       resize_keyboard: true,
+  //     };
+  //   }
+
+  //   bot.sendMessage(chatId, "Hello", {
+  //     reply_markup: mainMenuKeyboard(),
+  //   });
+
+  //   return;
+  // }
+
+  const dialogContext = [];
 
   bot.on("message", async (msg) => {
     const chatId = msg.chat.id;
     const userMessage = msg.text;
     const photo = msg.photo ? msg.photo[msg.photo.length - 1] : null;
-
-    if (userMessage.toLocaleLowerCase().includes("menu")) {
-      function mainMenuKeyboard() {
-        return {
-          keyboard: [["Пункт 1", "Пункт 2"], ["Пункт 3", "Пункт 4"], ["Выход"]],
-          resize_keyboard: true,
-        };
-      }
-
-      bot.sendMessage(chatId, "Hello", {
-        reply_markup: mainMenuKeyboard(),
-      });
-
-      return;
-    }
 
     async function sendResponseForImg(photo, service, aiName) {
       try {
@@ -54,7 +56,7 @@ module.exports = function () {
         if (data.is_counter)
           bot.sendMessage(
             chatId,
-            `${aiName}
+            `dev-${aiName}
           №: ${data.number};
           Показатель: ${data.value};
           Тип: ${data.type}`
@@ -72,7 +74,7 @@ module.exports = function () {
           ` "${aiName} не смог распознать данные на изображении"`
         );
         console.error(`Error generating sendMessage for ${aiName}:`, err);
-        throw new Error("Failed to generate Google Gemini response");
+        // throw new Error("Failed to generate Google Gemini response");
       }
     }
 
@@ -90,14 +92,20 @@ module.exports = function () {
       );
     } else {
       try {
-        const generatedAnswer = await geminiService.generateText(userMessage);
+        const generatedAnswer = await geminiService.generateText([
+          ...dialogContext,
+          userMessage,
+        ]);
+
+        dialogContext.push(userMessage);
+        dialogContext.push(generatedAnswer);
         // const generatedAnswer = await openaiService.generateText(userMessage);
 
         bot.sendMessage(chatId, generatedAnswer);
       } catch (e) {
         bot.sendMessage(chatId, "Я не смог для Вас сгенерировать ответ");
         console.error("Error generating sendMessage:", e);
-        throw new Error("Failed to generate Google Gemini response");
+        // throw new Error("Failed to generate Google Gemini response");
       }
     }
   });
