@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const telegramBotMessage = require("./telegram/handleMessage");
+const pingServer = require("./modules/pingServer");
 
 const app = express();
 const port = 3000;
@@ -15,10 +16,7 @@ app.use(express.json());
 
 telegramBotMessage();
 
-app.post("/openai-gpt", (req, res) => {
-  const apiKey = process.env.OPENAI_API_KEY;
-  res.status(200).send("Open ai");
-});
+setInterval(pingServer, 840000); // 14 minutes
 
 app.listen(port, () => {
   console.log(`The server is running on the port ${port}`);
