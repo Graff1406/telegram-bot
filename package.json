@@ -4,7 +4,7 @@
   "description": "Backend for make request'",
   "main": "src/index.js",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "scripts": {
     "dev": "nodemon src/index.js",
