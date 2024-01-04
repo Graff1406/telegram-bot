@@ -55,6 +55,7 @@ module.exports = function () {
         };
 
         mergeMessage(userMessage);
+
         const generatedAnswer = await geminiService.generateText(
           dialogContext[chatId].chat,
           userMessage
@@ -62,7 +63,7 @@ module.exports = function () {
 
         // const generatedAnswer = await openaiService.generateText(dialogContext);
 
-        mergeMessage(userMessage);
+        mergeMessage(generatedAnswer);
 
         handleSendMessage(generatedAnswer);
       } catch (e) {
