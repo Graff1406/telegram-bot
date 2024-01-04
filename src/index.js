@@ -6,7 +6,7 @@ const pingServer = require("./modules/pingServer");
 const isDev = process.env.NODE_ENV === "development";
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -30,4 +30,6 @@ app.listen(port, () => {
 const webhookUrl = isDev
   ? "https://821c-200-55-245-139.ngrok-free.app" + webhookPath
   : "https://telegram-bot-denona.onrender.com" + webhookPath;
-bot.setWebHook(webhookUrl);
+bot.setWebHook(webhookUrl).catch((error) => {
+  console.error(error);
+});
