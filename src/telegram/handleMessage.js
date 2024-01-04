@@ -5,60 +5,6 @@ const geminiService = require("../gemini/geminiService");
 const isDev = process.env.NODE_ENV === "development";
 
 module.exports = function () {
-  // bot.onText(/\/start/, (msg, match) => {
-  //   const chatId = msg.chat.id;
-  //   const resp = match[1];
-  //   console.log(22222222222);
-
-  //   function mainMenuKeyboard() {
-  //     return {
-  //       keyboard: [["Пункт 1", "Пункт 2"], ["Пункт 3", "Пункт 4"], ["Выход"]],
-  //       resize_keyboard: true,
-  //     };
-  //   }
-
-  //   bot.sendMessage(chatId, "Hello", {
-  //     reply_markup: mainMenuKeyboard(),
-  //   });
-  // });
-
-  // bot.setMyCommands([
-  //   { command: "start", description: "Запустить бота" },
-  //   { command: "help", description: "Помощь" },
-  // ]);
-
-  // if (userMessage.toLocaleLowerCase().includes("menu")) {
-  //   function mainMenuKeyboard() {
-  //     return {
-  //       keyboard: [["Пункт 1", "Пункт 2"], ["Пункт 3", "Пункт 4"], ["Выход"]],
-  //       resize_keyboard: true,
-  //     };
-  //   }
-
-  //   bot.sendMessage(chatId, "Hello", {
-  //     reply_markup: mainMenuKeyboard(),
-  //   });
-
-  //   return;
-  // }
-
-  // handleSendMessage(dialogContext, {
-  //   reply_markup: {
-  //     inline_keyboard: [
-  //       [
-  //         { text: "Кнопка под сообщением", callback_data: "comment" },
-  //         { text: "Кнопка под сообщением - 2", callback_data: "comment-2" },
-  //       ],
-  //     ],
-  //   },
-  // });
-
-  // handleSendMessage(dialogContext, {
-  //   reply_markup: {
-  //     force_reply: true, // Заставляет добавить над инпутом ввода возможность ответить на сообщение
-  //   },
-  // });
-
   const dialogContext = [];
 
   bot.on("message", async (msg) => {
@@ -118,15 +64,5 @@ module.exports = function () {
         console.error("Error generating sendMessage:", e);
       }
     }
-  });
-
-  bot.on("callback_query", (callbackQuery) => {
-    const chatId = callbackQuery.message.chat.id;
-    const comment = callbackQuery.data;
-    const username = callbackQuery.from.username;
-
-    // Отправка комментария
-    const commentMessage = `@${username} прокомментировал: "${comment}"`;
-    bot.sendMessage(chatId, commentMessage);
   });
 };
