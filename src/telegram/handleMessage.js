@@ -2,6 +2,8 @@ const bot = require("./botConfig");
 const openaiService = require("../openai/openaiService");
 const geminiService = require("../gemini/geminiService");
 
+const isDev = process.env.NODE_ENV === "development";
+
 module.exports = function () {
   // bot.onText(/\/start/, (msg, match) => {
   //   const chatId = msg.chat.id;
@@ -40,6 +42,23 @@ module.exports = function () {
   //   return;
   // }
 
+  // handleSendMessage(dialogContext, {
+  //   reply_markup: {
+  //     inline_keyboard: [
+  //       [
+  //         { text: "Кнопка под сообщением", callback_data: "comment" },
+  //         { text: "Кнопка под сообщением - 2", callback_data: "comment-2" },
+  //       ],
+  //     ],
+  //   },
+  // });
+
+  // handleSendMessage(dialogContext, {
+  //   reply_markup: {
+  //     force_reply: true, // Заставляет добавить над инпутом ввода возможность ответить на сообщение
+  //   },
+  // });
+
   const dialogContext = [];
 
   bot.on("message", async (msg) => {
@@ -47,66 +66,67 @@ module.exports = function () {
     const userMessage = msg.text;
     const photo = msg.photo ? msg.photo[msg.photo.length - 1] : null;
 
+    const handleSendMessage = (message, options) => {
+      bot.sendMessage(chatId, `${isDev ? "DEV" : ""}\n${message}`, options);
+    };
+
     async function sendResponseForImg(photo, service, aiName) {
       try {
         const pathInfo = await bot.getFileLink(photo.file_id);
 
         const data = await service.vision(pathInfo);
 
-        if (data.is_counter)
-          bot.sendMessage(
-            chatId,
-            `dev-${aiName}
+        if (data.is_counter) {
+          handleSendMessage(`${aiName}
           №: ${data.number};
           Показатель: ${data.value};
-          Тип: ${data.type}`
-          );
-        else
-          bot.sendMessage(
-            chatId,
-            `${aiName}
-             На фото не изабражен счетчик
-          `
-          );
+          Тип: ${data.type}`);
+        } else handleSendMessage(`${aiName} На фото не изабражен счетчик`);
       } catch (err) {
-        bot.sendMessage(
-          chatId,
-          ` "${aiName} не смог распознать данные на изображении"`
-        );
+        handleSendMessage(`${aiName} не смог распознать данные на изображении`);
         console.error(`Error generating sendMessage for ${aiName}:`, err);
-        // throw new Error("Failed to generate Google Gemini response");
       }
     }
 
     if (photo) {
-      bot.sendMessage(chatId, "Запущен процесс анализа изображения");
+      handleSendMessage("Запущен процесс анализа изображения");
 
       Promise.all([
         sendResponseForImg(photo, openaiService, "ChatGPT"),
         sendResponseForImg(photo, geminiService, "Google Gemini"),
       ]).then(() =>
-        bot.sendMessage(
-          chatId,
+        handleSendMessage(
           "Если данные не соответствуют, тогда стоит сделать фото под другим ракурсом, чтобы провести более точный анализ"
         )
       );
     } else {
       try {
-        const generatedAnswer = await geminiService.generateText([
-          ...dialogContext,
-          userMessage,
-        ]);
-
         dialogContext.push(userMessage);
-        dialogContext.push(generatedAnswer);
-        // const generatedAnswer = await openaiService.generateText(userMessage);
 
-        bot.sendMessage(chatId, generatedAnswer);
+        const generatedAnswer = await geminiService.generateText(
+          dialogContext,
+          userMessage
+        );
+
+        // const generatedAnswer = await openaiService.generateText(dialogContext);
+
+        dialogContext.push(generatedAnswer);
+
+        handleSendMessage(generatedAnswer);
       } catch (e) {
-        bot.sendMessage(chatId, "Я не смог для Вас сгенерировать ответ");
+        handleSendMessage("Я не смог для Вас сгенерировать ответ");
         console.error("Error generating sendMessage:", e);
-        // throw new Error("Failed to generate Google Gemini response");
       }
     }
+  });
+
+  bot.on("callback_query", (callbackQuery) => {
+    const chatId = callbackQuery.message.chat.id;
+    const comment = callbackQuery.data;
+    const username = callbackQuery.from.username;
+
+    // Отправка комментария
+    const commentMessage = `@${username} прокомментировал: "${comment}"`;
+    bot.sendMessage(chatId, commentMessage);
   });
 };
