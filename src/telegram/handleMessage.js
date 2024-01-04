@@ -5,7 +5,7 @@ const geminiService = require("../gemini/geminiService");
 const isDev = process.env.NODE_ENV === "development";
 
 module.exports = function () {
-  const dialogContext = [];
+  const dialogContext = {};
 
   bot.on("message", async (msg) => {
     const chatId = msg.chat.id;
@@ -47,16 +47,22 @@ module.exports = function () {
       );
     } else {
       try {
-        dialogContext.push(userMessage);
+        const mergeMessage = (message) => {
+          if (!dialogContext[chatId]) {
+            dialogContext[chatId] = { chat: [] };
+          }
+          dialogContext[chatId].chat.push(message);
+        };
 
+        mergeMessage(userMessage);
         const generatedAnswer = await geminiService.generateText(
-          dialogContext,
+          dialogContext[chatId].chat,
           userMessage
         );
 
         // const generatedAnswer = await openaiService.generateText(dialogContext);
 
-        dialogContext.push(generatedAnswer);
+        mergeMessage(userMessage);
 
         handleSendMessage(generatedAnswer);
       } catch (e) {
