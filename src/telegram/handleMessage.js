@@ -47,25 +47,25 @@ module.exports = function () {
       );
     } else {
       try {
-        const mergeMessage = (message) => {
+        const mergeMessage = (message, member) => {
           if (!dialogContext[chatId]) {
             dialogContext[chatId] = { chat: [] };
           }
-          dialogContext[chatId].chat.push(message);
+          dialogContext[chatId].chat.push(`${member}: ${message}`);
         };
 
-        mergeMessage(userMessage);
+        mergeMessage(userMessage, "client");
 
-        const generatedAnswer = await geminiService.generateText(
+        const { text } = await geminiService.generateText(
           dialogContext[chatId].chat,
           userMessage
         );
 
         // const generatedAnswer = await openaiService.generateText(dialogContext);
 
-        mergeMessage(generatedAnswer);
+        mergeMessage(text, "model");
 
-        handleSendMessage(generatedAnswer);
+        handleSendMessage(text);
       } catch (e) {
         handleSendMessage("Я не смог для Вас сгенерировать ответ");
         console.error("Error generating sendMessage:", e);
