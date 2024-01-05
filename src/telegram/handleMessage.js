@@ -51,19 +51,35 @@ module.exports = function () {
           if (!dialogContext[chatId]) {
             dialogContext[chatId] = { chat: [] };
           }
+
+          if (
+            Array.isArray(dialogContext[chatId].chat) &&
+            dialogContext[chatId].chat.length === 0
+          ) {
+            setTimeout(() => {
+              dialogContext[chatId] = { chat: [] };
+            }, 30 * 60 * 1000);
+          }
+
           dialogContext[chatId].chat.push(`${member}: ${message}`);
         };
 
         mergeMessage(userMessage, "client");
 
-        const { text } = await geminiService.generateText(
+        const { text, queries } = await geminiService.generateText(
           dialogContext[chatId].chat,
           userMessage
         );
 
-        // const generatedAnswer = await openaiService.generateText(dialogContext);
+        // const { text, queries } = await openaiService.generateText(
+        //   dialogContext[chatId].chat
+        // );
 
         mergeMessage(text, "model");
+
+        // if (Array.isArray(queries) && queries.length > 0) {
+        //   handleSendMessage(JSON.stringify(queries));
+        // }
 
         handleSendMessage(text);
       } catch (e) {

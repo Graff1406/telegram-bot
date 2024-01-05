@@ -16,7 +16,7 @@ async function generateText(context, prompt) {
         },
         {
           role: "model",
-          parts: prompts.model,
+          parts: prompts.modalGeorgiaApartment,
         },
       ],
     });
@@ -25,6 +25,7 @@ async function generateText(context, prompt) {
     const response = await result.response;
     const text = response.text();
     let data = parseJsonString(text);
+    console.log("query", data);
     return data ? data : { text };
   } catch (error) {
     console.error("Error generating response from Google Gemini:", error);
