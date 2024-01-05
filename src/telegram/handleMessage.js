@@ -1,11 +1,12 @@
 const bot = require("./botConfig");
 const openaiService = require("../openai/openaiService");
 const geminiService = require("../gemini/geminiService");
-
+const prompts = require("../models/prompts");
 const isDev = process.env.NODE_ENV === "development";
 
 module.exports = function () {
   const dialogContext = {};
+  const userDefaultData = { chat: [], queries: [] };
 
   bot.on("message", async (msg) => {
     const chatId = msg.chat.id;
@@ -49,7 +50,7 @@ module.exports = function () {
       try {
         const mergeMessage = (message, member) => {
           if (!dialogContext[chatId]) {
-            dialogContext[chatId] = { chat: [] };
+            dialogContext[chatId] = userDefaultData;
           }
 
           if (
@@ -57,19 +58,49 @@ module.exports = function () {
             dialogContext[chatId].chat.length === 0
           ) {
             setTimeout(() => {
-              dialogContext[chatId] = { chat: [] };
+              dialogContext[chatId] = userDefaultData;
             }, 30 * 60 * 1000);
           }
 
           dialogContext[chatId].chat.push(`${member}: ${message}`);
         };
 
+        function uniqueValuesFromString(inputString, existingArray) {
+          const newValuesArray = inputString.split(";").map((value) =>
+            value
+              .replace(/[^\w\d\sа-яё]/gi, "")
+              .trim()
+              .toLowerCase()
+          );
+
+          let uniqueValuesSet = new Set([...existingArray, ...newValuesArray]);
+
+          const uniqueValues = Array.from(new Set(uniqueValuesSet));
+
+          return uniqueValues;
+        }
+
         mergeMessage(userMessage, "client");
 
-        const { text, queries } = await geminiService.generateText(
-          dialogContext[chatId].chat,
-          userMessage
+        const text = await geminiService.generateChatText({
+          context: dialogContext[chatId].chat,
+          prompt: userMessage,
+          temperature: 0.6,
+        });
+
+        const query = await geminiService.generateChatText({
+          context: dialogContext[chatId].chat,
+          prompt: userMessage,
+          history: prompts.modalGeorgiaApartmentQueries,
+          temperature: 0.4,
+        });
+
+        dialogContext[chatId].queries = uniqueValuesFromString(
+          query,
+          dialogContext[chatId].queries
         );
+
+        console.log("queries", dialogContext[chatId].queries);
 
         // const { text, queries } = await openaiService.generateText(
         //   dialogContext[chatId].chat

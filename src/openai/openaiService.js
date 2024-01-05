@@ -1,7 +1,6 @@
 const openaiInstance = require("./config");
 const prompts = require("../models/prompts");
 const extractJsonSubstring = require("../helpers/extractJsonSubstring");
-const { parseJsonString } = require("../helpers/parseJsonString");
 
 async function generateText(prompt = [], maxTokens = 150) {
   // console.log("GPT", prompt);
@@ -20,11 +19,7 @@ async function generateText(prompt = [], maxTokens = 150) {
     });
 
     const text = response.choices[0].message.content;
-    console.log("🚀 ~ file: openaiService.js:23 ~ generateText ~ text:", text);
-
-    let data = parseJsonString(text);
-    console.log("query", data);
-    return data ? data : { text };
+    return text;
   } catch (error) {
     console.error("Error generating response from OpenAI:", error);
     throw new Error("Failed to generate OpenAI response");

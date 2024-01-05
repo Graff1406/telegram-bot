@@ -1,22 +1,29 @@
 const genAI = require("./config");
 const { processImage } = require("../helpers/imageProcessor");
-const { parseJsonString } = require("../helpers/parseJsonString");
 
 const extractJsonSubstring = require("../helpers/extractJsonSubstring");
 const prompts = require("../models/prompts");
 
-async function generateText(context, prompt) {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+async function generateChatText({
+  context,
+  prompt,
+  history = prompts.modalGeorgiaApartment,
+  temperature = 0.9,
+}) {
+  const model = genAI.getGenerativeModel({
+    model: "gemini-pro",
+    generationConfig: { temperature },
+  });
   try {
     const chat = await model.startChat({
       history: [
         {
           role: "user",
-          parts: context.join(".\n"),
+          parts: typeof context === "string" ? context : context.join(".\n"),
         },
         {
           role: "model",
-          parts: prompts.modalGeorgiaApartment,
+          parts: history,
         },
       ],
     });
@@ -24,9 +31,7 @@ async function generateText(context, prompt) {
     const result = await chat.sendMessage(prompt);
     const response = await result.response;
     const text = response.text();
-    let data = parseJsonString(text);
-    console.log("query", data);
-    return data ? data : { text };
+    return text;
   } catch (error) {
     console.error("Error generating response from Google Gemini:", error);
     throw new Error("Failed to generate OpenAI response");
@@ -71,4 +76,4 @@ async function vision(filePath) {
   }
 }
 
-module.exports = { generateText, vision };
+module.exports = { generateChatText, vision };
