@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Backend for make request'",
   "main": "src/index.js",
-  "type": "module",
   "engines": {
     "node": "20.x"
   },
