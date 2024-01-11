@@ -28,7 +28,7 @@ app.listen(port, () => {
 });
 
 const webhookUrl = isDev
-  ? "https://821c-200-55-245-139.ngrok-free.app" + webhookPath
+  ? "https://76a5-200-55-245-140.ngrok-free.app" + webhookPath
   : "https://telegram-bot-denona.onrender.com" + webhookPath;
 bot.setWebHook(webhookUrl).catch((error) => {
   console.error(error);
