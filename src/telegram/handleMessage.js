@@ -6,7 +6,8 @@ const extractJsonSubstring = require("../helpers/extractJsonSubstring");
 const isDev = process.env.NODE_ENV === "development";
 
 module.exports = function () {
-  const context = {};
+  const history = {};
+  const dialogs = [];
   const state = {};
   const emptyProps = {};
 
@@ -91,157 +92,249 @@ module.exports = function () {
 
     return emptyFields;
   };
+  const mergeObjects = (obj1, obj2) => {
+    const result = { ...obj1 };
+
+    for (const key in obj2) {
+      if (obj2.hasOwnProperty(key) && obj2[key] !== null) {
+        result[key] = typeof obj2[key] === "number" ? obj2[key] : obj2[key];
+      }
+    }
+
+    return result;
+  };
+
+  const jsonToMarkdown = (jsonString) => {
+    try {
+      const obj = JSON.parse(jsonString);
+      let markdown = "";
+
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          markdown += `\`${key}\`: ${obj[key]}\n`;
+        }
+      }
+
+      return markdown;
+    } catch (error) {
+      console.error("Ошибка при парсинге JSON:", error.message);
+      return null;
+    }
+  };
+
+  const handleProperty = (id, message, callback = () => {}) => {
+    console.log("🚀 ~ handleProperty ~ message:", message);
+    try {
+      // Save data of property
+      const jsonData = extractJsonSubstring(message);
+      const jsData = JSON.parse(jsonData);
+      state[id] = mergeObjects(state[id], jsData);
+
+      if (jsData && Object.keys(jsData).length > 0) {
+        handleSendMessage(id, jsonToMarkdown(JSON.stringify(state[id])), {
+          parse_mode: "Markdown",
+          reply_markup: {
+            inline_keyboard: [
+              [
+                { text: "Готово", callback_data: "save_property" },
+                {
+                  text: "Редактировать",
+                  callback_data: "edit_in_progress_property",
+                },
+                { text: "Отменить", callback_data: "cancel_property" },
+              ],
+            ],
+          },
+        });
+        callback();
+      } else {
+        callback();
+      }
+    } catch (error) {
+      console.log("handleProperty", error);
+    }
+  };
+
+  const handleOther = (id, message) => {
+    try {
+      handleSendMessage(id, message, { parse_mode: "Markdown" });
+    } catch (error) {
+      console.log("handleProperty", error);
+    }
+  };
 
   bot.on("text", async (msg) => {
     const chatId = msg.chat.id;
     const userMessage = msg.text;
 
-    const buildPropertyDat = async () => {
-      let attempts = 3;
-      let success = false;
-
-      while (attempts > 0 && !success) {
-        const property = await AIResponse(
-          context[chatId],
-          userMessage,
-          prompts.property
-        );
-
-        console.log("property", property);
-
-        if (
-          typeof property === "string" &&
-          property[0] === "{" &&
-          property[property.length - 1] === "}"
-        ) {
-          mergeState(chatId, property);
-
-          const isRequiredFillFields = await AIResponse(
-            context[chatId],
-            JSON.stringify(emptyProps[chatId]),
-            prompts.emptyFields
-          );
-
-          handleSendMessage(chatId, isRequiredFillFields);
-
-          success = true;
-        } else {
-          attempts--;
-          if (attempts === 0) {
-            console.log("Достигнуто максимальное количество попыток");
-          } else {
-            console.log("Неудачная попытка. Осталось попыток: " + attempts);
-          }
-        }
-      }
-    };
-
     try {
-      const isPropertySubject = await geminiService.generateText(
-        `${
-          state[chatId]
-            ? prompts.continueDataCollection
-            : prompts.isPropertySubject
-        }. Сообщение от клиента: ${userMessage}`,
-        0
+      // history.push(
+      //   { role: "user", parts: userMessage },
+      //   { role: "model", parts: "" }
+      // );
+
+      // dialogs.push(
+      //   { role: "user", parts: userMessage },
+      //   { role: "model", parts: "" }
+      // );
+
+      let label = "";
+
+      const isPropertySubject =
+        state[chatId] && Object.keys(state[chatId]).length > 0;
+
+      if (isPropertySubject) {
+        label = await geminiService.generateChatText({
+          prompt: [prompts.ContinueCollectPropertyData],
+          history: history[chatId]["property"],
+        });
+      } else {
+        label = await geminiService.generateText(
+          `Инструкция: ${prompts.entry}. Сообщение: ${userMessage}`
+        );
+      }
+
+      console.log("🚀 ~ bot.on ~ label:", label);
+
+      const labels =
+        history[chatId] && history[chatId][label]
+          ? history[chatId]
+          : (history[chatId] = { ...history[chatId], [label]: [] });
+
+      const messages = labels[label];
+
+      messages.push(
+        { role: "user", parts: userMessage },
+        { role: "model", parts: "" }
       );
 
-      if (isPropertySubject === "yes") {
-        console.log("yes", isPropertySubject);
-        // buildPropertyDat();
+      // console.log("history", history);
 
-        const property = await geminiService.generateText(
-          `${prompts.property}. Сообщение от клиента: ${userMessage}`,
-          2
-        );
-        const jsonDataProperty = extractJsonSubstring(property);
-        // console.log("jsonDataProperty:", jsonDataProperty);
+      let stepMessage = null;
 
-        const dataForSaveToState = getFieldsWithValues(
-          JSON.parse(jsonDataProperty)
-        );
-        // console.log("dataForSaveToState:", dataForSaveToState);
-
-        const mergedState = mergeState(chatId, dataForSaveToState);
-        console.log("🚀 ~ bot.on ~ mergedState:", mergedState);
-
-        if (mergedState) {
-          const emptyFields = findEmptyFields(mergedState);
-          console.log("emptyFields", emptyFields);
-          if (emptyFields) {
-            const isEmptyText = await geminiService.generateText(
-              `${prompts.emptyFields}. Сообщение от клиента: ${JSON.stringify(
-                emptyFields
-              )}`,
-              0
+      switch (label) {
+        case "property":
+          if (isPropertySubject) {
+            stepMessage = await geminiService.generateChatText({
+              prompt: [prompts.property],
+              history: messages,
+            });
+          } else {
+            stepMessage = await geminiService.generateText(
+              `Инструкция: ${prompts.property}. Свойства Недвижимости: ${userMessage}`
             );
-
-            handleSendMessage(chatId, isEmptyText);
           }
-        }
+          handleProperty(chatId, stepMessage, async () => {
+            stepMessage = await geminiService.generateChatText({
+              prompt: [
+                prompts.other,
+                prompts.rules,
+                prompts.contacts,
+                prompts.global,
+              ],
+              history: messages,
+            });
+            handleSendMessage(chatId, stepMessage);
+          });
+          break;
+        case "rules":
+          stepMessage = await geminiService.generateChatText({
+            prompt: [prompts.rules, prompts.contacts, prompts.global],
+            history: messages,
+          });
+          handleSendMessage(chatId, stepMessage);
+          break;
 
-        /*
+        case "list":
+          Array.from({ length: 3 }).forEach(() => {
+            handleSendMessage(
+              chatId,
+              `
+            \`Тип недвижимости:\` Квартира
+            \`Классификация объекта недвижимости:\` Вторичная недвижимость
+            \`Город:\` Ивано-Франковск
+            `,
+              {
+                parse_mode: "Markdown",
+                reply_markup: {
+                  inline_keyboard: [
+                    [
+                      { text: "Редактировать", callback_data: "button_1" },
+                      { text: "Удалить", callback_data: "button_2" },
+                    ],
+                  ],
+                },
+              }
+            );
+          });
+          break;
 
-        const jsonDataProperty = extractJsonSubstring(property);
-
-        if (jsonDataProperty) {
-          const withValues = getFieldsWithValues(jsonDataProperty);
-          mergeState(chatId, withValues);
-
-          if (state[chatId]) {
-            const emptyFields = filterEmptyValues(state[chatId]);
-            if (!emptyFields) {
-              const isEmptyText = await geminiService.generateText(
-                `${prompts.emptyFields}. Сообщение от клиента: ${JSON.stringify(
-                  emptyFields
-                )}`,
-                0
-              );
-
-              handleSendMessage(chatId, isEmptyText);
-            }
-          }
-        }
-
-        */
-
-        // if (emptyProps[chatId]) {
-        //   const isEmptyText = await geminiService.generateText(
-        //     `${prompts.emptyFields}. Сообщение от клиента: ${JSON.stringify(
-        //       emptyProps[chatId]
-        //     )}`,
-        //     0
-        //   );
-
-        //   handleSendMessage(chatId, isEmptyText);
-        // } else {
-        //   emptyProps[chatId] = undefined;
-
-        //   const isSaveText = await geminiService.generateText(
-        //     `Сообщи что данные переданные были успешно сохранены`,
-        //     0
-        //   );
-
-        //   handleSendMessage(chatId, isSaveText);
-        // }
-      } else if (isPropertySubject === "not") {
-        console.log("not", isPropertySubject);
-        if (emptyProps[chatId]) {
-          const isEmptyText = await geminiService.generateText(
-            `${prompts.emptyFields}. Сообщение: ${JSON.stringify(
-              emptyProps[chatId]
-            )}`,
-            0
-          );
-
-          handleSendMessage(chatId, isEmptyText);
-        } else {
-          const question = await geminiService.generateText(prompts.toQuestion);
-
-          mergeContext(chatId, question);
-          handleSendMessage(chatId, question);
-        }
+        case "other":
+          stepMessage = await geminiService.generateChatText({
+            prompt: [prompts.other, prompts.contacts, prompts.global],
+            history: messages,
+          });
+          handleSendMessage(chatId, stepMessage);
+          break;
       }
+
+      if (messages && stepMessage)
+        messages[messages.length - 1] = {
+          role: "model",
+          parts: stepMessage,
+        };
+
+      // const [modelMessage, dialogMessage] = await Promise.all([
+      //   geminiService.generateChatText({
+      //     prompt: [prompts.property],
+      //     history,
+      //     temperature: 0,
+      //   }),
+      //   geminiService.generateChatText({
+      //     prompt: prompts.other,
+      //     history: dialogs,
+      //   }),
+      // ]);
+
+      // console.log("🚀 ~ bot.on ~ modelMessage:", modelMessage);
+      // console.log("🚀 ~ bot.on ~ dialogMessage:", dialogMessage);
+
+      // const jsonData = extractJsonSubstring(modelMessage);
+
+      // let data = null;
+
+      // if (jsonData) {
+      //   data = JSON.parse(jsonData);
+      //   state[chatId] = mergeObjects(state[chatId], data);
+
+      //   history[history.length - 1] = {
+      //     role: "model",
+      //     parts: JSON.stringify(state[chatId]),
+      //   };
+      // }
+
+      // dialogs[dialogs.length - 1] = {
+      //   role: "model",
+      //   parts: dialogMessage,
+      // };
+
+      // if (data && Object.keys(data).length > 0) {
+      //   handleSendMessage(
+      //     chatId,
+      //     jsonToMarkdown(JSON.stringify(state[chatId])),
+      //     {
+      //       parse_mode: "Markdown",
+      //       reply_markup: {
+      //         inline_keyboard: [
+      //           [{ text: "Сохранить", callback_data: "button1" }],
+      //           [{ text: "Ещё данные", callback_data: "button2" }],
+      //         ],
+      //       },
+      //     }
+      //   );
+      // } else {
+      //   handleSendMessage(chatId, dialogMessage, { parse_mode: "Markdown" });
+      // }
     } catch (err) {
       console.error(err);
       handleSendMessage(chatId, err);
@@ -251,9 +344,10 @@ module.exports = function () {
   bot.on("photo", async (msg) => {
     const chatId = msg.chat.id;
     const photo = msg.photo;
-    console.log("🚀 ~ bot.on ~ photo:", photo);
+    const fileId = msg.photo[0];
+    console.log("🚀 ~ bot.on ~ photo:", fileId);
     const caption = msg.caption;
-    console.log("🚀 ~ bot.on ~ caption:", caption);
+    // console.log("🚀 ~ bot.on ~ caption:", caption);
 
     // try {
     //   const query = await geminiService.generateChatText({

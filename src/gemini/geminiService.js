@@ -18,9 +18,9 @@ async function generateText(prompt, temperature = 0.9) {
 }
 
 async function generateChatText({
-  context = "",
+  context = [],
   prompt,
-  history = "",
+  history = [],
   temperature = 0.5,
 }) {
   const model = genAI.getGenerativeModel({
@@ -29,16 +29,7 @@ async function generateChatText({
   });
   try {
     const chat = await model.startChat({
-      history: [
-        {
-          role: "user",
-          parts: typeof context === "string" ? context : context.join(".\n"),
-        },
-        {
-          role: "model",
-          parts: history,
-        },
-      ],
+      history,
     });
 
     const result = await chat.sendMessage(prompt);
