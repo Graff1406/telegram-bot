@@ -1,11 +1,12 @@
 const bot = require("./botConfig");
-const geminiService = require("../gemini/geminiService");
-const prompts = require("../models/prompts");
+const geminiService = require("../api/gemini/geminiService");
+const openService = require("../api/openai/openaiService");
+const prompts = require("../models/instructions");
 const parseJsonString = require("../helpers/parseJsonString");
 const extractJsonSubstring = require("../helpers/extractJsonSubstring");
 const isDev = process.env.NODE_ENV === "development";
 
-module.exports = function () {
+module.exports = async function () {
   const history = {};
   const dialogs = [];
   const state = {};
@@ -104,22 +105,27 @@ module.exports = function () {
     return result;
   };
 
-  const jsonToMarkdown = (jsonString) => {
-    try {
-      const obj = JSON.parse(jsonString);
-      let markdown = "";
+  const jsonToMarkdown = (jsonObject) => {
+    let markdown = "";
 
+    function processObject(obj, depth = 1) {
       for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
-          markdown += `\`${key}\`: ${obj[key]}\n`;
+          const value = obj[key];
+
+          if (typeof value === "object" && value !== null) {
+            markdown += `${"\t".repeat(depth - 1)}- ${key}:\n`;
+            processObject(value, depth + 1);
+          } else {
+            markdown += `${"\t".repeat(depth - 1)}- ${key}: *${value}*\n`;
+          }
         }
       }
-
-      return markdown;
-    } catch (error) {
-      console.error("Ошибка при парсинге JSON:", error.message);
-      return null;
     }
+
+    processObject(jsonObject);
+
+    return markdown;
   };
 
   const handleProperty = (id, message, callback = () => {}) => {
@@ -163,6 +169,40 @@ module.exports = function () {
     }
   };
 
+  const extractPropertyObject = (inputString) => {
+    try {
+      // Ищем начало JSON объекта с свойством "property"
+      const startIndex = inputString.indexOf('{"property":');
+      if (startIndex === -1) {
+        throw new Error('Не найдено свойство "property" в строке');
+      }
+
+      // Обрезаем строку до начала JSON объекта
+      const jsonString = inputString.substring(startIndex);
+
+      // Пытаемся распарсить JSON
+      const parsedObject = JSON.parse(jsonString);
+
+      // Проверяем, что объект содержит свойство "property"
+      if (!parsedObject.property) {
+        throw new Error('Свойство "property" отсутствует в JSON объекте');
+      }
+
+      // Определяем текст за пределами JSON объекта
+      const textOutsideJson = inputString.substring(0, startIndex);
+
+      return {
+        propertyObject: parsedObject.property,
+        textOutsideJson: textOutsideJson.trim(), // Обрезаем лишние пробелы
+      };
+    } catch (error) {
+      console.error("Ошибка при извлечении JSON объекта:", error.message);
+      return null;
+    }
+  };
+
+  const runChat = await openService.generateChatResponse();
+
   bot.on("text", async (msg) => {
     const chatId = msg.chat.id;
     const userMessage = msg.text;
@@ -183,16 +223,7 @@ module.exports = function () {
       const isPropertySubject =
         state[chatId] && Object.keys(state[chatId]).length > 0;
 
-      if (isPropertySubject) {
-        label = await geminiService.generateChatText({
-          prompt: [prompts.ContinueCollectPropertyData],
-          history: history[chatId]["property"],
-        });
-      } else {
-        label = await geminiService.generateText(
-          `Инструкция: ${prompts.entry}. Сообщение: ${userMessage}`
-        );
-      }
+      label = "other";
 
       console.log("🚀 ~ bot.on ~ label:", label);
 
@@ -203,86 +234,84 @@ module.exports = function () {
 
       const messages = labels[label];
 
-      messages.push(
-        { role: "user", parts: userMessage },
-        { role: "model", parts: "" }
-      );
+      messages.push({ role: "user", content: userMessage });
 
       // console.log("history", history);
 
       let stepMessage = null;
 
-      switch (label) {
-        case "property":
-          if (isPropertySubject) {
-            stepMessage = await geminiService.generateChatText({
-              prompt: [prompts.property],
-              history: messages,
-            });
-          } else {
-            stepMessage = await geminiService.generateText(
-              `Инструкция: ${prompts.property}. Свойства Недвижимости: ${userMessage}`
-            );
-          }
-          handleProperty(chatId, stepMessage, async () => {
-            stepMessage = await geminiService.generateChatText({
-              prompt: [
-                prompts.other,
-                prompts.rules,
-                prompts.contacts,
-                prompts.global,
+      stepMessage = await runChat(userMessage);
+      // console.log("🚀 ~ bot.on ~ stepMessage:", stepMessage);
+
+      const data = JSON.parse(extractJsonSubstring(stepMessage));
+
+      if (Object.keys(data.property).length > 0) {
+        handleSendMessage(chatId, jsonToMarkdown(data.property), {
+          parse_mode: "Markdown",
+          reply_markup: {
+            inline_keyboard: [
+              [
+                { text: "Готово", callback_data: "save_property" },
+                // {
+                //   text: "Редактировать",
+                //   callback_data: "edit_in_progress_property",
+                // },
+                // { text: "Отменить", callback_data: "cancel_property" },
               ],
-              history: messages,
-            });
-            handleSendMessage(chatId, stepMessage);
-          });
-          break;
-        case "rules":
-          stepMessage = await geminiService.generateChatText({
-            prompt: [prompts.rules, prompts.contacts, prompts.global],
-            history: messages,
-          });
-          handleSendMessage(chatId, stepMessage);
-          break;
-
-        case "list":
-          Array.from({ length: 3 }).forEach(() => {
-            handleSendMessage(
-              chatId,
-              `
-            \`Тип недвижимости:\` Квартира
-            \`Классификация объекта недвижимости:\` Вторичная недвижимость
-            \`Город:\` Ивано-Франковск
-            `,
-              {
-                parse_mode: "Markdown",
-                reply_markup: {
-                  inline_keyboard: [
-                    [
-                      { text: "Редактировать", callback_data: "button_1" },
-                      { text: "Удалить", callback_data: "button_2" },
-                    ],
-                  ],
-                },
-              }
-            );
-          });
-          break;
-
-        case "other":
-          stepMessage = await geminiService.generateChatText({
-            prompt: [prompts.other, prompts.contacts, prompts.global],
-            history: messages,
-          });
-          handleSendMessage(chatId, stepMessage);
-          break;
+            ],
+          },
+        });
       }
 
-      if (messages && stepMessage)
-        messages[messages.length - 1] = {
-          role: "model",
-          parts: stepMessage,
-        };
+      // messages.push({ role: "assistant", content: data.text });
+
+      handleSendMessage(chatId, data.text);
+
+      // console.log(1111111, JSON.stringify(messages));
+
+      // const data = extractPropertyObject(stepMessage);
+
+      // if (data) {
+      //   handleSendMessage(chatId, data.property, {
+      //     reply_markup: {
+      //       inline_keyboard: [
+      //         [
+      //           { text: "Готово", callback_data: "save_property" },
+      //           {
+      //             text: "Редактировать",
+      //             callback_data: "edit_in_progress_property",
+      //           },
+      //           { text: "Отменить", callback_data: "cancel_property" },
+      //         ],
+      //       ],
+      //     },
+      //   });
+      //   handleSendMessage(chatId, data.text);
+      //   messages.push({ role: "assistant", content: property });
+      //   messages.push({ role: "assistant", content: text });
+      // } else {
+      //   try {
+      //     const data = JSON.parse(stepMessage);
+      //     handleSendMessage(chatId, stepMessage, {
+      //       reply_markup: {
+      //         inline_keyboard: [
+      //           [
+      //             { text: "Готово", callback_data: "save_property" },
+      //             {
+      //               text: "Редактировать",
+      //               callback_data: "edit_in_progress_property",
+      //             },
+      //             { text: "Отменить", callback_data: "cancel_property" },
+      //           ],
+      //         ],
+      //       },
+      //     });
+      //     messages.push({ role: "assistant", content: data.property });
+      //   } catch (error) {
+      //     handleSendMessage(chatId, stepMessage);
+      //     messages.push({ role: "assistant", content: stepMessage });
+      //   }
+      // }
 
       // const [modelMessage, dialogMessage] = await Promise.all([
       //   geminiService.generateChatText({

@@ -1,7 +1,7 @@
 const genAI = require("./config");
-const { processImage } = require("../helpers/imageProcessor");
+const { processImage } = require("../../helpers/imageProcessor");
 
-const extractJsonSubstring = require("../helpers/extractJsonSubstring");
+const extractJsonSubstring = require("../../helpers/extractJsonSubstring");
 
 async function generateText(prompt, temperature = 0.9) {
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });

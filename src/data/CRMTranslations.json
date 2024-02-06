@@ -1,0 +1,817 @@
+[
+  {
+    "name": "warningNoPhotos",
+    "body": {
+      "ru": {
+        "title": "Объявление без фотографии",
+        "text": "Вы можете сейчас отправить фотографии в этот чат, и мы их добавим к данному объявлению и опубликуем все вместе, или можете опубликовать объявление без фотографии!"
+      },
+      "uk": {
+        "title": "Оголошення без фотографії",
+        "text": "Ви можете зараз відправити фотографії в цей чат, і ми їх додамо до цього оголошення та опублікуємо все разом, або можете опублікувати оголошення без фотографії!"
+      },
+      "ge": {
+        "title": "განცხადება უკაფაზოდ",
+        "text": "შეგიძლიათ ახლა გააგზავნოთ ფოტოები ამ ჩათში, და ჩვენ მათ დავამატებთ ამ განცხადებას და ვერაფერს გამოვაქვეყნებთ ერთად, ან შეგიძლიათ გამოაქვეყნოთ განცხადება უკაფაზოდ!"
+      },
+      "de": {
+        "title": "Anzeige ohne Foto",
+        "text": "Sie können jetzt Fotos in diesen Chat senden, und wir fügen sie zu dieser Anzeige hinzu und veröffentlichen alles zusammen, oder Sie können die Anzeige ohne Foto veröffentlichen!"
+      },
+      "en": {
+        "title": "Ad without Photo",
+        "text": "You can now send photos to this chat, and we will add them to this ad and publish everything together, or you can publish the ad without a photo!"
+      },
+      "tr": {
+        "title": "Fotoğrafsız İlan",
+        "text": "Şimdi bu sohbete fotoğraf gönderebilir ve onları bu ilana ekleriz ve her şeyi birlikte yayınlarız veya fotoğrafsız ilanı yayınlayabilirsiniz!"
+      }
+    }       
+  },
+  {
+    "name": "waitingForResponse",
+    "body": {
+      "ru": {
+        "title": "Ожидание ответа",
+        "text": "Я в процессе подготовки ответа.\nПрошу подождите еще некоторое время!"
+      },
+      "uk": {
+        "title": "Очікування відповіді",
+        "text": "Я у процесі підготовки відповіді.\nПрошу зачекайте ще трошки!"
+      },
+      "ge": {
+        "title": "პასუხის ელოდება",
+        "text": "მე პასუხის მომზადებლად ვარ.\nგთხოვთ დაიცადოთ კიდევ რამდენიმე წუთი!"
+      },
+      "de": {
+        "title": "Warten auf Antwort",
+        "text": "Ich bereite gerade eine Antwort vor.\nBitte warten Sie noch einen Moment!"
+      },
+      "en": {
+        "title": "Waiting for Response",
+        "text": "I'm in the process of preparing a response.\nPlease wait a little longer!"
+      },
+      "tr": {
+        "title": "Cevap Bekleniyor",
+        "text": "Şu anda bir yanıt hazırlıyorum.\nLütfen biraz daha bekleyin!"
+      }
+    }
+  },
+  {
+    "name": "contactInfo",
+    "body": {
+        "ru": {
+            "title": "Контакты",
+            "text": "Для связи с нами используйте указанные ниже контактные данные. Мы всегда рады помочь вам!"
+        },
+        "uk": {
+            "title": "Контактна інформація",
+            "text": "Для зв'язку з нами використовуйте наведені нижче контактні дані. Ми завжди готові вам допомогти!"
+        },
+        "ge": {
+            "title": "კონტაქტი",
+            "text": "ჩვენსათვის დაგვეკავშირდით შემდეგ მოცემულ კონტაქტურ ინფორმაციით. ჩვენ ყოველთვის მოგესალმებით!"
+        },
+        "de": {
+            "title": "Kontaktinformationen",
+            "text": "Verwenden Sie die unten angegebenen Kontaktdaten, um mit uns in Kontakt zu treten. Wir helfen Ihnen gerne weiter!"
+        },
+        "en": {
+            "title": "Contact Information",
+            "text": "Use the contact information provided below to get in touch with us. We are always happy to assist you!"
+        },
+        "tr": {
+            "title": "İletişim Bilgileri",
+            "text": "Bizimle iletişime geçmek için aşağıdaki iletişim bilgilerini kullanın. Size her zaman yardımcı olmaktan mutluluk duyarız!"
+        }
+    }
+  },
+  {
+    "name": "adReadyForPublishing",
+    "body": {
+      "ru": {
+      "title": "Объявление готово для публикации",
+      "text": "Ниже выберите действие"
+      },
+      "uk": {
+      "title": "Оголошення готове до публікації",
+      "text": "Нижче виберіть дію"
+      },
+      "ge": {
+      "title": "განცხადება მზად არის გამოქვეყნებადი",
+      "text": "ქვემოთ აირჩიეთ ქმედება"
+      },
+      "de": {
+      "title": "Anzeige bereit zur Veröffentlichung",
+      "text": "Wählen Sie unten eine Aktion aus"
+      },
+      "en": {
+      "title": "Ad Ready for Publication",
+      "text": "Select an action below"
+      },
+      "tr": {
+      "title": "İlan Yayına Hazır",
+      "text": "Aşağıdan bir eylem seçin"
+      }
+    }
+  },
+  {
+    "name": "publishActionButton",
+    "body": {
+        "ru": {
+            "title": "Опубликовать",
+            "text": "Вы можете сейчас опубликовать это в чате, и мы сразу разместим!"
+        },
+        "uk": {
+            "title": "Опублікувати",
+            "text": "Ви можете зараз опублікувати це в чаті, і ми відразу розмістимо!"
+        },
+        "ge": {
+            "title": "გამოქვეყნოთ",
+            "text": "შეგიძლიათ ახლა გამოქვეყნოთ ეს ჩათში, და ჩვენ ადამატებთ ამას და ვარდებთ ამას ერთად!"
+        },
+        "de": {
+            "title": "Veröffentlichen",
+            "text": "Sie können dies jetzt im Chat veröffentlichen, und wir werden es sofort veröffentlichen!"
+        },
+        "en": {
+            "title": "Publish",
+            "text": "You can now publish this in the chat, and we will post it immediately!"
+        },
+        "tr": {
+            "title": "Yayınla",
+            "text": "Şimdi bunu sohbet üzerinden yayınlayabilirsiniz ve hemen yayınlarız!"
+        }
+    }
+  },
+  {
+    "name": "publishWithoutPhotoActionButton",
+    "body": {
+      "ru": {
+        "title": "Опубликовать без фотографии",
+        "text": "Вы можете сейчас отправить фотографии в этот чат, и мы их добавим к данному объявлению и опубликуем все вместе, или можете опубликовать объявление без фотографии!"
+      },
+      "uk": {
+        "title": "Опублікувати без фотографії",
+        "text": "Ви можете зараз відправити фотографії в цей чат, і ми їх додамо до цього оголошення та опублікуємо все разом, або можете опублікувати оголошення без фотографії!"
+      },
+      "ge": {
+        "title": "გამოაქვეყნოთ ფოტოები გარეთ",
+        "text": "შეგიძლიათ ახლა გააგზავნოთ ფოტოები ამ ჩათში, და ჩვენ მათ დავამატებთ ამ განცხადებას და ვერაფერს გამოვაქვეყნებთ ერთად, ან შეგიძლიათ გამოაქვეყნოთ განცხადება გარეთ!"
+      },
+      "de": {
+        "title": "Anzeige ohne Foto veröffentlichen",
+        "text": "Sie können jetzt Fotos in diesen Chat senden, und wir fügen sie zu dieser Anzeige hinzu und veröffentlichen alles zusammen, oder Sie können die Anzeige ohne Foto veröffentlichen!"
+      },
+      "en": {
+        "title": "Publish without Photo",
+        "text": "You can now send photos to this chat, and we will add them to this ad and publish everything together, or you can publish the ad without a photo!"
+      },
+      "tr": {
+        "title": "Fotoğrafsız İlanı Yayınla",
+        "text": "Şimdi bu sohbete fotoğraf gönderebilir ve onları bu ilana ekleriz ve her şeyi birlikte yayınlarız veya fotoğrafsız ilanı yayınlayabilirsiniz!"
+      }
+    }
+  },
+  {
+    "name": "warningNoPhotosAd",
+    "body": {
+      "ru": {
+        "title": "Объявление без фотографии",
+        "text": "Вы можете сейчас отправить фотографии в этот чат, и мы их добавим к данному объявлению и опубликуем все вместе, или можете опубликовать объявление без фотографии!"
+      },
+      "uk": {
+        "title": "Оголошення без фотографії",
+        "text": "Ви можете зараз відправити фотографії в цей чат, і ми їх додамо до цього оголошення та опублікуємо все разом, або можете опублікувати оголошення без фотографії!"
+      },
+      "ge": {
+        "title": "განცხადება უკაფაზოდ",
+        "text": "შეგიძლიათ ახლა გააგზავნოთ ფოტოები ამ ჩათში, და ჩვენ მათ დავამატებთ ამ განცხადებას და ვერაფერს გამოვაქვეყნებთ ერთად, ან შეგიძლიათ გამოაქვეყნოთ განცხადება უკაფაზოდ!"
+      },
+      "de": {
+        "title": "Anzeige ohne Foto",
+        "text": "Sie können jetzt Fotos in diesen Chat senden, und wir fügen sie zu dieser Anzeige hinzu und veröffentlichen alles zusammen, oder Sie können die Anzeige ohne Foto veröffentlichen!"
+      },
+      "en": {
+        "title": "Ad without Photo",
+        "text": "You can now send photos to this chat, and we will add them to this ad and publish everything together, or you can publish the ad without a photo!"
+      },
+      "tr": {
+        "title": "Fotoğrafsız İlan",
+        "text": "Şimdi bu sohbete fotoğraf gönderebilir ve onları bu ilana ekleriz ve her şeyi birlikte yayınlarız veya fotoğrafsız ilanı yayınlayabilirsiniz!"
+      }
+    }
+  },
+  {
+    "name": "deleteAdActionButton",
+    "body": {
+      "ru": {
+        "title": "Удалить объявление",
+        "text": "Вы можете удалить это объявление, если оно больше не актуально или вам необходимо сделать изменения."
+      },
+      "uk": {
+        "title": "Видалити оголошення",
+        "text": "Ви можете видалити це оголошення, якщо воно вже неактуальне або вам потрібно внести зміни."
+      },
+      "ge": {
+        "title": "განცხადების წაშლა",
+        "text": "შეგიძლიათ წაშალოთ ეს განცხადება, თუ ის უკვე არაქტუალურია ან თქვენ გჭირდებათ ცვლილებები."
+      },
+      "de": {
+        "title": "Anzeige löschen",
+        "text": "Sie können diese Anzeige löschen, wenn sie nicht mehr aktuell ist oder Sie Änderungen vornehmen müssen."
+      },
+      "en": {
+        "title": "Delete Ad",
+        "text": "You can delete this ad if it's no longer relevant or if you need to make changes."
+      },
+      "tr": {
+        "title": "İlanı Sil",
+        "text": "Bu ilanı silabilirsiniz, eğer artık geçerli değilse veya değişiklik yapmanız gerekiyorsa."
+      }
+    }
+  },
+  {
+    "name": "announcementReadyForPublication",
+    "body": {
+      "ru": {
+        "title": "Объявление готово к публикации",
+        "text": "Вы можете сейчас отправить фотографии в этот чат, и мы их добавим к данному объявлению и опубликуем все вместе, или можете опубликовать объявление без фотографии!"
+      },
+      "uk": {
+        "title": "Оголошення готове до публікації",
+        "text": "Ви можете зараз відправити фотографії в цей чат, і ми їх додамо до цього оголошення та опублікуємо все разом, або можете опублікувати оголошення без фотографії!"
+      },
+      "ge": {
+        "title": "განცხადება მზად არის გამოქვეყნებადი",
+        "text": "შეგიძლიათ ახლა გააგზავნოთ ფოტოები ამ ჩათში, და ჩვენ მათ დავამატებთ ამ განცხადებას და ვერაფერს გამოვაქვეყნებთ ერთად, ან შეგიძლიათ გამოაქვეყნოთ განცხადება უკაფაზოდ!"
+      },
+      "de": {
+        "title": "Anzeige bereit zur Veröffentlichung",
+        "text": "Sie können jetzt Fotos in diesen Chat senden, und wir fügen sie zu dieser Anzeige hinzu und veröffentlichen alles zusammen, oder Sie können die Anzeige ohne Foto veröffentlichen!"
+      },
+      "en": {
+        "title": "Ad Ready for Publication",
+        "text": "You can now send photos to this chat, and we will add them to this ad and publish everything together, or you can publish the ad without a photo!"
+      },
+      "tr": {
+        "title": "Fotoğrafsız İlan Hazır",
+        "text": "Şimdi bu sohbete fotoğraf gönderebilir ve onları bu ilana ekleriz ve her şeyi birlikte yayınlarız veya fotoğrafsız ilanı yayınlayabilirsiniz!"
+      }
+    }
+  },
+  {
+    "name": "propertyWithoutDescription",
+    "body": {
+      "ru": {
+        "title": "Объявление без описания недвижимости",
+        "text": "Чтобы завершить публикацию объявления необходимо к фотографиям добавить описание недвижимости. Прошу вас прислать в этот чат описание недвижимости."
+      },
+      "uk": {
+        "title": "Оголошення без опису нерухомості",
+        "text": "Щоб завершити публікацію оголошення необхідно до фотографій додати опис нерухомості. Прошу вас вислати в цей чат опис нерухомості."
+      },
+      "ge": {
+        "title": "განცხადება უკაფაზოდ აღწერის გარეშე",
+        "text": "გამომართვას დასასრულებლად, გთხოვთ დაამატოთ აღწერა ფოტოებთან ერთად. გთხოვთ მოგვიანებით გამოაგზავნოთ ამ ჩათში ნაწარმი დასაწერი."
+      },
+      "de": {
+        "title": "Anzeige ohne Immobilienbeschreibung",
+        "text": "Um die Veröffentlichung der Anzeige abzuschließen, fügen Sie bitte eine Beschreibung der Immobilie zu den Fotos hinzu. Bitte senden Sie die Immobilienbeschreibung in diesen Chat."
+      },
+      "en": {
+        "title": "Ad without Property Description",
+        "text": "To complete the ad publication, please add a description of the property to the photos. Kindly send the property description to this chat."
+      },
+      "tr": {
+        "title": "Mülk Açıklaması Olmadan İlan",
+        "text": "İlan yayınlamayı tamamlamak için lütfen fotoğraflara mülk açıklaması ekleyin. Mülk açıklamasını bu sohbete gönderin."
+      }
+    }
+  },
+  {
+    "name": "adSuccessfullyPublished",
+    "body": {
+      "ru": {
+        "title": "Объявление успешно опубликовано\n",
+        "text": "Чтобы увидеть опубликованное объявление, посетите следующие ссылки:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+      },
+      "uk": {
+        "title": "Оголошення успішно опубліковано\n",
+        "text": "Щоб переглянути опубліковане оголошення, відвідайте наступні посилання:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+      },
+      "ge": {
+        "title": "განცხადება წარმატებით გამოქვეყნებულია\n",
+        "text": "განცხადების ნახვისას, გთხოვთ, შეეკეთეთ შემდეგი ბმულები:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+      },
+      "de": {
+        "title": "Anzeige erfolgreich veröffentlicht\n",
+        "text": "Um die veröffentlichte Anzeige zu sehen, besuchen Sie bitte die folgenden Links:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+      },
+      "en": {
+        "title": "Ad Successfully Published\n",
+        "text": "To view the published ad, please visit the following links:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+      },
+      "tr": {
+        "title": "İlan Başarıyla Yayınlandı\n",
+        "text": "Yayınlanan ilanı görmek için lütfen aşağıdaki bağlantılara gidin:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+      }
+    }
+  }
+  ,
+  {
+    "name": "propertyDescriptionUpdate",
+    "body": {
+        "ru": {
+            "title": "Обновление описания недвижимости",
+            "text": "Я готов обновить описание выбранной недвижимости"
+        },
+        "uk": {
+            "title": "Оновлення опису нерухомості",
+            "text": "Я готовий оновити опис обраної нерухомості"
+        },
+        "ge": {
+            "title": "უფროსი აღწერის განახლება",
+            "text": "მზად ვარ განახლებოთ არჩეული უძღოლის აღწერა"
+        },
+        "de": {
+            "title": "Aktualisierung der Immobilienbeschreibung",
+            "text": "Ich bin bereit, die Beschreibung der ausgewählten Immobilie zu aktualisieren"
+        },
+        "en": {
+            "title": "Property Description Update",
+            "text": "I am ready to update the description of the selected property"
+        },
+        "tr": {
+            "title": "Emlak Tanımı Güncelleme",
+            "text": "Seçilen emlak tanımını güncellemeye hazırım"
+        }
+    }
+  },
+  {
+    "name": "readyToReceivePropertyPhotos",
+    "body": {
+      "ru": {
+        "title": "Готов принять фотографии недвижимости",
+        "text": "Вы можете сейчас отправить фотографии в этот чат, и мы их добавим к данной информации и опубликуем все вместе, или можете отправить информацию без фотографий!"
+      },
+      "uk": {
+        "title": "Готовий прийняти фотографії нерухомості",
+        "text": "Ви можете зараз відправити фотографії в цей чат, і ми їх додамо до цієї інформації та опублікуємо все разом, або можете відправити інформацію без фотографій!"
+      },
+      "ge": {
+        "title": "მომზად ვარ მივიღოთ უკაფაზო ფოტოები",
+        "text": "შეგიძლიათ ახლა გააგზავნოთ ფოტოები ამ ჩათში, და ჩვენ მათ დავამატებთ ამ ინფორმაციას და ვერაფერს გამოვაქვეყნებთ ერთად, ან შეგიძლიათ გამოაქვეყნოთ ინფორმაცია უკაფაზოდ!"
+      },
+      "de": {
+        "title": "Bereit, Immobilienfotos zu erhalten",
+        "text": "Sie können jetzt Fotos in diesen Chat senden, und wir fügen sie zu diesen Informationen hinzu und veröffentlichen alles zusammen, oder Sie können die Informationen ohne Fotos senden!"
+      },
+      "en": {
+        "title": "Ready to Receive Property Photos",
+        "text": "You can now send photos to this chat, and we will add them to this information and publish everything together, or you can send information without photos!"
+      },
+      "tr": {
+        "title": "Mülkiyet Fotoğraflarını Almaya Hazır",
+        "text": "Şimdi bu sohbete fotoğraf gönderebilir ve onları bu bilgilere ekleriz ve her şeyi birlikte yayınlarız veya bilgileri fotoğrafsız olarak gönderebilirsiniz!"
+      }
+    }       
+  },
+  {
+    "name": "deleteSelectedAd",
+    "body": {
+      "ru": {
+        "title": "Удаление выбранного объявления",
+        "text": "Хотите удалить выбранное объявление?"
+      },
+      "uk": {
+        "title": "Видалення обраного оголошення",
+        "text": "Хочете видалити обране оголошення?"
+      },
+      "ge": {
+        "title": "შერჩეული განცხადების წაშლა",
+        "text": "გსურთ შერჩეული განცხადების წაშლა?"
+      },
+      "de": {
+        "title": "Löschen der ausgewählten Anzeige",
+        "text": "Möchten Sie die ausgewählte Anzeige löschen?"
+      },
+      "en": {
+        "title": "Delete Selected Ad",
+        "text": "Do you want to delete the selected ad?"
+      },
+      "tr": {
+        "title": "Seçili İlanı Sil",
+        "text": "Seçili ilanı silmek istiyor musunuz?"
+      }
+    }
+  },
+  {
+    "name": "cancelActionButton",
+    "body": {
+      "ru": {
+      "title": "Отменить",
+      "text": "Вы можете отменить это действие."
+      },
+      "uk": {
+      "title": "Скасувати",
+      "text": "Ви можете скасувати цю дію."
+      },
+      "ge": {
+      "title": "გაუქმება",
+      "text": "შეგიძლიათ გაუქმება ეს მოქმედება."
+      },
+      "de": {
+      "title": "Abbrechen",
+      "text": "Sie können diese Aktion abbrechen."
+      },
+      "en": {
+      "title": "Cancel",
+      "text": "You can cancel this action."
+      },
+      "tr": {
+      "title": "İptal",
+      "text": "Bu işlemi iptal edebilirsiniz."
+      }
+    }
+  },
+  {
+    "name": "deletionAdCanceled",
+    "body": {
+      "ru": {
+        "title": "Отмена удаления объявления",
+        "text": "Удаление объявления отменено!"
+      },
+      "uk": {
+        "title": "Скасування видалення оголошення",
+        "text": "Видалення оголошення скасовано!"
+      },
+      "ge": {
+        "title": "განცხადების წაშლის გაუქმება",
+        "text": "განცხადების წაშლის გაუქმება!"
+      },
+      "de": {
+        "title": "Löschen der Anzeige abgebrochen",
+        "text": "Löschen der Anzeige abgebrochen!"
+      },
+      "en": {
+        "title": "Deletion of Ad Canceled",
+        "text": "Deletion of ad canceled!"
+      },
+      "tr": {
+        "title": "İlan Silme İptal Edildi",
+        "text": "İlan silme iptal edildi!"
+      }
+    }
+  },
+  {
+    "name": "announcementAdDeletionSuccess",
+    "body": {
+      "ru": {
+        "title": "Успешное удаление объявления",
+        "text": "Объявление успешно удалено!"
+      },
+      "uk": {
+        "title": "Успішне видалення оголошення",
+        "text": "Оголошення успішно видалено!"
+      },
+      "ge": {
+        "title": "განცხადების წაშლის წარმატება",
+        "text": "განცხადება წარმატებით წაიშლება!"
+      },
+      "de": {
+        "title": "Erfolgreiches Löschen der Anzeige",
+        "text": "Die Anzeige wurde erfolgreich gelöscht!"
+      },
+      "en": {
+        "title": "Successful Deletion of Ad",
+        "text": "Ad successfully deleted!"
+      },
+      "tr": {
+        "title": "İlan Başarıyla Silindi",
+        "text": "İlan başarıyla silindi!"
+      }
+    }
+  },
+  {
+    "name": "actionPreviouslyDone",
+    "body": {
+      "ru": {
+        "title": "Действие ранее было выполнено",
+        "text": "Текущее действие ранее было выполнено"
+      },
+      "uk": {
+        "title": "Дія раніше була виконана",
+        "text": "Поточна дія раніше була виконана"
+      },
+      "ge": {
+        "title": "Ქმედება უკავშირდა",
+        "text": "მიმდინარე ქმედება უკავშირდა"
+      },
+      "de": {
+        "title": "Aktion zuvor erledigt",
+        "text": "Die aktuelle Aktion wurde zuvor erledigt"
+      },
+      "en": {
+        "title": "Action Previously Done",
+        "text": "The current action was previously done"
+      },
+      "tr": {
+        "title": "Daha önce yapılan eylem",
+        "text": "Mevcut eylem daha önce yapıldı"
+      }
+    }
+  },
+  {
+    "name": "retryPreviousAction",
+    "body": {
+      "ru": {
+        "title": "Пожалуйста повторите предыдущее действие",
+        "text": "Приношу свои извинения, но на сервере произошла непредвиденная ситуация, поэтому прошу Вас повторить предыдущее действие!"
+      },
+      "uk": {
+        "title": "Будь ласка, повторіть попередню дію",
+        "text": "Вибачте за непорозуміння, але на сервері сталася непередбачена ситуація, тому прошу вас повторити попередню дію!"
+      },
+      "ge": {
+        "title": "გთხოვთ, გამოიყენოთ წინა ქმედება",
+        "text": "მიწოდებულვარ ჩემი უკავშირია, მაგრამ სერვერზე შეუძლებელი სიტუაცია მოხდა, ამიტომ გთხოვთ, გამოიყენოთ წინა ქმედება!"
+      },
+      "de": {
+        "title": "Bitte wiederholen Sie die vorherige Aktion",
+        "text": "Es tut mir leid, aber auf dem Server ist eine unerwartete Situation aufgetreten, daher bitte ich Sie, die vorherige Aktion zu wiederholen!"
+      },
+      "en": {
+        "title": "Please Repeat the Previous Action",
+        "text": "I apologize, but an unexpected situation occurred on the server, so please repeat the previous action!"
+      },
+      "tr": {
+        "title": "Lütfen Önceki Eylemi Tekrarlayın",
+        "text": "Özür dilerim, ancak sunucuda beklenmeyen bir durum oluştu, bu nedenle lütfen önceki eylemi tekrarlayın!"
+      }
+    }
+  },
+  {
+    "name": "repeatLastActionButton",
+    "body": {
+      "ru": {
+        "title": "Повторить действие",
+        "text": "Вы можете сейчас повторить это действие в этот чат, и мы добавим его и опубликуем все вместе, или можете опубликовать это действие еще раз!"
+      },
+      "uk": {
+        "title": "Повторити дію",
+        "text": "Ви можете зараз повторити цю дію в цей чат, і ми додамо її та опублікуємо все разом, або можете опублікувати цю дію ще раз!"
+      },
+      "ge": {
+        "title": "ქმედების გამეორება",
+        "text": "შეგიძლიათ ახლა გაამეოროთ ეს ქმედება ამ ჩათში, და ჩვენ მას დავამატებთ და ვერაფერს გამოვაქვეყნებთ ერთად, ან შეგიძლიათ გამოაქვეყნოთ ეს ქმედება კვლავ!"
+      },
+      "de": {
+        "title": "Aktion wiederholen",
+        "text": "Sie können jetzt diese Aktion in diesen Chat senden, und wir fügen sie hinzu und veröffentlichen alles zusammen, oder Sie können die Aktion ohne Foto wiederholen!"
+      },
+      "en": {
+        "title": "Repeat Action",
+        "text": "You can now repeat this action in this chat, and we will add it to this ad and publish everything together, or you can repeat this action without a photo!"
+      },
+      "tr": {
+        "title": "Eylemi Tekrarla",
+        "text": "Şimdi bu sohbete bu eylemi tekrarlayabilir ve onu bu ilana ekleriz ve her şeyi birlikte yayınlarız veya bu eylemi fotoğrafsız tekrarlayabilirsiniz!"
+      }
+    }
+  },
+  {
+    "name": "introduction",
+    "body": {
+      "ru": {
+        "title": "Краткое знакомство\n",
+        "text": "Привет! Я, Denona AI, твой личный ассистент, помогу тебе разместить объявление о недвижимости на различных площадках для достижения твоих целей.\n\nЧтобы опубликовать объявление, просто передай мне описание и фотографии недвижимости в этом чате.\n\nТы всегда можешь удалить объявление, если захочешь. А чтобы посмотреть список опубликованных объявлений, просто напиши мне, и я предоставлю тебе полный список.\n\nПосле публикации объявление автоматически становится доступным на следующих площадках:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>\n\n<b>Давайте начнем!</b>\n\n"
+      },
+      "uk": {
+        "title": "Коротке знайомство\n",
+        "text": "Привіт! Я, Denona AI, твій особистий асистент, допоможу тобі розмістити оголошення про нерухомість на різних платформах для досягнення твоїх цілей.\n\nЩоб опублікувати оголошення, просто передай мені опис і фотографії нерухомості в цьому чаті.\n\nТи завжди можеш видалити оголошення, якщо захочеш. А щоб переглянути список опублікованих оголошень, просто напиши мені, і я надам тобі повний список.\n\nПісля публікації оголошення автоматично стає доступним на наступних платформах:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>\n\n<b>Давайте почнемо!</b>\n\n"
+      },
+      "ge": {
+        "title": "მოკლე შეხვედრა\n",
+        "text": "გამარჯობა! მე, Denona AI, შენი პირადი ასისტენტი, დაგეხმარებათ განათლება უძლურების შესასრულელებელი დასაფოსტაცია.\n\nრომ გამოაქვეყნოთ განცხადება, მხოლოდ გადაუტვირთეთ მოკლე აღწერა და ფოტოები ამ ჩათში.\n\nთუ გსურთ, შეგიძლიათ წაშალოთ განცხადება, თუ გსურთ. ხოლო განსასაზღვრულ განცხადებებს ნახეთ, როდესაც გირჩევთ.\n\nგანცხადების გამოქვეყნების შემდეგ ის ავტომატურად ხდება ხელმისაწვდომი შემდეგი პლატფორმებზე:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>\n\n<b>დავიწყოთ!</b>\n\n"
+      },
+      "de": {
+        "title": "Kurze Vorstellung\n",
+        "text": "Hallo! Ich bin Denona AI, dein persönlicher Assistent, der dir helfen wird, Immobilienanzeigen auf verschiedenen Plattformen zu veröffentlichen, um deine Ziele zu erreichen.\n\nUm eine Anzeige zu veröffentlichen, übermittle mir einfach die Beschreibung und Fotos der Immobilie in diesem Chat.\n\nDu kannst die Anzeige jederzeit löschen, wenn du möchtest. Um eine Liste der veröffentlichten Anzeigen anzuzeigen, schreibe mir einfach, und ich werde dir eine vollständige Liste zur Verfügung stellen.\n\nNach der Veröffentlichung wird die Anzeige automatisch auf den folgenden Plattformen verfügbar:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>\n\n<b>Lass uns beginnen!</b>\n\n"
+      },
+      "en": {
+        "title": "Brief Introduction\n",
+        "text": "Hello! I am Denona AI, your personal assistant, here to help you post real estate ads on various platforms to achieve your goals.\n\nTo post an ad, simply share with me the description and photos of the property in this chat.\n\nYou can always delete the ad if you wish. And to view a list of published ads, just write to me, and I'll provide you with a full list.\n\nAfter publication, the ad automatically becomes available on the following platforms:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>\n\n<b>Let's get started!</b>\n\n"
+      },
+      "tr": {
+        "title": "Kısa Tanıtım\n",
+        "text": "Merhaba! Ben Denona AI, kişisel asistanın, hedeflerine ulaşmak için çeşitli platformlarda emlak ilanları yayınlaman konusunda sana yardımcı olacak.\n\nBir ilan yayınlamak için sadece bu sohbetteki mülkün açıklamasını ve fotoğraflarını bana iletebilirsin.\n\nİlanı istediğin zaman silebilirsin. Yayınlanan ilanların listesini görmek için bana yazman yeterli, ve sana tam bir liste sağlayacağım.\n\nYayınlamadan sonra ilan otomatik olarak aşağıdaki platformlarda kullanıma sunulur:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>\n\n<b>Hadi başlayalım!</b>\n\n"
+      }
+    }
+  },
+  {
+    "name": "noPublishedPropertyAd",
+    "body": {
+      "ru": {
+        "title": "У вас еще нет ни одного опубликованного объявления о недвижимости",
+        "text": "Вы можете прислать сюда описание и фотографии недвижимости и я опубликую на наших площадках."
+      },
+      "uk": {
+        "title": "У вас ще немає жодного опублікованого оголошення про нерухомість",
+        "text": "Ви можете вислати сюди опис та фотографії нерухомості, і я опублікую їх на наших платформах."
+      },
+      "ge": {
+        "title": "თქვენ ჯერ არ გაქვთ არაფერი დასადგენიანი უძრავი ქონების განცხადება",
+        "text": "შეგიძლიათ გამოაგზავნოთ აქ უძრავი ქონების აღწერა და ფოტოები, და მე მათ ვამატებ ჩემს პლატფორმებზე."
+      },
+      "de": {
+        "title": "Sie haben noch keine veröffentlichte Immobilienanzeige",
+        "text": "Sie können hier eine Beschreibung und Fotos der Immobilie senden, und ich werde sie auf unseren Plattformen veröffentlichen."
+      },
+      "en": {
+        "title": "You have not published any real estate ad yet",
+        "text": "You can send the description and photos of the property here, and I will publish them on our platforms."
+      },
+      "tr": {
+        "title": "Henüz yayınlanmış bir emlak ilanınız yok",
+        "text": "Emlak açıklamasını ve fotoğraflarını buraya gönderebilirsiniz, ve ben onları platformlarımızda yayınlarım."
+      }
+    }
+  },
+  {
+    "name": "processingPreviousMessage",
+    "body": {
+      "ru": {
+      "title": "Я нахожусь в процессе обработки предыдущего сообщения",
+      "text": "К сожалению, ваше последнее сообщение будет проигнорировано. Пожалуйста, дождитесь моего ответа и повторите последнее запрашиваемое действие."
+      },
+      "uk": {
+      "title": "Я в процесі обробки попереднього повідомлення",
+      "text": "На жаль, ваше останнє повідомлення буде проігноровано. Зачекайте мого відповіді і повторіть останню запитувану дію."
+      },
+      "ge": {
+      "title": "მე ვიმუშაობ წინა შეტყობინების დამუშავების პროცესში",
+      "text": "ბოდიშით, თქვენი ბოლო შეტყობინება გამოიყენებს. გთხოვთ, დაიცადოთ ჩემი პასუხი და გამოგეგოთ ბოლო მოთხოვნილი ქმედება."
+      },
+      "de": {
+      "title": "Ich bearbeite die vorherige Nachricht",
+      "text": "Leider wird Ihre letzte Nachricht ignoriert. Bitte warten Sie auf meine Antwort und wiederholen Sie die zuletzt angeforderte Aktion."
+      },
+      "en": {
+      "title": "I am processing the previous message",
+      "text": "Unfortunately, your last message will be ignored. Please wait for my response and repeat the last requested action."
+      },
+      "tr": {
+      "title": "Önceki Mesaj İşleniyor",
+      "text": "Üzgünüm, son mesajınız dikkate alınmayacak. Lütfen benim cevabımı bekleyin ve son istenen eylemi tekrarlayın."
+      }
+    }
+  },
+  {
+    "name": "successfulPublishingAdCancellation",
+    "body": {
+      "ru": {
+        "title": "Публикация объявления успешно отменена",
+        "text": "Я готов принять новые данные недвижимости для последующей публикации на следующих площадках:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+      },
+      "uk": {
+        "title": "Публікацію оголошення успішно скасовано",
+        "text": "Я готовий прийняти нові дані нерухомості для подальшої публікації на наступних площадках:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+      },
+      "ge": {
+        "title": "განცხადების გამოქვეყნება წარმატებით გაუქმდა",
+        "text": "მე მზად ვარ შევინახო ახალი უძრავი ქონების მონაცემები შემდეგ პლატფორმებზე გამოქვეყნებასთან:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+      },
+      "de": {
+        "title": "Anzeige erfolgreich storniert",
+        "text": "Ich bin bereit, neue Immobiliendaten zur späteren Veröffentlichung auf den folgenden Plattformen zu akzeptieren:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+      },
+      "en": {
+        "title": "Ad Successfully Canceled",
+        "text": "I am ready to accept new real estate data for subsequent publication on the following platforms:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+      },
+      "tr": {
+        "title": "İlan Başarıyla İptal Edildi",
+        "text": "Şimdi bu sohbete fotoğraf gönderebilir ve onları bu ilana ekleriz ve her şeyi birlikte yayınlarız veya fotoğrafsız ilanı yayınlayabilirsiniz!"
+      }
+    }
+  },
+  {
+    "name": "lastDataIgnored",
+    "body": {
+      "ru": {
+      "title": "Необходимо выбрать действие относительно публикации",
+      "text": "Я готов опубликовать ваше объявление, пожалуйста выберите действие по отношению публикации объявления и тогда я смогу продолжить процесс нашей коммуникации"
+      },
+      "uk": {
+      "title": "Необхідно вибрати дію стосовно публікації",
+      "text": "Я готовий опублікувати ваше оголошення, будь ласка, виберіть дію щодо публікації оголошення, і тоді я зможу продовжити процес нашої комунікації"
+      },
+      "ge": {
+      "title": "აუცილებლად არჩევა ქმედება შეფუთვების შესახებ",
+      "text": "მზად ვარ გამოვაქვეყოთ თქვენი განცხადება, გთხოვთ, აირჩიოთ ქმედება შეფუთვების შესახებ, და მაშინ მე შემიძლია გაგიგრძელოთ ჩვენი კომუნიკაციის პროცესი"
+      },
+      "de": {
+      "title": "Aktion zur Veröffentlichung auswählen",
+      "text": "Ich bin bereit, Ihre Anzeige zu veröffentlichen. Bitte wählen Sie eine Aktion in Bezug auf die Veröffentlichung der Anzeige aus, damit ich den Kommunikationsprozess fortsetzen kann."
+      },
+      "en": {
+      "title": "Choose Action for Publication",
+      "text": "I'm ready to publish your ad. Please choose an action regarding the publication of the ad, and then I can proceed with our communication process."
+      },
+      "tr": {
+      "title": "Yayın İçin Eylem Seçin",
+      "text": "İlanınızı yayınlamaya hazırım. Lütfen ilanın yayınlanmasıyla ilgili bir eylem seçin, sonra iletişim sürecimize devam edebilirim."
+      }
+    }
+  },
+  {
+    "name": "propertyListingExample",
+    "body": {
+      "ru": {
+        "title": "Пример формата текста для публикации\n",
+        "text": "1-комнатная квартира 30 м2, стандартная планировка на среднем этаже. (2/5). Тихий центр Киева. В пешей доступности исторический и деловой центр, новый рынок, магазины, школы, ВУЗы, музеи и театры. Квартира в простом жилом состоянии, готова под ваш текущий или капитальный ремонт. Фасадная! Ухоженная парадная, двор с возможностью парковки. Цена 26 000 у.е. Квартира готова к просмотру, чтобы вы уверенно приняли решение, мы покажем вам аналоги, звоните нам и оставляйте заявку на просмотр"
+      },
+      "uk": {
+        "title": "Приклад формату тексту для публікації\n",
+        "text": "1-кімнатна квартира 30 м2, стандартне планування на середньому поверсі. (2/5). Тихий центр Києва. В пішій доступності історичний і бізнес-центр, новий ринок, магазини, школи, ВНЗ, музеї і театри. Квартира в простому житловому стані, готова під ваш поточний або капітальний ремонт. Фасадна! Доглянута парадна, двір з можливістю парковки. Ціна 26 000 у.о. Квартира готова до перегляду, щоб ви впевнено прийняли рішення, ми покажемо вам аналоги, телефонуйте нам і залишайте заявку на перегляд"
+      },
+      "ge": {
+        "title": "სამაგიდო ტექსტის პუბლიკაციის ფორმატის მაგალითი\n",
+        "text": "1 ოთახიანი ბინა 30 მ2, სტანდარტული გეგმის მიხედვით საშუალო სარდაფის. (2/5). კახის სამხედრო. ისტორიული და ბიზნეს ცენტრი, ახალი ბაზარი, მაღაზიები, სკოლები, სასწორები, უნივერსიტეტები, მუზეები და თეატრები წარმოსადგომად. ბინა საბოლოო ცრემლში, მზიანი პარადნი, გარემო პარკინგის შესაძლებლობით. ფასი 26 000 ა.შ. ბინა მზადია ნახვარდებართვის, რომ დაგეხმაროთ გამოხვედრის შესამეხველად, ჩვენ გაგიჩნდებით ანალოგებს, ზარებეთ ჩვენ და დატოვეთ მოთხოვნა ნახვარდებართვის"
+      },
+      "de": {
+        "title": "Beispieltextformat für die Veröffentlichung\n",
+        "text": "1-Zimmer-Wohnung 30 m2, Standardlayout auf mittlerer Etage. (2/5). Ruhige Mitte von Berlin. In Gehweite zum historischen und Geschäftszentrum, zum neuen Markt, zu Geschäften, Schulen, Hochschulen, Museen und Theatern. Die Wohnung befindet sich in einem einfachen Wohnzustand und ist bereit für Ihre aktuelle oder grundlegende Renovierung. Fassade! Gepflegtes Treppenhaus, Hof mit Parkmöglichkeit. Preis 26.000 €. Die Wohnung ist zur Besichtigung bereit. Um eine fundierte Entscheidung zu treffen, zeigen wir Ihnen Vergleichsobjekte. Rufen Sie uns an und hinterlassen Sie eine Anfrage zur Besichtigung."
+      },
+      "en": {
+        "title": "Example Text Format for Publication\n",
+        "text": "1-bedroom apartment 30 m2, standard layout on a middle floor. (2/5). Quiet center of London. Within walking distance to the historical and business center, new market, shops, schools, universities, museums, and theaters. The apartment is in a simple residential condition, ready for your current or major renovation. Facade! Well-maintained entrance, courtyard with parking possibility. Price £26,000. The apartment is ready for viewing, and to help you make a confident decision, we will show you similar options. Call us and leave a viewing request."
+      },
+      "tr": {
+        "title": "Yayın için Metin Formatı Örneği\n",
+        "text": "1 yatak odalı daire 30 m2, orta katta standart düzen. (2/5). Londra'nın sakin merkezi. Tarihi ve iş merkezine, yeni pazara, mağazalara, okullara, üniversitelere, müzelere ve tiyatrolara yürüme mesafesinde. Daire basit bir konut durumunda, mevcut veya genel tadilatınıza hazır. Cephe! Bakımlı giriş, otopark imkanlı avlu. Fiyat 26.000 £. Daire izlemeye hazır, güvenli bir karar vermenize yardımcı olmak için size benzer seçenekleri göstereceğiz. Bize arayın ve izleme talebi bırakın."
+      }
+    }
+  },
+  {
+    "name": "benefitsOfDenonaCRM",
+    "body": {
+        "ru": {
+            "title": "Польза от использования Denona CRM",
+            "text": "- Хаотичное описание недвижимости преобразует в структурированный формат.\n\n- Быстрое извлечение данных из страницы сайта на котором уже размещена ваша публикация просто указав ссылку.\n\n- Автоматизированное публикация объявления на разных площадках по недвижимость в разных мессенджерах, таких как Facebook, Telegram, Viber, Whatsappа также на нашем сайте(пока не доступно).\n\n- Мгновенная коммуникация с покупателем через мессенджеры.\n\n- Возможность индивидуальной интеграции функционала Denona AI Search в ваш бизнес аккаунт в мессенджерах. Это позволит вам использовать алгоритмы ассистента Denona AI Search исключительно для консультации в рамках ваших публикации.\n\n В текущем тестовом варианте функционал ограниченный"
+        },
+        "uk": {
+            "title": "Користь від використання Denona CRM",
+            "text": "- Хаотичний опис нерухомості перетворює в структурований формат.\n\n- Швидке вилучення даних зі сторінки сайту, на якому вже розміщено вашу публікацію, просто вказавши посилання.\n\n- Автоматизована публікація оголошення на різних платформах з нерухомістю у різних месенджерах, таких як Facebook, Telegram, Viber, Whatsapp, а також на нашому сайті (поки що недоступно).\n\n- Миттєва комунікація з покупцем через месенджери.\n\n- Можливість індивідуальної інтеграції функціоналу Denona AI Search у ваш бізнес-аккаунт у месенджерах. Це дозволить вам використовувати алгоритми асистента Denona AI Search виключно для консультації в рамках ваших публікацій.\n\n У поточному тестовому варіанті функціонал обмежений"
+        },
+        "ge": {
+            "title": "Denona CRM-ის გამოყენების სანახავად",
+            "text": "- ახალგაზრდა უბრალოდ აღწერა უძლიერს სტრუქტურულ ფორმატში გადამყარების.\n\n- მონაცემთა სწორდარის სწორედ ბმულის მითითებით წაკითხვის სწორად ვაღწევს გვერდისათვის, სადაც უკვე განთავსებულია თქვენი პუბლიკაცია.\n\n- ავტომატიზირებული განცხადების გამოქვეყნება სხვადასხვა საჭიროების პლატფორმებზე მესენჯერებში, მაგრამის სახელებში, როგორიცაა Facebook, Telegram, Viber, Whatsapp, ასევე ჩვენი ვებგვერდი (ჯანმრთელობისას ჯარიმებში ჯარიმის კალკუ ლატორისათვის ჯარიმი ჯარიმის კალკულატორი არ არის ხელით ასაფრთხოებელი) (ჯანმრთელობისას ჯარიმებში ჯარიმის კალკულატორისათვის ჯარიმი ჯარიმის კალკულატორი არ არის ხელით ასაფრთხოებელი) (ჯანმრთელობისას ჯარიმებში ჯარიმის კალკულატორისათვის ჯარიმი ჯარიმის კალკულატორი არ არის ხელით ასაფრთხოებელი) (ჯანმრთელობისას ჯარიმებში ჯარიმის კალკულატორისათვის ჯარიმი ჯარიმის კალკულატორი არ არის ხელით ასაფრთხოებელი) (ჯანმრთელობისას ჯარიმებში ჯარიმის კალკულატორისათვის ჯარიმი ჯარიმის კალკულატორი არ არის ხელით ასაფრთხოებელი).\n\n- მომართვა კუპონის მეშვეობით პოტენციალური მყარადიანი შეიძლება შეარჩიოთ, როგორიცაა ფესტივალები, სასწორებლად გარდაიცვლება და გაიგება გარდაიცვლება."
+        },
+        "de": {
+            "title": "Nutzen der Nutzung von Denona CRM",
+            "text": "- Chaotische Immobilienbeschreibung wird in strukturiertes Format umgewandelt.\n\n- Schnelle Extraktion von Daten von der Website-Seite, auf der bereits Ihre Veröffentlichung platziert ist, einfach durch Angabe des Links.\n\n- Automatisierte Veröffentlichung von Anzeigen auf verschiedenen Immobilienplattformen in verschiedenen Messengern wie Facebook, Telegram, Viber, Whatsapp sowie auf unserer Website (derzeit nicht verfügbar).\n\n- Sofortige Kommunikation mit dem Käufer über Messenger.\n\n- Möglichkeit der individuellen Integration der Denona AI Search-Funktionalität in Ihr Geschäftskonto in Messengern. Dies ermöglicht es Ihnen, die Algorithmen des Assistenten Denona AI Search ausschließlich für Beratung im Rahmen Ihrer Veröffentlichungen zu verwenden.\n\n In der aktuellen Testversion ist die Funktionalität eingeschränkt"
+        },
+        "en": {
+            "title": "Benefits of Using Denona CRM",
+            "text": "- Chaotic real estate description is transformed into a structured format.\n\n- Quick extraction of data from the website page where your publication is already placed, simply by providing the link.\n\n- Automated publication of real estate ads on various platforms in different messengers such as Facebook, Telegram, Viber, Whatsapp, and also on our website (currently not available).\n\n- Instant communication with the buyer through messengers.\n\n- Possibility of individual integration of Denona AI Search functionality into your business account in messengers. This will allow you to use the algorithms of the Denona AI Search assistant exclusively for consultation within the scope of your publications.\n\n In the current test version, the functionality is limited"
+        },
+        "tr": {
+            "title": "Denona CRM Kullanmanın Faydaları",
+            "text": "- Kaotik emlak açıklaması yapılandırılmış bir formata dönüştürülüyor.\n\n- Yayınınızın zaten yer aldığı web sitesi sayfasından veri hızlı bir şekilde çıkartılır, sadece bağlantıyı sağlayarak.\n\n- Farklı mesajlaşma uygulamalarında, Facebook, Telegram, Viber, Whatsapp gibi, ve ayrıca kendi web sitemizde (şu anda kullanılamıyor) emlak ilanlarını otomatik olarak yayınlama.\n\n- Mesajlaşma uygulamaları aracılığıyla alıcı ile anında iletişim.\n\n- Mesajlaşma uygulamalarında Denona AI Search özelliklerini iş hesabınıza bireysel olarak entegre etme imkanı. Bu, Denona AI Search asistanının algoritmalarını yalnızca yayınlarınızın kapsamı dahilinde danışmanlık için kullanmanıza olanak tanır.\n\n Şu anki test sürümünde, işlevsellik sınırlıdır"
+        }
+    }
+  },
+ 
+  {
+    "name": "denonaAIBotInfo",
+    "body": {
+      "ru": {
+        "title": "Чатбот Denona AI",
+        "text": "Я в стадии разработки и тестирования, прошу вас не судить строго! Постараюсь максимально помочь вам при подборе недвижимости"
+      },
+      "uk": {
+        "title": "Чатбот Denona AI",
+        "text": "Я в стадии разработки и тестирования, прошу вас не судити строго! Постараюсь максимально допомогти вам при виборі нерухомості"
+      },
+      "ge": {
+        "title": "Denona AI ჩეთბოტი",
+        "text": "მე ვცდილობ გამოვიდე და ტესტვით, გთხოვ არ მგებობდები მართლმა! ცადებთ მაქსიმალურად გეხმაროთ მისიათა არჩევისას"
+      },
+      "de": {
+        "title": "Denona AI Bot",
+        "text": "Ich befinde mich in der Entwicklungs- und Testphase, bitte beurteilen Sie mich nicht streng! Ich werde mein Bestes tun, um Ihnen bei der Immobiliensuche zu helfen"
+      },
+      "en": {
+        "title": "Denona AI Bot",
+        "text": "I'm in the development and testing stage, please don't judge me harshly! I'll do my best to assist you in finding real estate"
+      },
+      "tr": {
+        "title": "Denona AI Bot",
+        "text": "Geliştirme ve test aşamasındayım, lütfen beni sert bir şekilde yargılamayın! Gayrimenkul seçiminde size maksimum yardımcı olmaya çalışacağım"
+      }
+    }
+  }
+  
+]
