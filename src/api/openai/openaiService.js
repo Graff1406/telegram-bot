@@ -6,7 +6,6 @@ const fs = require("fs");
 const fsP = require("fs/promises");
 
 const createAssistantAndThread = async (instruction, readFile = false) => {
-  console.log("🚀 readFile:", readFile);
   let fileIds = [];
 
   if (readFile) {
@@ -34,8 +33,9 @@ const createAssistantAndThread = async (instruction, readFile = false) => {
         type: readFile && fileIds.length > 0 ? "retrieval" : "code_interpreter",
       },
     ],
-    model: "gpt-4-1106-preview", // gpt-3.5-turbo-1106 , gpt-4-1106-preview
+    model: "gpt-4-0125-preview", // gpt-3.5-turbo-0125, gpt-3.5-turbo-1106 , gpt-4-1106-preview, gpt-4-0125-preview
     file_ids: fileIds,
+    // response_format: { type: "json_object" },
   });
 
   const thread = await openaiInstance.beta.threads.create();
@@ -43,18 +43,18 @@ const createAssistantAndThread = async (instruction, readFile = false) => {
   return { assistant, thread, fileIds };
 };
 
-async function generateText({ prompt = "", maxTokens = 1000, instruction }) {
+async function generateText({ chatState = [], maxTokens = 1000, instruction }) {
   if (!instruction) throw new Error("No instruction");
   try {
     const response = await openaiInstance.chat.completions.create({
-      model: "gpt-3.5-turbo-1106",
+      model: "gpt-3.5-turbo-0125",
       response_format: { type: "json_object" },
       messages: [
         {
           role: "system",
           content: instruction,
         },
-        ...prompt,
+        ...chatState,
       ],
       max_tokens: maxTokens,
     });
