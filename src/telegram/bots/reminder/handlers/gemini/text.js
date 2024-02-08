@@ -1,5 +1,6 @@
 const chat = require("../../chat");
 const geminiService = require("../../../../../api/gemini/geminiService");
+const sendMessageToViber = require("../../../../../modules/sendMessageToViber");
 
 const gTTS = require("gtts");
 const fs = require("fs");
@@ -109,6 +110,14 @@ module.exports = () => {
   };
 
   chat.on("text", async (msg) => {
+    // sendMessageToViber({
+    //   type: "picture",
+    //   text: "_Тип недвижимости:_ *Квартира*",
+    //   media:
+    //     "https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/76e32e4c-996d-4647-9f75-7dfd4c41059c/1920x",
+    // });
+    // return;
+
     const chatId = msg.chat.id;
     const userMessage = msg.text;
 

@@ -18,7 +18,7 @@ const publishAdToChannel = async ({
       const media = await getMediaBasedLinks(pictures);
       return await chat.sendMediaGroup(chatId, media);
     } else if (message) {
-      await chat.sendMessage(chatId, messageWithContact, {
+      return await chat.sendMessage(chatId, messageWithContact, {
         parse_mode: "HTML",
       });
     } else {

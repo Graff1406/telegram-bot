@@ -12,6 +12,7 @@ const getTranslation = require("../../../../../helpers/getTranslation");
 const filterAllowedTags = require("../../../../../helpers/filterAllowedTags");
 
 const instructions = require("../../../../../models/instructions");
+const sendMessageToViber = require("../../../../../modules/sendMessageToViber");
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -141,6 +142,7 @@ module.exports = () => {
       );
 
       const responseAssistant = await assistantInstance(userMessage);
+
       console.log(
         "🚀 ~ runConversation ~ responseAssistant:",
         responseAssistant
@@ -161,7 +163,7 @@ module.exports = () => {
 
       try {
         const data = JSON.parse(extractJsonSubstring(responseAssistant));
-        console.log(66666, data);
+        // console.log(66666, data);
 
         // const data = {
         //   text: "текстовый ответ",
@@ -174,6 +176,7 @@ module.exports = () => {
         //   property: {
         //     description:
         //       "<i>- Тип недвижимости:</i> <b>Квартира</b>\n<i>- Адрес:</i> <b>ул. Галицкая, Ивано-Франковск</b>\n<i>- Цена:</i> <b>59 000 $ (2 289 200 грн, 434 $ за м²)</b>\n<i>- Общая площадь:</i><b>136 м²</b><i>- Этаж:</i><b>5 из 6</b>\n<i>- Материал стен:</i> <b>Кирпич</b>\n<i>- Состояние:</i> <b>Вторичная недвижимость, 2-уровневая с ремонтом</b>\n<i>- Комиссионные:</i> <b>Без комиссионных</b>",
+        //     location: true,
         //   },
         //   list: false,
         // };
@@ -498,6 +501,12 @@ module.exports = () => {
         propertyPictureLinks[chatId] &&
         propertyDescription[chatId]
       ) {
+        await sendMessageToViber({
+          type: "picture",
+          text: propertyDescription[chatId],
+          media: propertyPictureLinks[chatId][0][2].link,
+        });
+
         await publishAdToChannel({
           chat,
           chatId: isDev
@@ -522,6 +531,11 @@ module.exports = () => {
         data === "publish_without_picture" &&
         propertyDescription[chatId]
       ) {
+        await sendMessageToViber({
+          type: "text",
+          text: propertyDescription[chatId],
+        });
+
         await publishAdToChannel({
           chat,
           chatId: isDev

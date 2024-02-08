@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const telegramCRMBot = require("./telegram/bots/crm/chat");
 const telegramSearchBot = require("./telegram/bots/search/chat");
 const telegramReminderBot = require("./telegram/bots/reminder/chat");
+const setViberWebhook = require("./modules/setViberWebhook");
 
 // Bots
 
@@ -22,6 +23,7 @@ const isDev = process.env.NODE_ENV === "development";
 const telegramCRMBotDir = "/telegram-crm-bot";
 const telegramSearchBotDir = "/telegram-search-bot";
 const telegramReminderBotDir = "/telegram-reminder-bot";
+const viberChannel = "/viber-channel";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -51,6 +53,12 @@ app.post(telegramReminderBotDir, (req, res) => {
   res.sendStatus(200);
 });
 
+app.post(viberChannel, (req, res) => {
+  const update = req.body;
+  // console.log("🚀 ~ app.post ~ update:", update);
+  res.sendStatus(200);
+});
+
 watchingTelegramCRMBot();
 
 watchingTelegramReminderBot();
@@ -59,12 +67,14 @@ watchingTelegramReminderBot();
 
 setInterval(pingServer, 270000); // 4,5 minutes
 
+const ngrok = "https://545f-185-6-123-223.ngrok-free.app";
+const prod = "https://telegram-bot-denona.onrender.com";
+
 app.listen(port, () => {
   console.log(`The server is running on the port ${port}`);
-});
 
-const ngrok = "https://da5c-185-6-123-223.ngrok-free.app";
-const prod = "https://telegram-bot-denona.onrender.com";
+  setViberWebhook(ngrok + viberChannel);
+});
 
 const telegramCRMBotUrl = isDev
   ? ngrok + telegramCRMBotDir
