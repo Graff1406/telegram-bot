@@ -116,6 +116,35 @@
     }
   },
   {
+    "name": "missingPropertyAddress",
+    "body": {
+      "ru": {
+        "title": "Отсутствует адрес недвижимости!",
+        "text": "Пожалуйста, укажите адрес (страна, город, улица, номер дома) недвижимости, чтобы я мог опубликовать объявление."
+      },
+      "uk": {
+        "title": "Відсутня адреса нерухомості!",
+        "text": "Будь ласка, вкажіть адресу (країна, місто, вулиця, номер будинку) нерухомості, щоб я міг опублікувати оголошення."
+      },
+      "ge": {
+        "title": "უარყოფითია უძრავის მისამართი!",
+        "text": "გთხოვთ, მიუთითოთ უძრავის მისამართი (ქვეყანა, ქალაქი, ქუჩა, სახლის ნომერი), რათა მე შემიძლიათ გამოვაქვეყნო განცხადება."
+      },
+      "de": {
+        "title": "Keine Immobilienadresse angegeben!",
+        "text": "Bitte geben Sie die Adresse (Land, Stadt, Straße, Hausnummer) der Immobilie an, damit ich die Anzeige veröffentlichen kann."
+      },
+      "en": {
+        "title": "Missing Property Address!",
+        "text": "Please specify the address (country, city, street, house number) of the property so that I can publish the ad."
+      },
+      "tr": {
+        "title": "Emlak Adresi Belirtilmemiş!",
+        "text": "Lütfen gayrimenkulün adresini (ülke, şehir, sokak, ev numarası) belirtin, böylece ilanı yayınlayabilirim."
+      }
+    }
+  },
+  {
     "name": "publishActionButton",
     "body": {
         "ru": {
@@ -294,27 +323,27 @@
     "body": {
       "ru": {
         "title": "Объявление успешно опубликовано\n",
-        "text": "Чтобы увидеть опубликованное объявление, посетите следующие ссылки:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+        "text": "Чтобы увидеть опубликованное объявление, посетите следующие ссылки:\n\n{links}"
       },
       "uk": {
         "title": "Оголошення успішно опубліковано\n",
-        "text": "Щоб переглянути опубліковане оголошення, відвідайте наступні посилання:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+        "text": "Щоб переглянути опубліковане оголошення, відвідайте наступні посилання:\n\n{links}"
       },
       "ge": {
         "title": "განცხადება წარმატებით გამოქვეყნებულია\n",
-        "text": "განცხადების ნახვისას, გთხოვთ, შეეკეთეთ შემდეგი ბმულები:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+        "text": "განცხადების ნახვისას, გთხოვთ, შეეკეთეთ შემდეგი ბმულები:\n\n{links}"
       },
       "de": {
         "title": "Anzeige erfolgreich veröffentlicht\n",
-        "text": "Um die veröffentlichte Anzeige zu sehen, besuchen Sie bitte die folgenden Links:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+        "text": "Um die veröffentlichte Anzeige zu sehen, besuchen Sie bitte die folgenden Links:\n\n{links}"
       },
       "en": {
         "title": "Ad Successfully Published\n",
-        "text": "To view the published ad, please visit the following links:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+        "text": "To view the published ad, please visit the following links:\n\n{links}"
       },
       "tr": {
         "title": "İlan Başarıyla Yayınlandı\n",
-        "text": "Yayınlanan ilanı görmek için lütfen aşağıdaki bağlantılara gidin:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+        "text": "Yayınlanan ilanı görmek için lütfen aşağıdaki bağlantılara gidin:\n\n{links}"
       }
     }
   }
@@ -585,27 +614,27 @@
     "body": {
       "ru": {
         "title": "Краткое знакомство\n",
-        "text": "Привет! Я, Denona AI, твой личный ассистент, помогу тебе разместить объявление о недвижимости на различных площадках для достижения твоих целей.\n\nЧтобы опубликовать объявление, просто передай мне описание и фотографии недвижимости в этом чате.\n\nТы всегда можешь удалить объявление, если захочешь. А чтобы посмотреть список опубликованных объявлений, просто напиши мне, и я предоставлю тебе полный список.\n\nПосле публикации объявление автоматически становится доступным на следующих площадках:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>\n\n<b>Давайте начнем!</b>\n\n"
+        "text": "Привет! Я, Denona AI, твой личный ассистент, помогу тебе разместить объявление о недвижимости на различных площадках для достижения твоих целей.\n\nЧтобы опубликовать объявление, просто передай мне описание и фотографии недвижимости в этом чате.\n\nТы всегда можешь удалить объявление, если захочешь. А чтобы посмотреть список опубликованных объявлений, просто напиши мне, и я предоставлю тебе полный список.\n\nПосле публикации объявление автоматически становится доступным на следующих площадках:\n\n{links}"
       },
       "uk": {
         "title": "Коротке знайомство\n",
-        "text": "Привіт! Я, Denona AI, твій особистий асистент, допоможу тобі розмістити оголошення про нерухомість на різних платформах для досягнення твоїх цілей.\n\nЩоб опублікувати оголошення, просто передай мені опис і фотографії нерухомості в цьому чаті.\n\nТи завжди можеш видалити оголошення, якщо захочеш. А щоб переглянути список опублікованих оголошень, просто напиши мені, і я надам тобі повний список.\n\nПісля публікації оголошення автоматично стає доступним на наступних платформах:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>\n\n<b>Давайте почнемо!</b>\n\n"
+        "text": "Привіт! Я, Denona AI, твій особистий асистент, допоможу тобі розмістити оголошення про нерухомість на різних платформах для досягнення твоїх цілей.\n\nЩоб опублікувати оголошення, просто передай мені опис і фотографії нерухомості в цьому чаті.\n\nТи завжди можеш видалити оголошення, якщо захочеш. А щоб переглянути список опублікованих оголошень, просто напиши мені, і я надам тобі повний список.\n\nПісля публікації оголошення автоматично стає доступним на наступних платформах:\n\n{links}"
       },
       "ge": {
         "title": "მოკლე შეხვედრა\n",
-        "text": "გამარჯობა! მე, Denona AI, შენი პირადი ასისტენტი, დაგეხმარებათ განათლება უძლურების შესასრულელებელი დასაფოსტაცია.\n\nრომ გამოაქვეყნოთ განცხადება, მხოლოდ გადაუტვირთეთ მოკლე აღწერა და ფოტოები ამ ჩათში.\n\nთუ გსურთ, შეგიძლიათ წაშალოთ განცხადება, თუ გსურთ. ხოლო განსასაზღვრულ განცხადებებს ნახეთ, როდესაც გირჩევთ.\n\nგანცხადების გამოქვეყნების შემდეგ ის ავტომატურად ხდება ხელმისაწვდომი შემდეგი პლატფორმებზე:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>\n\n<b>დავიწყოთ!</b>\n\n"
+        "text": "გამარჯობა! მე, Denona AI, შენი პირადი ასისტენტი, დაგეხმარებათ განათლება უძლურების შესასრულელებელი დასაფოსტაცია.\n\nრომ გამოაქვეყნოთ განცხადება, მხოლოდ გადაუტვირთეთ მოკლე აღწერა და ფოტოები ამ ჩათში.\n\nთუ გსურთ, შეგიძლიათ წაშალოთ განცხადება, თუ გსურთ. ხოლო განსასაზღვრულ განცხადებებს ნახეთ, როდესაც გირჩევთ.\n\nგანცხადების გამოქვეყნების შემდეგ ის ავტომატურად ხდება ხელმისაწვდომი შემდეგი პლატფორმებზე:\n\n{links}"
       },
       "de": {
         "title": "Kurze Vorstellung\n",
-        "text": "Hallo! Ich bin Denona AI, dein persönlicher Assistent, der dir helfen wird, Immobilienanzeigen auf verschiedenen Plattformen zu veröffentlichen, um deine Ziele zu erreichen.\n\nUm eine Anzeige zu veröffentlichen, übermittle mir einfach die Beschreibung und Fotos der Immobilie in diesem Chat.\n\nDu kannst die Anzeige jederzeit löschen, wenn du möchtest. Um eine Liste der veröffentlichten Anzeigen anzuzeigen, schreibe mir einfach, und ich werde dir eine vollständige Liste zur Verfügung stellen.\n\nNach der Veröffentlichung wird die Anzeige automatisch auf den folgenden Plattformen verfügbar:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>\n\n<b>Lass uns beginnen!</b>\n\n"
+        "text": "Hallo! Ich bin Denona AI, dein persönlicher Assistent, der dir helfen wird, Immobilienanzeigen auf verschiedenen Plattformen zu veröffentlichen, um deine Ziele zu erreichen.\n\nUm eine Anzeige zu veröffentlichen, übermittle mir einfach die Beschreibung und Fotos der Immobilie in diesem Chat.\n\nDu kannst die Anzeige jederzeit löschen, wenn du möchtest. Um eine Liste der veröffentlichten Anzeigen anzuzeigen, schreibe mir einfach, und ich werde dir eine vollständige Liste zur Verfügung stellen.\n\nNach der Veröffentlichung wird die Anzeige automatisch auf den folgenden Plattformen verfügbar:\n\n{links}"
       },
       "en": {
         "title": "Brief Introduction\n",
-        "text": "Hello! I am Denona AI, your personal assistant, here to help you post real estate ads on various platforms to achieve your goals.\n\nTo post an ad, simply share with me the description and photos of the property in this chat.\n\nYou can always delete the ad if you wish. And to view a list of published ads, just write to me, and I'll provide you with a full list.\n\nAfter publication, the ad automatically becomes available on the following platforms:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>\n\n<b>Let's get started!</b>\n\n"
+        "text": "Hello! I am Denona AI, your personal assistant, here to help you post real estate ads on various platforms to achieve your goals.\n\nTo post an ad, simply share with me the description and photos of the property in this chat.\n\nYou can always delete the ad if you wish. And to view a list of published ads, just write to me, and I'll provide you with a full list.\n\nAfter publication, the ad automatically becomes available on the following platforms:\n\n{links}"
       },
       "tr": {
         "title": "Kısa Tanıtım\n",
-        "text": "Merhaba! Ben Denona AI, kişisel asistanın, hedeflerine ulaşmak için çeşitli platformlarda emlak ilanları yayınlaman konusunda sana yardımcı olacak.\n\nBir ilan yayınlamak için sadece bu sohbetteki mülkün açıklamasını ve fotoğraflarını bana iletebilirsin.\n\nİlanı istediğin zaman silebilirsin. Yayınlanan ilanların listesini görmek için bana yazman yeterli, ve sana tam bir liste sağlayacağım.\n\nYayınlamadan sonra ilan otomatik olarak aşağıdaki platformlarda kullanıma sunulur:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>\n\n<b>Hadi başlayalım!</b>\n\n"
+        "text": "Merhaba! Ben Denona AI, kişisel asistanın, hedeflerine ulaşmak için çeşitli platformlarda emlak ilanları yayınlaman konusunda sana yardımcı olacak.\n\nBir ilan yayınlamak için sadece bu sohbetteki mülkün açıklamasını ve fotoğraflarını bana iletebilirsin.\n\nİlanı istediğin zaman silebilirsin. Yayınlanan ilanların listesini görmek için bana yazman yeterli, ve sana tam bir liste sağlayacağım.\n\nYayınlamadan sonra ilan otomatik olarak aşağıdaki platformlarda kullanıma sunulur:\n\n{links}"
       }
     }
   },
@@ -672,23 +701,23 @@
     "body": {
       "ru": {
         "title": "Публикация объявления успешно отменена",
-        "text": "Я готов принять новые данные недвижимости для последующей публикации на следующих площадках:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+        "text": "Я готов принять новые данные недвижимости для последующей публикации на следующих площадках:\n\n{links}"
       },
       "uk": {
         "title": "Публікацію оголошення успішно скасовано",
-        "text": "Я готовий прийняти нові дані нерухомості для подальшої публікації на наступних площадках:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+        "text": "Я готовий прийняти нові дані нерухомості для подальшої публікації на наступних площадках:\n\n{links}"
       },
       "ge": {
         "title": "განცხადების გამოქვეყნება წარმატებით გაუქმდა",
-        "text": "მე მზად ვარ შევინახო ახალი უძრავი ქონების მონაცემები შემდეგ პლატფორმებზე გამოქვეყნებასთან:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+        "text": "მე მზად ვარ შევინახო ახალი უძრავი ქონების მონაცემები შემდეგ პლატფორმებზე გამოქვეყნებასთან:\n\n{links}"
       },
       "de": {
         "title": "Anzeige erfolgreich storniert",
-        "text": "Ich bin bereit, neue Immobiliendaten zur späteren Veröffentlichung auf den folgenden Plattformen zu akzeptieren:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+        "text": "Ich bin bereit, neue Immobiliendaten zur späteren Veröffentlichung auf den folgenden Plattformen zu akzeptieren:\n\n{links}"
       },
       "en": {
         "title": "Ad Successfully Canceled",
-        "text": "I am ready to accept new real estate data for subsequent publication on the following platforms:\n\n<a href=\"https://t.me/denoname_bot\">Denona AI Apartments Search</a>\n<a href=\"https://t.me/denona_real_estate\">Denona Apartments Channel</a>"
+        "text": "I am ready to accept new real estate data for subsequent publication on the following platforms:\n\n{links}"
       },
       "tr": {
         "title": "İlan Başarıyla İptal Edildi",

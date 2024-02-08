@@ -16,7 +16,17 @@ const getTranslation = async (languageCode) => {
 
     // Iterate through each entry and extract the translation for the specified language
     translationEntries.forEach((entry) => {
-      const translation = entry.body[languageCode] || entry.body["en"];
+      let translation = entry.body[languageCode] || entry.body["en"];
+
+      // Replace {links} placeholder with actual links
+      translation = {
+        ...translation,
+        text: translation.text.replace(
+          /\{links\}/g,
+          "[Telegram - Denona AI Search](https://t.me/denoname_bot)\n[Telegram - Real State Channel](https://t.me/denona_real_estate)\n[Viber - Real State Channel](https://invite.viber.com/?g2=AQB5%2BBdfLYNcTVJh6%2FTEZgDJoDre8kePwPMUfs1j%2FjtAAUe4lr892SoFDv2BE32A)"
+        ),
+      };
+
       translations[entry.name] = translation;
     });
 

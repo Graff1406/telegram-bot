@@ -17,9 +17,9 @@ module.exports = () => {
     lastUserMessage = userMessage;
     chat.sendMessage(
       chatId,
-      `<b>${translation.retryPreviousAction.title}</b>\n${translation.retryPreviousAction.text}`,
+      `*${translation.retryPreviousAction.title}*\n${translation.retryPreviousAction.text}`,
       {
-        parse_mode: "HTML",
+        parse_mode: "Markdown",
         reply_markup: {
           inline_keyboard: [
             [
@@ -66,8 +66,8 @@ module.exports = () => {
     if (msg.text.toLowerCase() === "/start") {
       chat.sendMessage(
         chatId,
-        `<b>${translation.denonaAIBotInfo.title}</b>\n${translation.denonaAIBotInfo.text}`,
-        { parse_mode: "HTML" }
+        `*${translation.denonaAIBotInfo.title}*\n${translation.denonaAIBotInfo.text}`,
+        { parse_mode: "Markdown" }
       );
       return;
     }

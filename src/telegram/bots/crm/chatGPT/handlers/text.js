@@ -1,6 +1,7 @@
 const chat = require("../../chat");
 
 const openService = require("../../../../../api/openai/openaiService");
+const geminiService = require("../../../../../api/gemini/geminiService");
 
 const extractJsonSubstring = require("../../../../../helpers/extractJsonSubstring");
 const updateProperty = require("../../../../../helpers/updateProperty");
@@ -97,13 +98,33 @@ module.exports = () => {
     }
   };
 
+  // const sendTelegramMessage = async ({id, title, text, options}) => {
+  //   await chat.sendMessage(
+  //     id,
+  //     `*${title}*\n${text}`,
+  //     {
+  //       parse_mode: 'Markdown',
+  //       reply_markup: {
+  //         inline_keyboard: [
+  //           [
+  //             {
+  //               text: translation.repeatLastActionButton.title,
+  //               callback_data: "repeat_last_action",
+  //             },
+  //           ],
+  //         ],
+  //       },
+  //     }
+  //   );
+  // }
+
   const sendMessageWithRepeat = (chatId, userMessage) => {
     lastUserMessage = userMessage;
     chat.sendMessage(
       chatId,
-      `<b>${translation.retryPreviousAction.title}</b>\n${translation.retryPreviousAction.text}`,
+      `*${translation.retryPreviousAction.title}*\n${translation.retryPreviousAction.text}`,
       {
-        parse_mode: "HTML",
+        parse_mode: "Markdown",
         reply_markup: {
           inline_keyboard: [
             [
@@ -124,7 +145,7 @@ module.exports = () => {
   //   await chat.sendMediaGroup(chatId, media);
 
   //   chat.sendMessage(chatId, message, {
-  //     parse_mode: "HTML",
+  //     parse_mode: "Markdown",
   //   });
   // };
 
@@ -136,17 +157,17 @@ module.exports = () => {
     }, 20000);
 
     try {
-      const assistantInstance = await getAssistantAIByChatID(
-        chatId,
-        agent.language_code
-      );
+      // const assistantInstance = await getAssistantAIByChatID(
+      //   chatId,
+      //   agent.language_code
+      // );
 
-      const responseAssistant = await assistantInstance(userMessage);
+      // const responseAssistant = await assistantInstance(userMessage);
 
-      console.log(
-        "🚀 ~ runConversation ~ responseAssistant:",
-        responseAssistant
-      );
+      // console.log(
+      //   "🚀 ~ runConversation ~ responseAssistant:",
+      //   responseAssistant
+      // );
 
       // await new Promise((resolve, reject) => {
       //   // Используем setTimeout для имитации задержки в 15 секунд
@@ -162,7 +183,7 @@ module.exports = () => {
       clearTimeout(runConversationTimeoutId);
 
       try {
-        const data = JSON.parse(extractJsonSubstring(responseAssistant));
+        // const data = JSON.parse(extractJsonSubstring(responseAssistant));
         // console.log(66666, data);
 
         // const data = {
@@ -171,15 +192,15 @@ module.exports = () => {
         //   list: true,
         // };
 
-        // const data = {
-        //   text: "текстовый ответ",
-        //   property: {
-        //     description:
-        //       "<i>- Тип недвижимости:</i> <b>Квартира</b>\n<i>- Адрес:</i> <b>ул. Галицкая, Ивано-Франковск</b>\n<i>- Цена:</i> <b>59 000 $ (2 289 200 грн, 434 $ за м²)</b>\n<i>- Общая площадь:</i><b>136 м²</b><i>- Этаж:</i><b>5 из 6</b>\n<i>- Материал стен:</i> <b>Кирпич</b>\n<i>- Состояние:</i> <b>Вторичная недвижимость, 2-уровневая с ремонтом</b>\n<i>- Комиссионные:</i> <b>Без комиссионных</b>",
-        //     location: true,
-        //   },
-        //   list: false,
-        // };
+        const data = {
+          text: "текстовый ответ",
+          property: {
+            description:
+              "_Тип недвижимости:_ *Квартира*\n\n_Адрес:_ *ул. Галицкая, Ивано-Франковск*\n\n_Цена:_ *59 000 $ (2 289 200 грн, 434 $ за м²)*\n\n_Общая площадь:_*136 м²*_Этаж:_*5 из 6*\n\n_Материал стен:_ *Кирпич*\n\n_Состояние:_ *Вторичная недвижимость, 2-уровневая с ремонтом*\n\n_Комиссионные:_ *Без комиссионных*",
+            location: false,
+          },
+          list: false,
+        };
 
         if (data === null) {
           chat.sendMessage(chatId, responseAssistant);
@@ -210,9 +231,9 @@ module.exports = () => {
 
             chat.sendMessage(
               chatId,
-              `<b>${translation.adReadyForPublishing.title}</b>\n${translation.adReadyForPublishing.text}`,
+              `*${translation.adReadyForPublishing.title}*\n${translation.adReadyForPublishing.text}`,
               {
-                parse_mode: "HTML",
+                parse_mode: "Markdown",
                 reply_markup: {
                   inline_keyboard: [
                     [
@@ -237,7 +258,7 @@ module.exports = () => {
             adReadyForPublishingWithoutPictures = true;
 
             await chat.sendMessage(chatId, propertyDescription[chatId], {
-              parse_mode: "HTML",
+              parse_mode: "Markdown",
               reply_markup: {
                 inline_keyboard: [
                   [
@@ -256,9 +277,23 @@ module.exports = () => {
 
             chat.sendMessage(
               chatId,
-              `<b>${translation.warningNoPhotosAd.title}</b>\n${translation.warningNoPhotosAd.text}`,
-              { parse_mode: "HTML" }
+              `*${translation.warningNoPhotosAd.title}*\n${translation.warningNoPhotosAd.text}`,
+              { parse_mode: "Markdown" }
             );
+          } else if (
+            (propertyDescription[chatId] &&
+              propertyPictureLinks[chatId] &&
+              !data.property.location) ||
+            (propertyDescription[chatId] &&
+              !propertyPictureLinks[chatId] &&
+              !data.property.location)
+          ) {
+            chat.sendMessage(
+              chatId,
+              `*${translation.missingPropertyAddress.title}*\n${translation.missingPropertyAddress.text}`,
+              { parse_mode: "Markdown" }
+            );
+            return;
           }
         } else if (data && data.list) {
           const items = await extractItems();
@@ -282,7 +317,7 @@ module.exports = () => {
               }
 
               await chat.sendMessage(chatId, property.description, {
-                parse_mode: "HTML",
+                parse_mode: "Markdown",
                 reply_markup: {
                   inline_keyboard: [
                     [
@@ -298,14 +333,14 @@ module.exports = () => {
           } else {
             chat.sendMessage(
               chatId,
-              `<b>${translation.noPublishedPropertyAd.title}</b>\n${translation.noPublishedPropertyAd.text}`,
-              { parse_mode: "HTML" }
+              `*${translation.noPublishedPropertyAd.title}*\n${translation.noPublishedPropertyAd.text}`,
+              { parse_mode: "Markdown" }
             );
           }
         }
 
         if (data.text) {
-          chat.sendMessage(chatId, data.text, { parse_mode: "HTML" });
+          chat.sendMessage(chatId, data.text, { parse_mode: "Markdown" });
         }
       } catch (error) {
         clearTimeout(runConversationTimeoutId);
@@ -326,25 +361,41 @@ module.exports = () => {
 
     translation = await getTranslation(msg.from.language_code);
 
+    // const responseAssistant = await geminiService.generateChatText({
+    //   userMessage,
+    //   instructions: `Ты Должен генерировать ответ на языке которому соответствует это код: "${msg.from.language_code}".\n${instructions.crm}`,
+    // });
+
+    // const data = JSON.parse(responseAssistant);
+
+    // chat.sendMessage(chatId, data.text, { parse_mode: "Markdown" });
+
+    // console.log(
+    //   "🚀 ~ runConversation ~ responseAssistant:",
+    //   data,
+    //   responseAssistant
+    // );
+    // return;
+
     if (chatId === +process.env.TELEGRAM_GROUP_DENONA_APARTMENT_ID) return;
 
     if (msg.text.toLowerCase() === "/start") {
       await chat.sendMessage(
         chatId,
-        `<b>${translation.introduction.title}</b>\n${translation.introduction.text}`,
-        { parse_mode: "HTML" }
+        `*${translation.introduction.title}*\n${translation.introduction.text}`,
+        { parse_mode: "Markdown" }
       );
 
       await chat.sendMessage(
         chatId,
-        `<b>${translation.benefitsOfDenonaCRM.title}</b>\n${translation.benefitsOfDenonaCRM.text}`,
-        { parse_mode: "HTML" }
+        `*${translation.benefitsOfDenonaCRM.title}*\n${translation.benefitsOfDenonaCRM.text}`,
+        { parse_mode: "Markdown" }
       );
 
       chat.sendMessage(
         chatId,
-        `<b>${translation.propertyListingExample.title}</b>\n${translation.propertyListingExample.text}`,
-        { parse_mode: "HTML" }
+        `*${translation.propertyListingExample.title}*\n${translation.propertyListingExample.text}`,
+        { parse_mode: "Markdown" }
       );
       return;
     }
@@ -352,8 +403,8 @@ module.exports = () => {
     if (status === "inProgress") {
       chat.sendMessage(
         chatId,
-        `<b>${translation.processingPreviousMessage.title}</b>\n${translation.processingPreviousMessage.text}`,
-        { parse_mode: "HTML" }
+        `*${translation.processingPreviousMessage.title}*\n${translation.processingPreviousMessage.text}`,
+        { parse_mode: "Markdown" }
       );
       clearTimeout(runConversationTimeoutId);
       return;
@@ -365,8 +416,8 @@ module.exports = () => {
     ) {
       chat.sendMessage(
         chatId,
-        `<b>${translation.lastDataIgnored.title}</b>\n${translation.lastDataIgnored.text}`,
-        { parse_mode: "HTML" }
+        `*${translation.lastDataIgnored.title}*\n${translation.lastDataIgnored.text}`,
+        { parse_mode: "Markdown" }
       );
       return;
     }
@@ -389,8 +440,8 @@ module.exports = () => {
     if (status === "inProgress") {
       chat.sendMessage(
         chatId,
-        `<b>${translation.processingPreviousMessage.title}</b>\n${translation.processingPreviousMessage.text}`,
-        { parse_mode: "HTML" }
+        `*${translation.processingPreviousMessage.title}*\n${translation.processingPreviousMessage.text}`,
+        { parse_mode: "Markdown" }
       );
       clearTimeout(runConversationTimeoutId);
       return;
@@ -399,8 +450,8 @@ module.exports = () => {
     if (adReadyForPublishingWithPictures) {
       chat.sendMessage(
         chatId,
-        `<b>${translation.lastDataIgnored.title}</b>\n${translation.lastDataIgnored.text}`,
-        { parse_mode: "HTML" }
+        `*${translation.lastDataIgnored.title}*\n${translation.lastDataIgnored.text}`,
+        { parse_mode: "Markdown" }
       );
       return;
     }
@@ -448,9 +499,9 @@ module.exports = () => {
 
         chat.sendMessage(
           chatId,
-          `<b>${translation.adReadyForPublishing.title}</b>\n${translation.adReadyForPublishing.text}`,
+          `*${translation.adReadyForPublishing.title}*\n${translation.adReadyForPublishing.text}`,
           {
-            parse_mode: "HTML",
+            parse_mode: "Markdown",
             reply_markup: {
               inline_keyboard: [
                 [
@@ -470,8 +521,8 @@ module.exports = () => {
       } else {
         chat.sendMessage(
           chatId,
-          `<b>${translation.propertyWithoutDescription.title}</b>\n${translation.propertyWithoutDescription.text}`,
-          { parse_mode: "HTML" }
+          `*${translation.propertyWithoutDescription.title}*\n${translation.propertyWithoutDescription.text}`,
+          { parse_mode: "Markdown" }
         );
       }
     }, timeout);
@@ -488,8 +539,8 @@ module.exports = () => {
     const publishedMessage = () => {
       chat.sendMessage(
         chatId,
-        `<b>${translation.adSuccessfullyPublished.title}</b>\n${translation.adSuccessfullyPublished.text}`,
-        { parse_mode: "HTML" }
+        `*${translation.adSuccessfullyPublished.title}*\n${translation.adSuccessfullyPublished.text}`,
+        { parse_mode: "Markdown" }
       );
 
       clear();
@@ -563,9 +614,9 @@ module.exports = () => {
       } else if (data === "publish_ad_cancel") {
         chat.sendMessage(
           chatId,
-          `<b>${translation.successfulPublishingAdCancellation.title}</b>\n${translation.successfulPublishingAdCancellation.text}`,
+          `*${translation.successfulPublishingAdCancellation.title}*\n${translation.successfulPublishingAdCancellation.text}`,
           {
-            parse_mode: "HTML",
+            parse_mode: "Markdown",
           }
         );
         clear();
@@ -576,25 +627,25 @@ module.exports = () => {
 
         chat.sendMessage(
           chatId,
-          `<b>${translation.propertyDescriptionUpdate.title}</b>\n${translation.propertyDescriptionUpdate.text}`,
-          { parse_mode: "HTML" }
+          `*${translation.propertyDescriptionUpdate.title}*\n${translation.propertyDescriptionUpdate.text}`,
+          { parse_mode: "Markdown" }
         );
       } else if (data.startsWith("update_picture")) {
         const [action, propertyId] = data.split(":");
         defineAction(chatId, propertyId, action);
         chat.sendMessage(
           chatId,
-          `<b>${translation.readyToReceivePropertyPhotos.title}</b>\n${translation.readyToReceivePropertyPhotos.text}`,
-          { parse_mode: "HTML" }
+          `*${translation.readyToReceivePropertyPhotos.title}*\n${translation.readyToReceivePropertyPhotos.text}`,
+          { parse_mode: "Markdown" }
         );
       } else if (data.startsWith("delete")) {
         const propertyId = data.split(":")[1];
         defineAction(chatId, propertyId, "delete");
         chat.sendMessage(
           chatId,
-          `<b>${translation.deleteSelectedAd.title}</b>\n${translation.deleteSelectedAd.text}`,
+          `*${translation.deleteSelectedAd.title}*\n${translation.deleteSelectedAd.text}`,
           {
-            parse_mode: "HTML",
+            parse_mode: "Markdown",
             reply_markup: {
               inline_keyboard: [
                 [
@@ -614,15 +665,15 @@ module.exports = () => {
       } else if (data === "permit_cancel") {
         chat.sendMessage(
           chatId,
-          `<b>${translation.deletionAdCanceled.title}</b>\n`,
-          { parse_mode: "HTML" }
+          `*${translation.deletionAdCanceled.title}*\n`,
+          { parse_mode: "Markdown" }
         );
       } else if (data === "permit_delete") {
         removePropertyById(query.from.id, action[chatId].propertyID);
         chat.sendMessage(
           chatId,
-          `<b>${translation.announcementAdDeletionSuccess.title}</b>\n`,
-          { parse_mode: "HTML" }
+          `*${translation.announcementAdDeletionSuccess.title}*\n`,
+          { parse_mode: "Markdown" }
         );
       } else if (data === "repeat_last_action") {
         if (lastUserMessage) {

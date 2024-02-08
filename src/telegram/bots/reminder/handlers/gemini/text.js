@@ -1,5 +1,6 @@
 const chat = require("../../chat");
 const geminiService = require("../../../../../api/gemini/geminiService");
+const instructions = require("../../../../../models/instructions");
 const sendMessageToViber = require("../../../../../modules/sendMessageToViber");
 
 const gTTS = require("gtts");
@@ -69,6 +70,7 @@ module.exports = () => {
 
     const res = await geminiService.generateChatText({
       userMessage,
+      instructions: instructions.coach,
     });
 
     clearTimeout(settimeoutID);
@@ -112,7 +114,7 @@ module.exports = () => {
   chat.on("text", async (msg) => {
     // sendMessageToViber({
     //   type: "picture",
-    //   text: "_Тип недвижимости:_ *Квартира*",
+    //   text: "Click [+380979061991](https://t.me/denona_ai) to view the picture. ",
     //   media:
     //     "https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/76e32e4c-996d-4647-9f75-7dfd4c41059c/1920x",
     // });

@@ -8,7 +8,7 @@ const publishAdToChannel = async ({
   pictures,
   translation,
 }) => {
-  const messageWithContact = `${message}\n\n<a href="https://t.me/${agentNickname}"><b>${translation.contactInfo.title}</b></a>`;
+  const messageWithContact = `${message}\n\n[${translation.contactInfo.title}](https://t.me/${agentNickname})`;
   try {
     console.log(5555, messageWithContact);
     if (Array.isArray(pictures) && message) {
@@ -19,7 +19,7 @@ const publishAdToChannel = async ({
       return await chat.sendMediaGroup(chatId, media);
     } else if (message) {
       return await chat.sendMessage(chatId, messageWithContact, {
-        parse_mode: "HTML",
+        parse_mode: "Markdown",
       });
     } else {
       throw new Error(

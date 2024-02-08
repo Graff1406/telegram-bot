@@ -32,7 +32,7 @@ const getMediaBasedLinks = async (
         type: "photo",
         media: photoBuffer,
         caption: i <= addCaptionToIndex ? caption : "",
-        parse_mode: i <= addCaptionToIndex ? "HTML" : "",
+        parse_mode: i <= addCaptionToIndex ? "Markdown" : "",
       };
     })
   );
