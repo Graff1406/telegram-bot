@@ -7,6 +7,7 @@ const extractJsonSubstring = require("../../../../../helpers/extractJsonSubstrin
 const publishAdToChannel = require("../../../../../helpers/publishAdToChannel");
 const extractItems = require("../../../../../helpers/extractItems");
 const filterAllowedTags = require("../../../../../helpers/filterAllowedTags");
+const watchUser = require("../../../../../modules/watchUser");
 
 module.exports = () => {
   const assistants = {};
@@ -60,6 +61,7 @@ module.exports = () => {
     // const properties = agents.map((agent) => agent.properties).flat();
     // console.log("🚀 ~ chat.on ~ items:", agents);
     // return;
+    watchUser({ chat, name: msg.from.username, message: userMessage });
 
     translation = await getTranslation(msg.from.language_code);
 
@@ -138,7 +140,11 @@ module.exports = () => {
 
       try {
         const jsonData = extractJsonSubstring(responseAssistant);
+
+        watchUser({ chat, name: msg.from.username, message: jsonData });
+
         console.log(333, jsonData);
+
         const data = JSON.parse(jsonData);
         console.log(441144, data);
 
@@ -198,12 +204,18 @@ module.exports = () => {
         clearTimeout(timeoutId);
         console.error(error);
         sendMessageWithRepeat(chatId, userMessage);
+        watchUser({
+          chat,
+          name: msg.from.username,
+          message: error.message,
+        });
       }
     } catch (error) {
       lastUserMessage = userMessage;
       clearTimeout(timeoutId);
       console.error(error);
       sendMessageWithRepeat(chatId, userMessage);
+      watchUser({ chat, name: msg.from.username, message: error.message });
     }
   });
 };

@@ -14,6 +14,7 @@ const filterAllowedTags = require("../../../../../helpers/filterAllowedTags");
 
 const instructions = require("../../../../../models/instructions");
 const sendMessageToViber = require("../../../../../modules/sendMessageToViber");
+const watchUser = require("../../../../../modules/watchUser");
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -157,12 +158,12 @@ module.exports = () => {
     }, 20000);
 
     try {
-      // const assistantInstance = await getAssistantAIByChatID(
-      //   chatId,
-      //   agent.language_code
-      // );
+      const assistantInstance = await getAssistantAIByChatID(
+        chatId,
+        agent.language_code
+      );
 
-      // const responseAssistant = await assistantInstance(userMessage);
+      const responseAssistant = await assistantInstance(userMessage);
 
       // console.log(
       //   "🚀 ~ runConversation ~ responseAssistant:",
@@ -182,8 +183,11 @@ module.exports = () => {
 
       clearTimeout(runConversationTimeoutId);
 
+      watchUser({ chat, name: agent.username, message: responseAssistant });
+
       try {
-        // const data = JSON.parse(extractJsonSubstring(responseAssistant));
+        const data = JSON.parse(extractJsonSubstring(responseAssistant));
+
         // console.log(66666, data);
 
         // const data = {
@@ -192,15 +196,15 @@ module.exports = () => {
         //   list: true,
         // };
 
-        const data = {
-          text: "текстовый ответ",
-          property: {
-            description:
-              "_Тип недвижимости:_ *Квартира*\n\n_Адрес:_ *ул. Галицкая, Ивано-Франковск*\n\n_Цена:_ *59 000 $ (2 289 200 грн, 434 $ за м²)*\n\n_Общая площадь:_*136 м²*_Этаж:_*5 из 6*\n\n_Материал стен:_ *Кирпич*\n\n_Состояние:_ *Вторичная недвижимость, 2-уровневая с ремонтом*\n\n_Комиссионные:_ *Без комиссионных*",
-            location: false,
-          },
-          list: false,
-        };
+        // const data = {
+        //   text: "текстовый ответ",
+        //   property: {
+        //     description:
+        //       "_Тип недвижимости:_ *Квартира*\n\n_Адрес:_ *ул. Галицкая, Ивано-Франковск*\n\n_Цена:_ *59 000 $ (2 289 200 грн, 434 $ за м²)*\n\n_Общая площадь:_*136 м²*_Этаж:_*5 из 6*\n\n_Материал стен:_ *Кирпич*\n\n_Состояние:_ *Вторичная недвижимость, 2-уровневая с ремонтом*\n\n_Комиссионные:_ *Без комиссионных*",
+        //     location: false,
+        //   },
+        //   list: false,
+        // };
 
         if (data === null) {
           chat.sendMessage(chatId, responseAssistant);
@@ -347,17 +351,21 @@ module.exports = () => {
         console.log("Response Assistant have not include JSON:", error.message);
 
         sendMessageWithRepeat(chatId, userMessage);
+        watchUser({ chat, name: agent.username, message: error.message });
       }
     } catch (error) {
       clearTimeout(runConversationTimeoutId);
       console.error("Error getting assistant AI:", error);
       sendMessageWithRepeat(chatId, userMessage);
+      watchUser({ chat, name: agent.username, message: error.message });
     }
   };
 
   chat.on("text", async (msg) => {
     const chatId = msg.chat.id;
     const userMessage = msg.text;
+
+    watchUser({ chat, name: msg.from.username, message: userMessage });
 
     translation = await getTranslation(msg.from.language_code);
 
@@ -430,6 +438,13 @@ module.exports = () => {
     const caption = msg.caption;
     const photos = msg.photo;
     const startDownload = Date.now();
+
+    watchUser({
+      chat,
+      photo: photos,
+      name: msg.from.username,
+      message: caption,
+    });
 
     if (timeoutId) clearTimeout(timeoutId);
 

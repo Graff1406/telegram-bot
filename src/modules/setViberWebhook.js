@@ -11,7 +11,8 @@ const setViberWebhook = async (webhookUrl) => {
       auth_token: viberAuthToken,
     });
 
-    console.log("Webhook set:", response.data);
+    // console.log("Webhook set:", response.data);
+    return response.data;
   } catch (error) {
     console.error("Error setting webhook:", error.response.data);
   }

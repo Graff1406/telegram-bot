@@ -24,6 +24,7 @@ const telegramCRMBotDir = "/telegram-crm-bot";
 const telegramSearchBotDir = "/telegram-search-bot";
 const telegramReminderBotDir = "/telegram-reminder-bot";
 const viberChannel = "/viber-channel";
+const facebookDenonaPage = "/facebook-denona-page";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -57,6 +58,21 @@ app.post(viberChannel, (req, res) => {
   const update = req.body;
   // console.log("🚀 ~ app.post ~ update:", update);
   res.sendStatus(200);
+});
+
+app.get(facebookDenonaPage, (req, res) => {
+  const mode = req.query["hub.mode"];
+  const challenge = req.query["hub.challenge"];
+  const token = req.query["hub.verify_token"];
+
+  if (mode && token) {
+    if (mode === "subscribe" && token === "facebookDenonaPage") {
+      console.log("Webhook подтвержден");
+      res.status(200).send(challenge);
+    } else {
+      res.sendStatus(403);
+    }
+  }
 });
 
 watchingTelegramCRMBot();
