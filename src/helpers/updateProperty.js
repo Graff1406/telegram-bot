@@ -10,8 +10,10 @@ const updateProperty = async ({
   agentID,
   propertyID,
   description,
+  agentFirstName,
   agentNickname,
   agentLanguageCode,
+  agentPhoneNumbers,
   sourceID = "telegramAgentID",
   sourceNickname = "telegramNickname",
   propertyFileName = "properties",
@@ -91,8 +93,24 @@ const updateProperty = async ({
 
     if (existingAgent) {
       // Update the agentNickname if it has changed
-      if (existingAgent.agentNickname !== agentNickname) {
-        existingAgent.agentNickname = agentNickname;
+      if (existingAgent.telegramNickname !== agentNickname) {
+        existingAgent.telegramNickname = agentNickname;
+      }
+
+      if (existingAgent.firstName !== agentFirstName) {
+        existingAgent.firstName = agentFirstName;
+      }
+
+      function arraysEqual(arr1, arr2) {
+        if (arr1.length !== arr2.length) return false;
+        for (let i = 0; i < arr1.length; i++) {
+          if (arr1[i] !== arr2[i]) return false;
+        }
+        return true;
+      }
+
+      if (!arraysEqual(existingAgent.phoneNumbers, agentPhoneNumbers)) {
+        existingAgent.phoneNumbers = agentPhoneNumbers;
       }
     } else {
       // If the agent ID doesn't exist, create a new item with the provided ID and add the new agent
@@ -101,6 +119,8 @@ const updateProperty = async ({
         [sourceID]: agentID,
         [sourceNickname]: agentNickname,
         languageCode: agentLanguageCode,
+        phoneNumbers: agentPhoneNumbers,
+        firstName: agentFirstName,
       };
 
       existingAgentData.push(newAgent);

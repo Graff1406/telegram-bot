@@ -19,6 +19,8 @@ const watchUser = require("../../../../../modules/watchUser");
 const isDev = process.env.NODE_ENV === "development";
 
 module.exports = () => {
+  let agents;
+  let currentAgent = {};
   let status = "completed";
   let runConversationTimeoutId;
   let timeoutId;
@@ -74,6 +76,8 @@ module.exports = () => {
     agentID,
     agentNickname,
     agentLanguageCode,
+    agentPhoneNumbers,
+    agentFirstName,
     description,
     pictures,
   }) => {
@@ -81,6 +85,8 @@ module.exports = () => {
       const property = await updateProperty({
         agentNickname,
         agentLanguageCode,
+        agentPhoneNumbers,
+        agentFirstName,
         agentID,
         description,
       });
@@ -151,24 +157,38 @@ module.exports = () => {
   // };
 
   const runConversation = async (chatId, userMessage, agent) => {
+    // console.log(888888, agent);
     status = "inProgress";
 
     runConversationTimeoutId = setTimeout(() => {
       chat.sendMessage(chatId, translation.waitingForResponse.text);
     }, 20000);
 
+    if (!agents) {
+      const items = await extractItems();
+      // console.log("🚀 ~ runConversation ~ items:", items);
+
+      const item = items.find((item) => item.telegramAgentID === agent.id);
+
+      if (item) currentAgent = item;
+      // console.log("🚀 ~ runConversation ~ currentAgent:", currentAgent);
+    }
+
     try {
-      const assistantInstance = await getAssistantAIByChatID(
-        chatId,
-        agent.language_code
-      );
-
-      const responseAssistant = await assistantInstance(userMessage);
-
-      // console.log(
-      //   "🚀 ~ runConversation ~ responseAssistant:",
-      //   responseAssistant
+      // const assistantInstance = await getAssistantAIByChatID(
+      //   chatId,
+      //   agent.language_code
       // );
+
+      // const responseAssistant = await assistantInstance(userMessage);
+
+      const responseAssistant = await geminiService.generateChatText({
+        userMessage,
+        instructions: instructions.crm,
+      });
+
+      console.log(1111, responseAssistant);
+      // return;
 
       // await new Promise((resolve, reject) => {
       //   // Используем setTimeout для имитации задержки в 15 секунд
@@ -183,10 +203,11 @@ module.exports = () => {
 
       clearTimeout(runConversationTimeoutId);
 
-      watchUser({ chat, name: agent.username, message: responseAssistant });
+      // watchUser({ chat, name: agent.username, message: responseAssistant });
 
       try {
         const data = JSON.parse(extractJsonSubstring(responseAssistant));
+        console.log("🚀 currentAgent", currentAgent);
 
         // console.log(66666, data);
 
@@ -201,7 +222,7 @@ module.exports = () => {
         //   property: {
         //     description:
         //       "_Тип недвижимости:_ *Квартира*\n\n_Адрес:_ *ул. Галицкая, Ивано-Франковск*\n\n_Цена:_ *59 000 $ (2 289 200 грн, 434 $ за м²)*\n\n_Общая площадь:_*136 м²*_Этаж:_*5 из 6*\n\n_Материал стен:_ *Кирпич*\n\n_Состояние:_ *Вторичная недвижимость, 2-уровневая с ремонтом*\n\n_Комиссионные:_ *Без комиссионных*",
-        //     location: false,
+        //     location: true,
         //   },
         //   list: false,
         // };
@@ -220,16 +241,34 @@ module.exports = () => {
             data.property.description
           );
 
-          console.log(
-            77777,
-            propertyDescription[chatId],
-            filterAllowedTags(data.property.description)
-          );
+          // console.log(
+          //   77777,
+          //   propertyDescription[chatId],
+          //   filterAllowedTags(data.property.description)
+          // );
+
+          currentAgent.phoneNumbers =
+            data && data.phoneNumbers && data.phoneNumbers.length > 0
+              ? data.phoneNumbers
+              : currentAgent &&
+                currentAgent.phoneNumbers &&
+                currentAgent.phoneNumbers.length > 0
+              ? currentAgent.phoneNumbers
+              : [];
+
+          currentAgent.telegramNickname = agent.username
+            ? agent.username
+            : typeof currentAgent.telegramNickname === "string" &&
+              currentAgent.telegramNickname.length > 0
+            ? currentAgent.telegramNickname
+            : "";
 
           if (
             propertyDescription[chatId] &&
             propertyPictureLinks[chatId] &&
-            data.property.location
+            data.property.location &&
+            currentAgent.phoneNumbers.length > 0 &&
+            currentAgent.telegramNickname.length > 0
           ) {
             adReadyForPublishingWithPictures = true;
 
@@ -257,7 +296,9 @@ module.exports = () => {
           } else if (
             propertyDescription[chatId] &&
             !propertyPictureLinks[chatId] &&
-            data.property.location
+            data.property.location &&
+            currentAgent.phoneNumbers.length > 0 &&
+            currentAgent.telegramNickname.length > 0
           ) {
             adReadyForPublishingWithoutPictures = true;
 
@@ -298,12 +339,48 @@ module.exports = () => {
               { parse_mode: "Markdown" }
             );
             return;
+          } else if (
+            (propertyDescription[chatId] &&
+              propertyPictureLinks[chatId] &&
+              currentAgent.phoneNumbers.length === 0) ||
+            (propertyDescription[chatId] &&
+              !propertyPictureLinks[chatId] &&
+              currentAgent.phoneNumbers.length === 0)
+          ) {
+            chat.sendMessage(
+              chatId,
+              `*${translation.missingPhoneNumber.title}*\n${translation.missingPhoneNumber.text}`,
+              { parse_mode: "Markdown" }
+            );
+            return;
+          } else if (
+            (propertyDescription[chatId] &&
+              propertyPictureLinks[chatId] &&
+              currentAgent.telegramNickname.length === 0) ||
+            (propertyDescription[chatId] &&
+              !propertyPictureLinks[chatId] &&
+              currentAgent.telegramNickname.length === 0)
+          ) {
+            chat.sendMessage(
+              chatId,
+              `*${translation.warningNoTelegramLink.title}*\n${translation.warningNoTelegramLink.text}`,
+              {
+                parse_mode: "Markdown",
+                reply_markup: {
+                  inline_keyboard: [
+                    [
+                      {
+                        text: translation.confirmationCreation.title,
+                        callback_data: "repeat_last_action",
+                      },
+                    ],
+                  ],
+                },
+              }
+            );
+            return;
           }
         } else if (data && data.list) {
-          const items = await extractItems();
-          const currentAgent = items.find(
-            (item) => item.telegramAgentID === agent.id
-          );
           const properties = currentAgent ? currentAgent.properties : [];
 
           if (properties.length) {
@@ -548,9 +625,11 @@ module.exports = () => {
     const data = query.data;
     const agentID = query.from.id;
     const agentNickname = query.from.username;
-    console.log("🚀 ~ chat.on ~ agentNickname:", agentNickname);
+    const agentFirstName = query.from.first_name;
     const agentLanguageCode = query.from.language_code;
-
+    const agentPhoneNumbers = currentAgent
+      ? currentAgent.phoneNumbers
+      : undefined;
     const publishedMessage = () => {
       chat.sendMessage(
         chatId,
@@ -567,11 +646,16 @@ module.exports = () => {
         propertyPictureLinks[chatId] &&
         propertyDescription[chatId]
       ) {
-        await sendMessageToViber({
-          type: "picture",
-          text: propertyDescription[chatId],
-          media: propertyPictureLinks[chatId][0][2].link,
-        });
+        await sendMessageToViber(
+          {
+            type: "picture",
+            text: propertyDescription[chatId],
+            media: propertyPictureLinks[chatId][0][2].link,
+            agentPhoneNumbers,
+            agentFirstName,
+          },
+          translation
+        );
 
         await publishAdToChannel({
           chat,
@@ -581,15 +665,18 @@ module.exports = () => {
           message: propertyDescription[chatId],
           pictures: propertyPictureLinks[chatId],
           agentNickname,
+          agentPhoneNumbers,
           translation,
         });
-
+        console.log(656565, currentAgent);
         await addDataProperty({
           agentID,
           agentNickname,
           agentLanguageCode,
+          agentPhoneNumbers,
           description: propertyDescription[chatId],
           pictures: propertyPictureLinks[chatId],
+          agentFirstName,
         });
 
         publishedMessage();
@@ -597,10 +684,15 @@ module.exports = () => {
         data === "publish_without_picture" &&
         propertyDescription[chatId]
       ) {
-        await sendMessageToViber({
-          type: "text",
-          text: propertyDescription[chatId],
-        });
+        await sendMessageToViber(
+          {
+            type: "text",
+            text: propertyDescription[chatId],
+            agentPhoneNumbers,
+            agentFirstName,
+          },
+          translation
+        );
 
         await publishAdToChannel({
           chat,
@@ -609,6 +701,7 @@ module.exports = () => {
             : process.env.TELEGRAM_CHANNEL_DENONA_REAL_ESTATE_ID,
           message: propertyDescription[chatId],
           agentNickname,
+          agentPhoneNumbers,
           pictures:
             Array.isArray(propertyPictureLinks[chatId]) &&
             propertyPictureLinks[chatId].length
@@ -623,10 +716,15 @@ module.exports = () => {
           agentLanguageCode,
           description: propertyDescription[chatId],
           pictures: propertyPictureLinks[chatId],
+          agentFirstName,
+          agentPhoneNumbers: currentAgent
+            ? currentAgent.phoneNumbers
+            : undefined,
         });
 
         publishedMessage();
       } else if (data === "publish_ad_cancel") {
+        console.log(656565, currentAgent);
         chat.sendMessage(
           chatId,
           `*${translation.successfulPublishingAdCancellation.title}*\n${translation.successfulPublishingAdCancellation.text}`,

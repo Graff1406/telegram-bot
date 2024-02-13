@@ -144,6 +144,124 @@
       }
     }
   },
+  { 
+    "name": "missingPhoneNumber",
+    "body": {
+      "ru": {
+        "title": "Отсутствует номер телефона!",
+        "text": "Пожалуйста, пришлите мне ваш номер телефона, чтобы я мог разместить в объявлении."
+      },
+      "uk": {
+        "title": "Відсутній номер телефону!",
+        "text": "Будь ласка, надішліть мені ваш номер телефону, щоб я міг розмістити в оголошенні."
+      },
+      "ge": {
+        "title": "ტელეფონის ნომერი არ არის!",
+        "text": "გთხოვთ, გამომიგზავნეთ თქვენი ტელეფონის ნომერი, რომ შევიძლო განათავსო განცხადებაში."
+      },
+      "de": {
+        "title": "Telefonnummer fehlt!",
+        "text": "Bitte senden Sie mir Ihre Telefonnummer, damit ich sie in der Anzeige platzieren kann."
+      },
+      "en": {
+        "title": "Missing Phone Number!",
+        "text": "Please send me your phone number so I can include it in the advertisement."
+      },
+      "tr": {
+        "title": "Telefon numarası eksik!",
+        "text": "Lütfen reklamda yer alması için telefon numaranızı gönderin."
+      }
+    }
+  },
+  
+  {
+    "name": "writeToTelegram",
+    "body": {
+      "ru": {
+        "title": "Написать в Telegram",
+        "text": ""
+      },
+      "uk": {
+        "title": "Написати в Telegram",
+        "text": ""
+      },
+      "ge": {
+        "title": "დაწერეთ Telegram-ში",
+        "text": ""
+      },
+      "de": {
+        "title": "Schreiben Sie an Telegram",
+        "text": ""
+      },
+      "en": {
+        "title": "Write to Telegram",
+        "text": ""
+      },
+      "tr": {
+        "title": "Telegram'a Yazın",
+        "text": ""
+      }
+    }
+  },
+  {
+    "name": "confirmationCreation",
+    "body": {
+      "ru": {
+        "title": "Подтверждаю создание",
+        "text": ""
+      },
+      "uk": {
+        "title": "Підтверджую створення",
+        "text": ""
+      },
+      "ge": {
+        "title": "შევქმნის დადება",
+        "text": ""
+      },
+      "de": {
+        "title": "Bestätigung der Erstellung",
+        "text": ""
+      },
+      "en": {
+        "title": "Confirmation of Creation",
+        "text": ""
+      },
+      "tr": {
+        "title": "Yaratılış Onayı",
+        "text": ""
+      }
+    }
+},
+  {
+    "name": "warningNoTelegramLink",
+    "body": {
+      "ru": {
+        "title": "Отсутствует ссылка на ваш Telegram аккаунт",
+        "text": "Ссылка на ваш Telegram аккаунт даст возможность потенциальным покупателям напрямую написать вам в Telegram.\n\n*Как создать ссылку на свой Telegram?*\nНастройки-->Имя пользователя.\n\nПосле создания сообщите мне об успешном создании.\n\n*Предупреждение!*\nПосле публикации объявления если вы измените имя пользователя в таком случае указанное имя пользователя в объявлении *станет недействительным*"
+      },
+      "uk": {
+        "title": "Відсутня посилання на ваш Telegram аккаунт",
+        "text": "Посилання на ваш Telegram аккаунт дозволить потенційним покупцям безпосередньо написати вам в Telegram.\n\n*Як створити посилання на свій Telegram?*\nНалаштування-->Ім'я користувача.\n\nПісля створення повідомте мені про успішне створення.\n\n*Попередження!*\nПісля публікації оголошення, якщо ви зміните ім'я користувача, в такому випадку зазначене ім'я користувача в оголошенні *стане недійсним*"
+      },
+      "ge": {
+        "title": "თქვენს Telegram ანგარიშზე ბმული არ არის",
+        "text": "ბმული თქვენს Telegram ანგარიშზე გაძლევს პოტენციურ ყიდვამ თქვენს Telegram-ში გამომგზავნებას.\n\n*როგორ შეიქმნას ბმული თქვენს Telegram-ზე?*\nპარამეტრები-->მომხმარებლის სახელი.\n\nშექმნის შემდეგ გამოიგზავნეთ ჩემსკენ შესახებ შექმნის წარადგენის წარმოების შესახებ.\n\n*გაფრთხილება!*\nგამოყენების შემდეგ, როცა თქვენ შეცვლით მომხმარებლის სახელს, ასეთ შემთხვევაში განსხვავებული სახელი გამოიყენება *დაუწყებელია*"
+      },
+      "de": {
+        "title": "Kein Link zu Ihrem Telegram-Konto vorhanden",
+        "text": "Ein Link zu Ihrem Telegram-Konto ermöglicht es potenziellen Käufern, Ihnen direkt in Telegram zu schreiben.\n\n*Wie erstelle ich einen Link zu meinem Telegram-Konto?*\nEinstellungen-->Benutzername.\n\nNach dem Erstellen informieren Sie mich über die erfolgreiche Erstellung.\n\n*Warnung!*\nNach der Veröffentlichung der Anzeige, wenn Sie Ihren Benutzernamen ändern, wird dieser Benutzername in der Anzeige *ungültig*"
+      },
+      "en": {
+        "title": "No Link to Your Telegram Account",
+        "text": "A link to your Telegram account will allow potential buyers to message you directly on Telegram.\n\n*How to create a link to your Telegram?*\nSettings-->Username.\n\nAfter creating, please inform me of the successful creation.\n\n*Warning!*\nAfter publishing the ad, if you change your username, the specified username in the ad will become *invalid*"
+      },
+      "tr": {
+        "title": "Telegram Hesabınıza Bağlantı Yok",
+        "text": "Telegram hesabınıza bir bağlantı, potansiyel alıcıların size doğrudan Telegram üzerinden mesaj göndermesini sağlar.\n\n*Telegram bağlantısı nasıl oluşturulur?*\nAyarlar-->Kullanıcı Adı.\n\nOluşturduktan sonra başarılı oluşturmayı bana bildirin.\n\n*Uyarı!*\nİlanı yayınladıktan sonra kullanıcı adınızı değiştirirseniz, ilandaki belirtilen kullanıcı adı *geçersiz* hale gelir"
+      }
+    }
+  },
+  
   {
     "name": "publishActionButton",
     "body": {
