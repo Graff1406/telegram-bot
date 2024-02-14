@@ -19,32 +19,62 @@ const watchUser = require("../../../../../modules/watchUser");
 const isDev = process.env.NODE_ENV === "development";
 
 module.exports = () => {
-  let agents;
-  let currentAgent = {};
-  let status = "completed";
-  let runConversationTimeoutId;
-  let timeoutId;
-  let timeout = 1000;
-  let collectedPictures = false;
-  let propertyDescription = {};
-  let propertyPictureLinks = {};
+  let data = {};
   let translation = {};
-  let lastUserMessage = null;
-  let adReadyForPublishingWithPictures = false;
-  let adReadyForPublishingWithoutPictures = false;
+  let assistants = {};
+  let agents;
 
-  const assistants = {};
-  const action = {};
+  const USER_DATA_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours
 
-  const clear = () => {
-    propertyDescription = {};
-    propertyPictureLinks = {};
-    adReadyForPublishingWithPictures = false;
-    adReadyForPublishingWithoutPictures = false;
+  const clearInactiveUserData = () => {
+    const currentTime = Date.now();
+    for (const chatId in data) {
+      const userData = data[chatId];
+      if (currentTime - userData.lastInteractionTime > USER_DATA_TIMEOUT) {
+        delete data[chatId];
+      }
+    }
+  };
+
+  const updateLastInteractionTime = (chatId) => {
+    if (data[chatId]) {
+      data[chatId].lastInteractionTime = Date.now();
+    }
+  };
+
+  setInterval(clearInactiveUserData, USER_DATA_TIMEOUT);
+
+  const setInitData = (payload = {}) => {
+    return {
+      propertyDescription: "",
+      propertyPictureLinks: [],
+      adReadyForPublishingWithPictures: false,
+      adReadyForPublishingWithoutPictures: false,
+      lastUserMessage: null,
+      action: {},
+      status: "completed",
+      runConversationTimeoutId: null,
+      currentAgent: {},
+      countCurrentlyDownloadedPictures: 0,
+      ...payload,
+    };
+  };
+
+  const getUserData = (chatId) => {
+    if (!data[chatId]) {
+      data[chatId] = setInitData();
+    }
+    return data[chatId];
+  };
+
+  const clearUserData = (chatId) => {
+    data[chatId] = setInitData();
   };
 
   const defineAction = (chatId, propertyID, type) => {
-    action[chatId] = {
+    const userData = getUserData(chatId);
+
+    userData.action = {
       propertyID,
       type,
     };
@@ -126,7 +156,8 @@ module.exports = () => {
   // }
 
   const sendMessageWithRepeat = (chatId, userMessage) => {
-    lastUserMessage = userMessage;
+    const userData = getUserData(chatId);
+    userData.lastUserMessage = userMessage;
     chat.sendMessage(
       chatId,
       `*${translation.retryPreviousAction.title}*\n${translation.retryPreviousAction.text}`,
@@ -147,7 +178,7 @@ module.exports = () => {
   };
 
   // const publishOnGroup = async (chatId, message) => {
-  //   const media = await getMediaBasedLinks(propertyPictureLinks[chatId]);
+  //   const media = await getMediaBasedLinks(userData.propertyPictureLinks);
 
   //   await chat.sendMediaGroup(chatId, media);
 
@@ -158,9 +189,11 @@ module.exports = () => {
 
   const runConversation = async (chatId, userMessage, agent) => {
     // console.log(888888, agent);
-    status = "inProgress";
+    const userData = getUserData(chatId);
 
-    runConversationTimeoutId = setTimeout(() => {
+    userData.status = "inProgress";
+
+    userData.runConversationTimeoutId = setTimeout(() => {
       chat.sendMessage(chatId, translation.waitingForResponse.text);
     }, 20000);
 
@@ -170,8 +203,8 @@ module.exports = () => {
 
       const item = items.find((item) => item.telegramAgentID === agent.id);
 
-      if (item) currentAgent = item;
-      // console.log("🚀 ~ runConversation ~ currentAgent:", currentAgent);
+      if (item) userData.currentAgent = item;
+      // console.log("🚀 ~ runConversation ~ currentAgent:", userData.currentAgent);
     }
 
     try {
@@ -195,19 +228,18 @@ module.exports = () => {
       //   setTimeout(() => {
       //     // После задержки, успешно выполняем промис
       //     resolve("Прошло 15 секунд!");
-      //     status = "completed";
+      //     userData.status = "completed";
       //   }, 5000);
       // });
 
-      status = "completed";
+      userData.status = "completed";
 
-      clearTimeout(runConversationTimeoutId);
+      clearTimeout(userData.runConversationTimeoutId);
 
       // watchUser({ chat, name: agent.username, message: responseAssistant });
 
       try {
         const data = JSON.parse(extractJsonSubstring(responseAssistant));
-        console.log("🚀 currentAgent", currentAgent);
 
         // console.log(66666, data);
 
@@ -237,40 +269,40 @@ module.exports = () => {
           typeof data.property.description === "string" &&
           data.property.description.length > 0
         ) {
-          propertyDescription[chatId] = filterAllowedTags(
+          userData.propertyDescription = filterAllowedTags(
             data.property.description
           );
 
           // console.log(
           //   77777,
-          //   propertyDescription[chatId],
+          //   userData.propertyDescription,
           //   filterAllowedTags(data.property.description)
           // );
 
-          currentAgent.phoneNumbers =
+          userData.currentAgent.phoneNumbers =
             data && data.phoneNumbers && data.phoneNumbers.length > 0
               ? data.phoneNumbers
-              : currentAgent &&
-                currentAgent.phoneNumbers &&
-                currentAgent.phoneNumbers.length > 0
-              ? currentAgent.phoneNumbers
+              : userData.currentAgent &&
+                userData.currentAgent.phoneNumbers &&
+                userData.currentAgent.phoneNumbers.length > 0
+              ? userData.currentAgent.phoneNumbers
               : [];
 
-          currentAgent.telegramNickname = agent.username
+          userData.currentAgent.telegramNickname = agent.username
             ? agent.username
-            : typeof currentAgent.telegramNickname === "string" &&
-              currentAgent.telegramNickname.length > 0
-            ? currentAgent.telegramNickname
+            : typeof userData.currentAgent.telegramNickname === "string" &&
+              userData.currentAgent.telegramNickname.length > 0
+            ? userData.currentAgent.telegramNickname
             : "";
 
           if (
-            propertyDescription[chatId] &&
-            propertyPictureLinks[chatId] &&
+            userData.propertyDescription.length > 0 &&
+            userData.propertyPictureLinks.length > 0 &&
             data.property.location &&
-            currentAgent.phoneNumbers.length > 0 &&
-            currentAgent.telegramNickname.length > 0
+            userData.currentAgent.phoneNumbers.length > 0 &&
+            userData.currentAgent.telegramNickname.length > 0
           ) {
-            adReadyForPublishingWithPictures = true;
+            userData.adReadyForPublishingWithPictures = true;
 
             chat.sendMessage(
               chatId,
@@ -294,15 +326,15 @@ module.exports = () => {
               }
             );
           } else if (
-            propertyDescription[chatId] &&
-            !propertyPictureLinks[chatId] &&
+            userData.propertyDescription.length > 0 &&
+            userData.propertyPictureLinks.length === 0 &&
             data.property.location &&
-            currentAgent.phoneNumbers.length > 0 &&
-            currentAgent.telegramNickname.length > 0
+            userData.currentAgent.phoneNumbers.length > 0 &&
+            userData.currentAgent.telegramNickname.length > 0
           ) {
-            adReadyForPublishingWithoutPictures = true;
+            userData.adReadyForPublishingWithoutPictures = true;
 
-            await chat.sendMessage(chatId, propertyDescription[chatId], {
+            await chat.sendMessage(chatId, userData.propertyDescription, {
               parse_mode: "Markdown",
               reply_markup: {
                 inline_keyboard: [
@@ -326,11 +358,11 @@ module.exports = () => {
               { parse_mode: "Markdown" }
             );
           } else if (
-            (propertyDescription[chatId] &&
-              propertyPictureLinks[chatId] &&
+            (userData.propertyDescription.length > 0 &&
+              userData.propertyPictureLinks.length > 0 &&
               !data.property.location) ||
-            (propertyDescription[chatId] &&
-              !propertyPictureLinks[chatId] &&
+            (userData.propertyDescription.length > 0 &&
+              userData.propertyPictureLinks.length === 0 &&
               !data.property.location)
           ) {
             chat.sendMessage(
@@ -340,12 +372,12 @@ module.exports = () => {
             );
             return;
           } else if (
-            (propertyDescription[chatId] &&
-              propertyPictureLinks[chatId] &&
-              currentAgent.phoneNumbers.length === 0) ||
-            (propertyDescription[chatId] &&
-              !propertyPictureLinks[chatId] &&
-              currentAgent.phoneNumbers.length === 0)
+            (userData.propertyDescription.length > 0 &&
+              userData.propertyPictureLinks.length > 0 &&
+              userData.currentAgent.phoneNumbers.length === 0) ||
+            (userData.propertyDescription.length > 0 &&
+              userData.propertyPictureLinks.length === 0 &&
+              userData.currentAgent.phoneNumbers.length === 0)
           ) {
             chat.sendMessage(
               chatId,
@@ -354,12 +386,12 @@ module.exports = () => {
             );
             return;
           } else if (
-            (propertyDescription[chatId] &&
-              propertyPictureLinks[chatId] &&
-              currentAgent.telegramNickname.length === 0) ||
-            (propertyDescription[chatId] &&
-              !propertyPictureLinks[chatId] &&
-              currentAgent.telegramNickname.length === 0)
+            (userData.propertyDescription.length > 0 &&
+              userData.propertyPictureLinks.length > 0 &&
+              userData.currentAgent.telegramNickname.length === 0) ||
+            (userData.propertyDescription.length > 0 &&
+              userData.propertyPictureLinks.length === 0 &&
+              userData.currentAgent.telegramNickname.length === 0)
           ) {
             chat.sendMessage(
               chatId,
@@ -381,7 +413,9 @@ module.exports = () => {
             return;
           }
         } else if (data && data.list) {
-          const properties = currentAgent ? currentAgent.properties : [];
+          const properties = userData.currentAgent
+            ? userData.currentAgent.properties
+            : [];
 
           if (properties.length) {
             for (const property of properties) {
@@ -424,14 +458,14 @@ module.exports = () => {
           chat.sendMessage(chatId, data.text, { parse_mode: "Markdown" });
         }
       } catch (error) {
-        clearTimeout(runConversationTimeoutId);
+        clearTimeout(userData.runConversationTimeoutId);
         console.log("Response Assistant have not include JSON:", error.message);
 
         sendMessageWithRepeat(chatId, userMessage);
         watchUser({ chat, name: agent.username, message: error.message });
       }
     } catch (error) {
-      clearTimeout(runConversationTimeoutId);
+      clearTimeout(userData.runConversationTimeoutId);
       console.error("Error getting assistant AI:", error);
       sendMessageWithRepeat(chatId, userMessage);
       watchUser({ chat, name: agent.username, message: error.message });
@@ -441,6 +475,9 @@ module.exports = () => {
   chat.on("text", async (msg) => {
     const chatId = msg.chat.id;
     const userMessage = msg.text;
+
+    updateLastInteractionTime(chatId);
+    const userData = getUserData(chatId);
 
     watchUser({ chat, name: msg.from.username, message: userMessage });
 
@@ -485,19 +522,19 @@ module.exports = () => {
       return;
     }
 
-    if (status === "inProgress") {
+    if (userData.status === "inProgress") {
       chat.sendMessage(
         chatId,
         `*${translation.processingPreviousMessage.title}*\n${translation.processingPreviousMessage.text}`,
         { parse_mode: "Markdown" }
       );
-      clearTimeout(runConversationTimeoutId);
+      clearTimeout(userData.runConversationTimeoutId);
       return;
     }
 
     if (
-      adReadyForPublishingWithPictures ||
-      adReadyForPublishingWithoutPictures
+      userData.adReadyForPublishingWithPictures ||
+      userData.adReadyForPublishingWithoutPictures
     ) {
       chat.sendMessage(
         chatId,
@@ -513,33 +550,35 @@ module.exports = () => {
   chat.on("photo", async (msg) => {
     const chatId = msg.chat.id;
     const caption = msg.caption;
-    const photos = msg.photo;
-    const startDownload = Date.now();
+    const photo = msg.photo;
+
+    updateLastInteractionTime(chatId);
+    const userData = getUserData(chatId);
+
+    userData.countCurrentlyDownloadedPictures += 1;
 
     watchUser({
       chat,
-      photo: photos,
+      photo: photo,
       name: msg.from.username,
       message: caption,
     });
-
-    if (timeoutId) clearTimeout(timeoutId);
 
     translation = await getTranslation(msg.from.language_code);
 
     if (chatId === +process.env.TELEGRAM_GROUP_DENONA_APARTMENT_ID) return;
 
-    if (status === "inProgress") {
+    if (userData.status === "inProgress") {
       chat.sendMessage(
         chatId,
         `*${translation.processingPreviousMessage.title}*\n${translation.processingPreviousMessage.text}`,
         { parse_mode: "Markdown" }
       );
-      clearTimeout(runConversationTimeoutId);
+      clearTimeout(userData.runConversationTimeoutId);
       return;
     }
 
-    if (adReadyForPublishingWithPictures) {
+    if (userData.adReadyForPublishingWithPictures) {
       chat.sendMessage(
         chatId,
         `*${translation.lastDataIgnored.title}*\n${translation.lastDataIgnored.text}`,
@@ -548,17 +587,16 @@ module.exports = () => {
       return;
     }
 
-    if (collectedPictures) {
-      propertyPictureLinks[chatId] = undefined;
-      collectedPictures = false;
+    if (
+      userData.propertyDescription.length === 0 &&
+      typeof caption === "string"
+    ) {
+      userData.propertyDescription = filterAllowedTags(caption);
     }
-
-    if (!propertyDescription[chatId] && typeof caption === "string")
-      propertyDescription[chatId] = filterAllowedTags(caption);
 
     try {
       const photoLinks = await Promise.all(
-        photos.map(async (photo) => {
+        photo.map(async (photo) => {
           const fileLink = await chat.getFileLink(photo.file_id);
           return {
             id: photo.file_unique_id,
@@ -570,54 +608,62 @@ module.exports = () => {
         })
       );
 
-      propertyPictureLinks[chatId] = Array.isArray(propertyPictureLinks[chatId])
-        ? [...propertyPictureLinks[chatId], photoLinks]
-        : [photoLinks];
+      userData.propertyPictureLinks =
+        userData.propertyPictureLinks.length > 0
+          ? [...userData.propertyPictureLinks, photoLinks]
+          : [photoLinks];
     } catch (error) {
       console.log(error);
     }
 
-    timeout += Date.now() - startDownload;
-    timeoutId = setTimeout(() => {
-      collectedPictures = true;
+    if (
+      userData.propertyPictureLinks.length !==
+      userData.countCurrentlyDownloadedPictures
+    ) {
+      return;
+    }
 
-      if (propertyDescription[chatId] && !adReadyForPublishingWithoutPictures) {
-        runConversation(chatId, propertyDescription[chatId], msg.from);
-      } else if (
-        !!propertyDescription[chatId] &&
-        adReadyForPublishingWithoutPictures
-      ) {
-        adReadyForPublishingWithPictures = true;
+    userData.countCurrentlyDownloadedPictures = 0;
 
-        chat.sendMessage(
-          chatId,
-          `*${translation.adReadyForPublishing.title}*\n${translation.adReadyForPublishing.text}`,
-          {
-            parse_mode: "Markdown",
-            reply_markup: {
-              inline_keyboard: [
-                [
-                  {
-                    text: translation.cancelActionButton.title,
-                    callback_data: "publish_ad_cancel",
-                  },
-                  {
-                    text: translation.publishActionButton.title,
-                    callback_data: "publish_with_picture",
-                  },
-                ],
+    if (
+      userData.propertyDescription.length > 0 &&
+      !userData.adReadyForPublishingWithoutPictures
+    ) {
+      runConversation(chatId, userData.propertyDescription, msg.from);
+    } else if (
+      userData.propertyDescription.length > 0 &&
+      userData.adReadyForPublishingWithoutPictures
+    ) {
+      userData.adReadyForPublishingWithPictures = true;
+
+      chat.sendMessage(
+        chatId,
+        `*${translation.adReadyForPublishing.title}*\n${translation.adReadyForPublishing.text}`,
+        {
+          parse_mode: "Markdown",
+          reply_markup: {
+            inline_keyboard: [
+              [
+                {
+                  text: translation.cancelActionButton.title,
+                  callback_data: "publish_ad_cancel",
+                },
+                {
+                  text: translation.publishActionButton.title,
+                  callback_data: "publish_with_picture",
+                },
               ],
-            },
-          }
-        );
-      } else {
-        chat.sendMessage(
-          chatId,
-          `*${translation.propertyWithoutDescription.title}*\n${translation.propertyWithoutDescription.text}`,
-          { parse_mode: "Markdown" }
-        );
-      }
-    }, timeout);
+            ],
+          },
+        }
+      );
+    } else {
+      chat.sendMessage(
+        chatId,
+        `*${translation.propertyWithoutDescription.title}*\n${translation.propertyWithoutDescription.text}`,
+        { parse_mode: "Markdown" }
+      );
+    }
   });
 
   chat.on("callback_query", async (query) => {
@@ -627,9 +673,14 @@ module.exports = () => {
     const agentNickname = query.from.username;
     const agentFirstName = query.from.first_name;
     const agentLanguageCode = query.from.language_code;
-    const agentPhoneNumbers = currentAgent
-      ? currentAgent.phoneNumbers
+
+    updateLastInteractionTime(chatId);
+    const userData = getUserData(chatId);
+
+    const agentPhoneNumbers = userData.currentAgent
+      ? userData.currentAgent.phoneNumbers
       : undefined;
+
     const publishedMessage = () => {
       chat.sendMessage(
         chatId,
@@ -637,20 +688,20 @@ module.exports = () => {
         { parse_mode: "Markdown" }
       );
 
-      clear();
+      clearUserData(chatId);
     };
 
     try {
       if (
         data === "publish_with_picture" &&
-        propertyPictureLinks[chatId] &&
-        propertyDescription[chatId]
+        userData.propertyPictureLinks.length > 0 &&
+        userData.propertyDescription.length > 0
       ) {
         await sendMessageToViber(
           {
             type: "picture",
-            text: propertyDescription[chatId],
-            media: propertyPictureLinks[chatId][0][2].link,
+            text: userData.propertyDescription,
+            media: userData.propertyPictureLinks[0][2].link,
             agentPhoneNumbers,
             agentFirstName,
           },
@@ -662,32 +713,32 @@ module.exports = () => {
           chatId: isDev
             ? process.env.TELEGRAM_GROUP_DENONA_APARTMENT_ID
             : process.env.TELEGRAM_CHANNEL_DENONA_REAL_ESTATE_ID,
-          message: propertyDescription[chatId],
-          pictures: propertyPictureLinks[chatId],
+          message: userData.propertyDescription,
+          pictures: userData.propertyPictureLinks,
           agentNickname,
           agentPhoneNumbers,
           translation,
         });
-        console.log(656565, currentAgent);
+
         await addDataProperty({
           agentID,
           agentNickname,
           agentLanguageCode,
           agentPhoneNumbers,
-          description: propertyDescription[chatId],
-          pictures: propertyPictureLinks[chatId],
+          description: userData.propertyDescription,
+          pictures: userData.propertyPictureLinks,
           agentFirstName,
         });
 
         publishedMessage();
       } else if (
         data === "publish_without_picture" &&
-        propertyDescription[chatId]
+        userData.propertyDescription.length > 0
       ) {
         await sendMessageToViber(
           {
             type: "text",
-            text: propertyDescription[chatId],
+            text: userData.propertyDescription,
             agentPhoneNumbers,
             agentFirstName,
           },
@@ -699,13 +750,12 @@ module.exports = () => {
           chatId: isDev
             ? process.env.TELEGRAM_GROUP_DENONA_APARTMENT_ID
             : process.env.TELEGRAM_CHANNEL_DENONA_REAL_ESTATE_ID,
-          message: propertyDescription[chatId],
+          message: userData.propertyDescription,
           agentNickname,
           agentPhoneNumbers,
           pictures:
-            Array.isArray(propertyPictureLinks[chatId]) &&
-            propertyPictureLinks[chatId].length
-              ? propertyPictureLinks[chatId]
+            userData.propertyPictureLinks.length > 0
+              ? userData.propertyPictureLinks
               : undefined,
           translation,
         });
@@ -714,17 +764,16 @@ module.exports = () => {
           agentID,
           agentNickname,
           agentLanguageCode,
-          description: propertyDescription[chatId],
-          pictures: propertyPictureLinks[chatId],
+          description: userData.propertyDescription,
+          pictures: userData.propertyPictureLinks,
           agentFirstName,
-          agentPhoneNumbers: currentAgent
-            ? currentAgent.phoneNumbers
+          agentPhoneNumbers: userData.currentAgent
+            ? userData.currentAgent.phoneNumbers
             : undefined,
         });
 
         publishedMessage();
       } else if (data === "publish_ad_cancel") {
-        console.log(656565, currentAgent);
         chat.sendMessage(
           chatId,
           `*${translation.successfulPublishingAdCancellation.title}*\n${translation.successfulPublishingAdCancellation.text}`,
@@ -732,7 +781,7 @@ module.exports = () => {
             parse_mode: "Markdown",
           }
         );
-        clear();
+        clearUserData(chatId);
       } else if (data.startsWith("update_text")) {
         const [action, propertyID] = data.split(":");
 
@@ -782,16 +831,15 @@ module.exports = () => {
           { parse_mode: "Markdown" }
         );
       } else if (data === "permit_delete") {
-        removePropertyById(query.from.id, action[chatId].propertyID);
+        removePropertyById(query.from.id, userData.action.propertyID);
         chat.sendMessage(
           chatId,
           `*${translation.announcementAdDeletionSuccess.title}*\n`,
           { parse_mode: "Markdown" }
         );
       } else if (data === "repeat_last_action") {
-        if (lastUserMessage) {
-          userMessage = null;
-          runConversation(chatId, lastUserMessage, query.from);
+        if (userData.lastUserMessage) {
+          runConversation(chatId, userData.lastUserMessage, query.from);
         }
       } else {
         chat.answerCallbackQuery(query.id, {
@@ -801,10 +849,10 @@ module.exports = () => {
       }
 
       // Clear all the data
-      clear();
+      clearUserData(chatId);
     } catch (error) {
       console.error(error);
-      clear();
+      clearUserData(chatId);
     }
   });
 };
