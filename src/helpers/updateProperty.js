@@ -132,7 +132,14 @@ const updateProperty = async ({
     // Writing the updated agent data back to the file
     await fs.writeFile(agentPath, updatedAgentJSON, { encoding: "utf8" });
 
-    console.log("New property and agent data successfully added.");
+    console.log(
+      "New AGENT successfully added: ",
+      await fs.readFile(agentPath, "utf8")
+    );
+    console.log(
+      "New PROPERTY successfully added: ",
+      await fs.readFile(propertyPath, "utf8")
+    );
 
     return property;
   } catch (error) {
