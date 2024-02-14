@@ -138,7 +138,12 @@ const updateProperty = async ({
     const p = JSON.parse(JSON_P);
 
     console.log("New AGENT: ", a.length);
-    console.log("New PROPERTY: ", p[0].properties.length);
+    console.log(
+      "New PROPERTY: ",
+      p.map((pr) =>
+        pr && Array.isArray(pr.properties) ? pr.properties.length : 0
+      )
+    );
     console.log(
       "----------------------------------------------------------------"
     );
