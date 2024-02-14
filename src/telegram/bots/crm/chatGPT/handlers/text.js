@@ -1,7 +1,7 @@
 const chat = require("../../chat");
 
 const openService = require("../../../../../api/openai/openaiService");
-const geminiService = require("../../../../../api/gemini/geminiService");
+// const geminiService = require("../../../../../api/gemini/geminiService");
 
 const extractJsonSubstring = require("../../../../../helpers/extractJsonSubstring");
 const updateProperty = require("../../../../../helpers/updateProperty");
@@ -188,7 +188,6 @@ module.exports = () => {
   // };
 
   const runConversation = async (chatId, userMessage, agent) => {
-    // console.log(888888, agent);
     const userData = getUserData(chatId);
 
     userData.status = "inProgress";
@@ -199,28 +198,26 @@ module.exports = () => {
 
     if (!agents) {
       const items = await extractItems();
-      // console.log("🚀 ~ runConversation ~ items:", items);
 
       const item = items.find((item) => item.telegramAgentID === agent.id);
 
       if (item) userData.currentAgent = item;
-      // console.log("🚀 ~ runConversation ~ currentAgent:", userData.currentAgent);
     }
 
     try {
-      // const assistantInstance = await getAssistantAIByChatID(
-      //   chatId,
-      //   agent.language_code
-      // );
+      const assistantInstance = await getAssistantAIByChatID(
+        chatId,
+        agent.language_code
+      );
 
-      // const responseAssistant = await assistantInstance(userMessage);
+      const responseAssistant = await assistantInstance(userMessage);
 
-      const responseAssistant = await geminiService.generateChatText({
-        userMessage,
-        instructions: instructions.crm,
-      });
+      // const responseAssistant = await geminiService.generateChatText({
+      //   userMessage,
+      //   instructions: instructions.crm,
+      // });
 
-      console.log(1111, responseAssistant);
+      // console.log(1111, responseAssistant);
       // return;
 
       // await new Promise((resolve, reject) => {
@@ -236,7 +233,7 @@ module.exports = () => {
 
       clearTimeout(userData.runConversationTimeoutId);
 
-      // watchUser({ chat, name: agent.username, message: responseAssistant });
+      watchUser({ chat, name: agent.first_name, message: responseAssistant });
 
       try {
         const data = JSON.parse(extractJsonSubstring(responseAssistant));
@@ -462,13 +459,13 @@ module.exports = () => {
         console.log("Response Assistant have not include JSON:", error.message);
 
         sendMessageWithRepeat(chatId, userMessage);
-        watchUser({ chat, name: agent.username, message: error.message });
+        watchUser({ chat, name: agent.first_name, message: error.message });
       }
     } catch (error) {
       clearTimeout(userData.runConversationTimeoutId);
       console.error("Error getting assistant AI:", error);
       sendMessageWithRepeat(chatId, userMessage);
-      watchUser({ chat, name: agent.username, message: error.message });
+      watchUser({ chat, name: agent.first_name, message: error.message });
     }
   };
 
@@ -479,7 +476,7 @@ module.exports = () => {
     updateLastInteractionTime(chatId);
     const userData = getUserData(chatId);
 
-    watchUser({ chat, name: msg.from.username, message: userMessage });
+    watchUser({ chat, name: msg.from.first_name, message: userMessage });
 
     translation = await getTranslation(msg.from.language_code);
 
@@ -560,7 +557,7 @@ module.exports = () => {
     watchUser({
       chat,
       photo: photo,
-      name: msg.from.username,
+      name: msg.from.first_name,
       message: caption,
     });
 
