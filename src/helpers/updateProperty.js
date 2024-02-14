@@ -137,15 +137,15 @@ const updateProperty = async ({
     const JSON_P = await fs.readFile(propertyPath, "utf8");
     const p = JSON.parse(JSON_P);
 
+    console.log(
+      "----------------------------------------------------------------"
+    );
     console.log("New AGENT: ", a.length);
     console.log(
       "New PROPERTY: ",
       p.map((pr) =>
         pr && Array.isArray(pr.properties) ? pr.properties.length : 0
       )
-    );
-    console.log(
-      "----------------------------------------------------------------"
     );
 
     return property;
