@@ -28,7 +28,7 @@ const addPicture = async ({ propertyID, pictures }) => {
     // Writing the updated data back to the file
     await fs.writeFile(pathToFile, updatedDataJSON, { encoding: "utf8" });
 
-    console.log("New object successfully added to file:", pathToFile);
+    // console.log("New object successfully added to file:", pathToFile);
 
     return picture;
   } catch (error) {

@@ -137,8 +137,8 @@ const updateProperty = async ({
     const JSON_P = await fs.readFile(propertyPath, "utf8");
     const p = JSON.parse(JSON_P);
 
-    console.log("New AGENT successfully added: ", a.length);
-    console.log("New PROPERTY successfully added: ", p.length);
+    console.log("New AGENT: ", a.length);
+    console.log("New PROPERTY: ", p.length);
 
     return property;
   } catch (error) {
