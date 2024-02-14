@@ -30,9 +30,10 @@ const sendMessageToViber = async (messageData, translation) => {
 
   // console.log("🚀 ~ sendMessageToViber ~ body:", body);
   try {
-    const response = await axios.post(viberApiUrl, body);
+    // const response = await axios.post(viberApiUrl, body);
+    await axios.post(viberApiUrl, body);
 
-    console.log("Message sent to Viber:", response.data);
+    // console.log("Message sent to Viber:", response.data);
   } catch (error) {
     console.error("Error sending message to Viber:", error);
   }

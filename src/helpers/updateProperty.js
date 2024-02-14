@@ -139,6 +139,9 @@ const updateProperty = async ({
 
     console.log("New AGENT: ", a.length);
     console.log("New PROPERTY: ", p.length);
+    console.log(
+      "----------------------------------------------------------------"
+    );
 
     return property;
   } catch (error) {
