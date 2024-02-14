@@ -73,7 +73,21 @@ const updateProperty = async ({
     const updatedPropertyJSON = JSON.stringify(existingPropertyData, null, 2);
 
     // Writing the updated property data back to the file
-    await fs.writeFile(propertyPath, updatedPropertyJSON, { encoding: "utf8" });
+    await fs.writeFile(
+      propertyPath,
+      updatedPropertyJSON,
+      { encoding: "utf8" },
+      async (err) => {
+        if (err) {
+          console.error("Ошибка при записи в файл updatedPropertyJSON:", err);
+        } else {
+          const JSON_P = await fs.readFile(propertyPath, "utf8");
+          const p = JSON.parse(JSON_P);
+
+          console.log("New PROPERTY: ", p.length);
+        }
+      }
+    );
 
     // Now, update the agent data
     // Reading existing agent data from the file
@@ -130,15 +144,21 @@ const updateProperty = async ({
     const updatedAgentJSON = JSON.stringify(existingAgentData, null, 2);
 
     // Writing the updated agent data back to the file
-    await fs.writeFile(agentPath, updatedAgentJSON, { encoding: "utf8" });
+    await fs.writeFile(
+      agentPath,
+      updatedAgentJSON,
+      { encoding: "utf8" },
+      async (err) => {
+        if (err) {
+          console.error("Ошибка при записи в файл updatedAgentJSON:", err);
+        } else {
+          const JSON_A = await fs.readFile(agentPath, "utf8");
+          const a = JSON.parse(JSON_A);
+          console.log("New AGENT: ", a.length);
+        }
+      }
+    );
 
-    const JSON_A = await fs.readFile(agentPath, "utf8");
-    const a = JSON.parse(JSON_A);
-    const JSON_P = await fs.readFile(propertyPath, "utf8");
-    const p = JSON.parse(JSON_P);
-
-    console.log("New AGENT: ", a.length);
-    console.log("New PROPERTY: ", p.length);
     console.log(
       "----------------------------------------------------------------"
     );
