@@ -1,7 +1,7 @@
 const chat = require("../../chat");
 
 const openService = require("../../../../../api/openai/openaiService");
-// const geminiService = require("../../../../../api/gemini/geminiService");
+const geminiService = require("../../../../../api/gemini/geminiService");
 
 const extractJsonSubstring = require("../../../../../helpers/extractJsonSubstring");
 const updateProperty = require("../../../../../helpers/updateProperty");
@@ -205,17 +205,17 @@ module.exports = () => {
     }
 
     try {
-      const assistantInstance = await getAssistantAIByChatID(
-        chatId,
-        agent.language_code
-      );
+      // const assistantInstance = await getAssistantAIByChatID(
+      //   chatId,
+      //   agent.language_code
+      // );
 
-      const responseAssistant = await assistantInstance(userMessage);
+      // const responseAssistant = await assistantInstance(userMessage);
 
-      // const responseAssistant = await geminiService.generateChatText({
-      //   userMessage,
-      //   instructions: instructions.crm,
-      // });
+      const responseAssistant = await geminiService.generateChatText({
+        userMessage,
+        instructions: instructions.crm,
+      });
 
       // console.log(1111, responseAssistant);
       // return;
