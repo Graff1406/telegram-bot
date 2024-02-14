@@ -90,4 +90,24 @@ async function vision(filePath) {
   }
 }
 
-module.exports = { generateText, generateChatText, vision };
+const generateEmbedContent = async () => {
+  try {
+    const model = genAI.getGenerativeModel({ model: "embedding-001" });
+
+    const text = "Меня зовут Автан. Я живу в Нико";
+    const text2 = "Как зовут человека который живет в Нико?";
+
+    const result = await model.embedContent([text, text2]);
+    const embedding = result.embedding;
+    console.log(result);
+  } catch (error) {
+    console.log("🚀 ~ generateEmbedContent ~ error:", error);
+  }
+};
+
+module.exports = {
+  generateText,
+  generateChatText,
+  vision,
+  generateEmbedContent,
+};

@@ -1,6 +1,6 @@
 const chat = require("../../chat");
 
-const openService = require("../../../../../api/openai/openaiService");
+// const openService = require("../../../../../api/openai/openaiService");
 const geminiService = require("../../../../../api/gemini/geminiService");
 
 const extractJsonSubstring = require("../../../../../helpers/extractJsonSubstring");
@@ -56,6 +56,8 @@ module.exports = () => {
       runConversationTimeoutId: null,
       currentAgent: {},
       countCurrentlyDownloadedPictures: 0,
+      chatHistory: [],
+      properties: [],
       ...payload,
     };
   };
@@ -84,23 +86,23 @@ module.exports = () => {
   //   return `<a href="https://t.me/c/${chatId}/${messageId}">${text}</a>`;
   // };
 
-  const getAssistantAIByChatID = async (id, languageCode) => {
-    if (assistants[id]) {
-      return assistants[id];
-    }
+  // const getAssistantAIByChatID = async (id, languageCode) => {
+  //   if (assistants[id]) {
+  //     return assistants[id];
+  //   }
 
-    try {
-      const assistant = await openService.generateChatResponse(
-        `Ты Должен генерировать ответ на языке которому соответствует это код: "${languageCode}".\n${instructions.crm}`,
-        true
-      );
-      assistants[id] = assistant;
-      return assistant;
-    } catch (error) {
-      console.error("Error getting assistant AI:", error);
-      throw new Error("Failed to get assistant AI");
-    }
-  };
+  //   try {
+  //     const assistant = await openService.generateChatResponse(
+  //       `Ты Должен генерировать ответ на языке которому соответствует это код: "${languageCode}".\n${instructions.crm}`,
+  //       true
+  //     );
+  //     assistants[id] = assistant;
+  //     return assistant;
+  //   } catch (error) {
+  //     console.error("Error getting assistant AI:", error);
+  //     throw new Error("Failed to get assistant AI");
+  //   }
+  // };
 
   const addDataProperty = async ({
     agentID,
@@ -212,9 +214,21 @@ module.exports = () => {
 
       // const responseAssistant = await assistantInstance(userMessage);
 
+      userData.chatHistory.push(
+        {
+          role: "user",
+          parts: userMessage,
+        },
+        {
+          role: "model",
+          parts: "",
+        }
+      );
+
       const responseAssistant = await geminiService.generateChatText({
         userMessage,
         instructions: instructions.crm,
+        chatHistory: userData.chatHistory,
       });
 
       // console.log(1111, responseAssistant);
@@ -237,6 +251,18 @@ module.exports = () => {
 
       try {
         const data = JSON.parse(extractJsonSubstring(responseAssistant));
+        // console.log(22222, data);
+
+        if (
+          Array.isArray(userData.chatHistory) &&
+          userData.chatHistory.length > 0 &&
+          data &&
+          typeof data.text === "string" &&
+          data.text.length > 0
+        ) {
+          userData.chatHistory[userData.chatHistory.length - 1].parts =
+            data.text;
+        }
 
         // console.log(66666, data);
 
@@ -256,8 +282,24 @@ module.exports = () => {
         //   list: false,
         // };
 
-        if (data === null) {
+        if (data === null && typeof responseAssistant === "string") {
           chat.sendMessage(chatId, responseAssistant);
+          return;
+        } else if (data !== null && !data.hasOwnProperty("text")) {
+          runConversation(userMessage);
+          return;
+        } else if (
+          (data !== null &&
+            !data.hasOwnProperty("property") &&
+            typeof data.text === "string") ||
+          (data !== null &&
+            !data.hasOwnProperty("list") &&
+            typeof data.text === "string") ||
+          (data !== null &&
+            !data.hasOwnProperty("phoneNumbers") &&
+            typeof data.text === "string")
+        ) {
+          chat.sendMessage(chatId, data.text);
           return;
         }
 
@@ -277,10 +319,12 @@ module.exports = () => {
           // );
 
           userData.currentAgent.phoneNumbers =
-            data && data.phoneNumbers && data.phoneNumbers.length > 0
+            data &&
+            Array.isArray(data.phoneNumbers) &&
+            data.phoneNumbers.length > 0
               ? data.phoneNumbers
               : userData.currentAgent &&
-                userData.currentAgent.phoneNumbers &&
+                Array.isArray(userData.currentAgent.phoneNumbers) &&
                 userData.currentAgent.phoneNumbers.length > 0
               ? userData.currentAgent.phoneNumbers
               : [];
@@ -409,10 +453,13 @@ module.exports = () => {
             );
             return;
           }
-        } else if (data && data.list) {
-          const properties = userData.currentAgent
-            ? userData.currentAgent.properties
-            : [];
+        } else if (data !== null && data.hasOwnProperty("list") && data.list) {
+          const properties =
+            userData.currentAgent &&
+            Array.isArray(userData.currentAgent.properties) &&
+            userData.currentAgent.properties.length > 0
+              ? userData.currentAgent.properties
+              : [];
 
           if (properties.length) {
             for (const property of properties) {
