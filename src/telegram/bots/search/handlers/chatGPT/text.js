@@ -12,10 +12,51 @@ const watchUser = require("../../../../../modules/watchUser");
 module.exports = () => {
   const assistants = {};
   let translation = {};
-  let lastUserMessage = null;
+  let data = {};
+
+  const USER_DATA_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours
+
+  const clearInactiveUserData = () => {
+    const currentTime = Date.now();
+    for (const chatId in data) {
+      const userData = data[chatId];
+      if (currentTime - userData.lastInteractionTime > USER_DATA_TIMEOUT) {
+        delete data[chatId];
+      }
+    }
+  };
+
+  const updateLastInteractionTime = (chatId) => {
+    if (data[chatId]) {
+      data[chatId].lastInteractionTime = Date.now();
+    }
+  };
+
+  setInterval(clearInactiveUserData, USER_DATA_TIMEOUT);
+
+  const setInitData = (payload = {}) => {
+    return {
+      lastUserMessage: null,
+      // status: "completed",
+      // chatHistory: [],
+      timeoutId: null,
+      ...payload,
+    };
+  };
+
+  const getUserData = (chatId) => {
+    if (!data[chatId]) {
+      data[chatId] = setInitData();
+    }
+    return data[chatId];
+  };
+
+  // const clearUserData = (chatId) => {
+  //   data[chatId] = setInitData();
+  // };
 
   const sendMessageWithRepeat = (chatId, userMessage) => {
-    lastUserMessage = userMessage;
+    userData.lastUserMessage = userMessage;
     chat.sendMessage(
       chatId,
       `*${translation.retryPreviousAction.title}*\n${translation.retryPreviousAction.text}`,
@@ -42,7 +83,7 @@ module.exports = () => {
 
     try {
       const assistant = await openService.generateChatResponse(
-        `Ты Должен генерировать ответ на языке которому соответствует это код: "${languageCode}". Этот код определяет язык user.\n${instructions.search}`,
+        `${instructions.search}\n\nТы Должен генерировать ответ на языке которому соответствует это код: "${languageCode}".`,
         true
       );
       assistants[id] = assistant;
@@ -61,6 +102,9 @@ module.exports = () => {
     // const properties = agents.map((agent) => agent.properties).flat();
     // console.log("🚀 ~ chat.on ~ items:", agents);
     // return;
+    updateLastInteractionTime(chatId);
+    const userData = getUserData(chatId);
+
     watchUser({ chat, name: msg.from.username, message: userMessage });
 
     translation = await getTranslation(msg.from.language_code);
@@ -123,39 +167,62 @@ module.exports = () => {
     // }
     // return;
 
-    const timeoutId = setTimeout(() => {
+    userData.timeoutId = setTimeout(() => {
       chat.sendMessage(chatId, translation.waitingForResponse.text);
     }, 20000);
 
     try {
-      console.log(111, userMessage);
+      // console.log(111, userMessage);
 
       const assistantInstance = await getAssistantAIByChatID(chatId);
 
       const responseAssistant = await assistantInstance(userMessage);
+      // userData.chatHistory.push({
+      //   role: "user",
+      //   content: userMessage,
+      // });
 
-      console.log(222, responseAssistant);
+      // const responseAssistant = await openService.generateText({
+      //   instruction: `Ты Должен генерировать ответ на языке которому соответствует это код: "${msg.from.language_code}". Этот код определяет язык user.\n${instructions.search}`,
+      //   chatHistory: userData.chatHistory,
+      // });
 
-      clearTimeout(timeoutId);
+      // console.log(222, responseAssistant);
+
+      clearTimeout(userData.timeoutId);
 
       try {
         const jsonData = extractJsonSubstring(responseAssistant);
 
         watchUser({ chat, name: msg.from.username, message: jsonData });
 
-        console.log(333, jsonData);
+        // console.log(333, jsonData);
 
         const data = JSON.parse(jsonData);
-        console.log(441144, data);
+        // console.log(441144, data);
+
+        if (data !== null && data.text) {
+          chat.sendMessage(chatId, data.text);
+          // userData.chatHistory.push({
+          //   role: "assistant",
+          //   content: data.text,
+          // });
+        } else if (data === null && typeof responseAssistant === "string") {
+          chat.sendMessage(chatId, responseAssistant);
+          // userData.chatHistory.push({
+          //   role: "assistant",
+          //   content: responseAssistant,
+          // });
+        }
 
         if (
-          !!data &&
+          data !== null &&
           Array.isArray(data.properties) &&
           data.properties.length > 0
         ) {
           const agents = await extractItems();
 
-          const properties = agents
+          const currentAgent = agents
             .map((agent) =>
               agent.properties.map((property) => ({
                 ...property,
@@ -168,13 +235,13 @@ module.exports = () => {
             )
             .flat();
 
-          const coincideProperties = properties.filter((property) =>
-            data.properties.some((item) => item.id === property.id)
+          const properties = currentAgent.filter((property) =>
+            data.properties.some((p) => p.id === property.id)
           );
-          console.log(444, coincideProperties);
+          // console.log(444, properties);
 
-          if (coincideProperties.length) {
-            for (const property of coincideProperties) {
+          if (properties.length) {
+            for (const property of properties) {
               await publishAdToChannel({
                 chat,
                 chatId: chatId,
@@ -190,18 +257,9 @@ module.exports = () => {
             }
           }
         }
-
-        if (!!data && data.text) {
-          chat.sendMessage(chatId, data.text);
-        }
-
-        if (!data && typeof responseAssistant === "string") {
-          chat.sendMessage(chatId, responseAssistant);
-          return;
-        }
       } catch (error) {
-        lastUserMessage = userMessage;
-        clearTimeout(timeoutId);
+        userData.lastUserMessage = userMessage;
+        clearTimeout(userData.timeoutId);
         console.error(error);
         sendMessageWithRepeat(chatId, userMessage);
         watchUser({
@@ -211,8 +269,8 @@ module.exports = () => {
         });
       }
     } catch (error) {
-      lastUserMessage = userMessage;
-      clearTimeout(timeoutId);
+      userData.lastUserMessage = userMessage;
+      clearTimeout(userData.timeoutId);
       console.error(error);
       sendMessageWithRepeat(chatId, userMessage);
       watchUser({ chat, name: msg.from.username, message: error.message });

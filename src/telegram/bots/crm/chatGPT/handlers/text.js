@@ -21,7 +21,7 @@ const isDev = process.env.NODE_ENV === "development";
 module.exports = () => {
   let data = {};
   let translation = {};
-  let assistants = {};
+  // let assistants = {};
   let agents;
 
   const USER_DATA_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours
@@ -231,7 +231,7 @@ module.exports = () => {
         chatHistory: userData.chatHistory,
       });
 
-      // console.log(1111, responseAssistant);
+      console.log(1111, responseAssistant);
       // return;
 
       // await new Promise((resolve, reject) => {

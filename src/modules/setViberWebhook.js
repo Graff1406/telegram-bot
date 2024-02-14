@@ -14,7 +14,10 @@ const setViberWebhook = async (webhookUrl) => {
     // console.log("Webhook set:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Error setting webhook:", error.response.data);
+    console.error(
+      "Error setting webhook:",
+      error.response && error.response.data
+    );
   }
 };
 
