@@ -403,7 +403,7 @@ module.exports = () => {
                     [
                       {
                         text: translation.confirmationCreation.title,
-                        callback_data: "repeat_last_action",
+                        callback_data: "set_telegram_username",
                       },
                     ],
                   ],
@@ -837,10 +837,10 @@ module.exports = () => {
           `*${translation.announcementAdDeletionSuccess.title}*\n`,
           { parse_mode: "Markdown" }
         );
-      } else if (data === "repeat_last_action") {
-        if (userData.lastUserMessage) {
-          runConversation(chatId, userData.lastUserMessage, query.from);
-        }
+      } else if (data === "repeat_last_action" ?? userData.lastUserMessage) {
+        runConversation(chatId, userData.lastUserMessage, query.from);
+      } else if (data === "set_telegram_username") {
+        runConversation(chatId, userData.propertyDescription, query.from);
       } else {
         chat.answerCallbackQuery(query.id, {
           text: translation.actionPreviouslyDone.title,

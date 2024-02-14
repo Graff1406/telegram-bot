@@ -37,7 +37,7 @@ const filterAllowedTags = (html) => {
       });
 
     const filteredHtml = $.html();
-    console.log("Отфильтрованный HTML:", filteredHtml);
+    // console.log("Отфильтрованный HTML:", filteredHtml);
     return filteredHtml;
   } catch (error) {
     console.error("Ошибка при фильтрации HTML:", error.message);
