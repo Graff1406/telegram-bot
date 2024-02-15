@@ -1,6 +1,6 @@
 const chat = require("../../chat");
 
-// const openService = require("../../../../../api/openai/openaiService");
+const openService = require("../../../../../api/openai/openaiService");
 const geminiService = require("../../../../../api/gemini/geminiService");
 
 const extractJsonSubstring = require("../../../../../helpers/extractJsonSubstring");
@@ -21,7 +21,7 @@ const isDev = process.env.NODE_ENV === "development";
 module.exports = () => {
   let data = {};
   let translation = {};
-  // let assistants = {};
+  let assistants = {};
   let agents;
 
   const USER_DATA_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours
@@ -86,23 +86,23 @@ module.exports = () => {
   //   return `<a href="https://t.me/c/${chatId}/${messageId}">${text}</a>`;
   // };
 
-  // const getAssistantAIByChatID = async (id, languageCode) => {
-  //   if (assistants[id]) {
-  //     return assistants[id];
-  //   }
+  const getAssistantAIByChatID = async (id, languageCode) => {
+    if (assistants[id]) {
+      return assistants[id];
+    }
 
-  //   try {
-  //     const assistant = await openService.generateChatResponse(
-  //       `Ты Должен генерировать ответ на языке которому соответствует это код: "${languageCode}".\n${instructions.crm}`,
-  //       true
-  //     );
-  //     assistants[id] = assistant;
-  //     return assistant;
-  //   } catch (error) {
-  //     console.error("Error getting assistant AI:", error);
-  //     throw new Error("Failed to get assistant AI");
-  //   }
-  // };
+    try {
+      const assistant = await openService.generateChatResponse({
+        instruction: `Ты Должен генерировать ответ на языке которому соответствует это код: "${languageCode}".\n${instructions.crm}`,
+        model: "gpt-4-0125-preview",
+      });
+      assistants[id] = assistant;
+      return assistant;
+    } catch (error) {
+      console.error("Error getting assistant AI:", error);
+      throw new Error("Failed to get assistant AI");
+    }
+  };
 
   const addDataProperty = async ({
     agentID,
@@ -207,12 +207,12 @@ module.exports = () => {
     }
 
     try {
-      // const assistantInstance = await getAssistantAIByChatID(
-      //   chatId,
-      //   agent.language_code
-      // );
+      const assistantInstance = await getAssistantAIByChatID(
+        chatId,
+        agent.language_code
+      );
 
-      // const responseAssistant = await assistantInstance(userMessage);
+      const responseAssistant = await assistantInstance(userMessage);
 
       userData.chatHistory.push(
         {
@@ -225,11 +225,11 @@ module.exports = () => {
         }
       );
 
-      const responseAssistant = await geminiService.generateChatText({
-        userMessage,
-        instructions: instructions.crm,
-        chatHistory: userData.chatHistory,
-      });
+      // const responseAssistant = await geminiService.generateChatText({
+      //   userMessage,
+      //   instructions: instructions.crm,
+      //   chatHistory: userData.chatHistory,
+      // });
 
       console.log(1111, responseAssistant);
       // return;
@@ -304,9 +304,11 @@ module.exports = () => {
         }
 
         if (
+          data !== null &&
           data.property &&
           typeof data.property.description === "string" &&
-          data.property.description.length > 0
+          data.property.description.length > 0 &&
+          data.property.minData
         ) {
           userData.propertyDescription = filterAllowedTags(
             data.property.description
@@ -498,7 +500,13 @@ module.exports = () => {
           }
         }
 
-        if (data.text) {
+        if (
+          data !== null &&
+          typeof data.text === "string" &&
+          data.text.length > 0 &&
+          data.property &&
+          !data.property.minData
+        ) {
           chat.sendMessage(chatId, data.text, { parse_mode: "Markdown" });
         }
       } catch (error) {
@@ -509,6 +517,8 @@ module.exports = () => {
         watchUser({ chat, name: agent.first_name, message: error.message });
       }
     } catch (error) {
+      userData.status = "completed";
+
       clearTimeout(userData.runConversationTimeoutId);
       console.error("Error getting assistant AI:", error);
       sendMessageWithRepeat(chatId, userMessage);

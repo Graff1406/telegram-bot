@@ -5,7 +5,11 @@ const path = require("path");
 const fs = require("fs");
 const fsP = require("fs/promises");
 
-const createAssistantAndThread = async (instruction, readFile = false) => {
+const createAssistantAndThread = async (
+  instruction,
+  readFile = false,
+  model = "gpt-3.5-turbo-0125"
+) => {
   let fileIds = [];
 
   if (readFile) {
@@ -33,8 +37,8 @@ const createAssistantAndThread = async (instruction, readFile = false) => {
         type: readFile && fileIds.length > 0 ? "retrieval" : "code_interpreter",
       },
     ],
-    model: "gpt-3.5-turbo-0125", // gpt-3.5-turbo-0125, gpt-3.5-turbo-1106 , gpt-4-1106-preview, gpt-4-0125-preview
-    file_ids: fileIds,
+    model, // gpt-3.5-turbo-0125, gpt-3.5-turbo-1106 , gpt-4-1106-preview, gpt-4-0125-preview
+    file_ids: fileIds.length ? fileIds : undefined,
     // response_format: { type: "json_object" },
   });
 
@@ -73,12 +77,13 @@ async function generateText({
   }
 }
 
-async function generateChatResponse(instruction, readFile) {
+async function generateChatResponse({ instruction, readFile, model }) {
   if (!instruction) throw new Error("No instruction");
   try {
     const { assistant, thread, fileIds } = await createAssistantAndThread(
       instruction,
-      readFile
+      readFile,
+      model
     );
 
     const run = async (userMessage) => {

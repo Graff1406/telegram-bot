@@ -1,5 +1,6 @@
 const fs = require("fs/promises");
 const path = require("path");
+const { links } = require("../data/resource");
 
 const getTranslation = async (languageCode) => {
   const pathToFile = path.join(__dirname, "../data/CRMTranslations.json");
@@ -21,10 +22,7 @@ const getTranslation = async (languageCode) => {
       // Replace {links} placeholder with actual links
       translation = {
         ...translation,
-        text: translation.text.replace(
-          /\{links\}/g,
-          "[Telegram - Denona AI Search](https://t.me/denoname_bot)\n[Telegram - Real State Channel](https://t.me/denona_real_estate)\n[Viber - Real State Channel](https://invite.viber.com/?g2=AQB5%2BBdfLYNcTVJh6%2FTEZgDJoDre8kePwPMUfs1j%2FjtAAUe4lr892SoFDv2BE32A)"
-        ),
+        text: translation.text.replace(/\{links\}/g, links),
       };
 
       translations[entry.name] = translation;
