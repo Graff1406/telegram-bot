@@ -82,10 +82,10 @@ module.exports = () => {
     }
 
     try {
-      const assistant = await openService.generateChatResponse(
-        `${instructions.search}\n\nТы Должен генерировать ответ на языке которому соответствует это код: "${languageCode}".`,
-        true
-      );
+      const assistant = await openService.generateChatResponse({
+        instruction: `${instructions.search}\n\nТы Должен генерировать ответ на языке которому соответствует это код: "${languageCode}".`,
+        readFile: true,
+      });
       assistants[id] = assistant;
       return assistant;
     } catch (error) {

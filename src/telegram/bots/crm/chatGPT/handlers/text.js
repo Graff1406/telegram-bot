@@ -93,7 +93,7 @@ module.exports = () => {
 
     try {
       const assistant = await openService.generateChatResponse({
-        instruction: `Ты Должен генерировать ответ на языке которому соответствует это код: "${languageCode}".\n${instructions.crm}`,
+        instruction: `${instructions.crm}\n\nТы Должен генерировать ответ на языке которому соответствует это код: "${languageCode}"`,
         model: "gpt-4-0125-preview",
       });
       assistants[id] = assistant;

@@ -83,7 +83,7 @@ watchingTelegramReminderBot();
 
 setInterval(pingServer, 270000); // 4,5 minutes
 
-const ngrok = "https://56d3-185-6-123-150.ngrok-free.app";
+const ngrok = "https://43ae-185-6-123-160.ngrok-free.app";
 const prod = "https://telegram-bot-denona.onrender.com";
 
 app.listen(port, () => {
