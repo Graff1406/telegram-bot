@@ -105,7 +105,7 @@ module.exports = () => {
     updateLastInteractionTime(chatId);
     const userData = getUserData(chatId);
 
-    watchUser({ chat, name: msg.from.username, message: userMessage });
+    watchUser({ chat, name: msg.from.first_name, message: userMessage });
 
     translation = await getTranslation(msg.from.language_code);
 
@@ -194,7 +194,7 @@ module.exports = () => {
       try {
         const jsonData = extractJsonSubstring(responseAssistant);
 
-        watchUser({ chat, name: msg.from.username, message: jsonData });
+        watchUser({ chat, name: msg.from.first_name, message: jsonData });
 
         // console.log(333, jsonData);
 
@@ -264,7 +264,7 @@ module.exports = () => {
         sendMessageWithRepeat(chatId, userMessage);
         watchUser({
           chat,
-          name: msg.from.username,
+          name: msg.from.first_name,
           message: error.message,
         });
       }
@@ -273,7 +273,7 @@ module.exports = () => {
       clearTimeout(userData.timeoutId);
       console.error(error);
       sendMessageWithRepeat(chatId, userMessage);
-      watchUser({ chat, name: msg.from.username, message: error.message });
+      watchUser({ chat, name: msg.from.first_name, message: error.message });
     }
   });
 };

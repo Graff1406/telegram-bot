@@ -120,9 +120,9 @@ module.exports = () => {
     //     "https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/76e32e4c-996d-4647-9f75-7dfd4c41059c/1920x",
     // });
 
-    postToFacebookGroup("testMessage");
+    // postToFacebookGroup("testMessage");
 
-    return;
+    // return;
 
     const chatId = msg.chat.id;
     const userMessage = msg.text;
