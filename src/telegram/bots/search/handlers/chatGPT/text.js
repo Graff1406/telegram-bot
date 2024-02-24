@@ -1,4 +1,4 @@
-const axios = require("axios");
+// const axios = require("axios");
 const chat = require("../../chat");
 const openService = require("../../../../../api/openai/openaiService");
 const instructions = require("../../../../../models/instructions");
@@ -10,7 +10,7 @@ const filterAllowedTags = require("../../../../../helpers/filterAllowedTags");
 const watchUser = require("../../../../../modules/watchUser");
 
 module.exports = () => {
-  const assistants = {};
+  let assistants = {};
   let translation = {};
   let data = {};
 

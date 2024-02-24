@@ -2,32 +2,42 @@ const axios = require("axios");
 
 let accessToken;
 
-const getQueryInitData = async (dir) => {
-  const getAccessToken = async () => {
-    const res = await axios.get(
-      "https://graph.facebook.com/v12.0/oauth/access_token",
-      {
-        params: {
-          grant_type: "fb_exchange_token",
-          client_id: process.env.FACEBOOK_APP_ID,
-          client_secret: process.env.FACEBOOK_APP_SECRET,
-          fb_exchange_token: process.env.FACEBOOK_SHIRT_ACCESS_TOKEN,
-        },
-      }
-    );
+const getAccessToken = async () => {
+  const res = await axios.get(
+    "https://graph.facebook.com/v12.0/oauth/access_token",
+    {
+      params: {
+        grant_type: "fb_exchange_token",
+        client_id: process.env.FACEBOOK_APP_ID,
+        client_secret: process.env.FACEBOOK_APP_SECRET,
+        fb_exchange_token:
+          accessToken || process.env.FACEBOOK_SHIRT_ACCESS_TOKEN,
+      },
+    }
+  );
 
-    return res.data;
-  };
+  return res.data;
+};
 
+const autoRefreshAccessTokenFacebook = async () => {
   if (!accessToken) {
     const { access_token, expires_in } = await getAccessToken();
     accessToken = access_token;
 
-    const expiresIn = expires_in - 20000;
+    const expiresIn = Math.max(expires_in - 100000, 0);
 
-    setTimeout(() => {}, !!expiresIn ? expiresIn : expires_in);
+    console.log(
+      "Access token for FB: ",
+      accessToken.substring(0, 10),
+      " ",
+      Date.now()
+    );
+
+    setTimeout(autoRefreshAccessTokenFacebook, expiresIn);
   }
+};
 
+const getQueryInitData = async (dir) => {
   return {
     endpoint: `https://graph.facebook.com/v19.0/${process.env.FACEBOOK_DENONA_GROUP_ID}/${dir}`,
     params: {
@@ -59,14 +69,16 @@ const uploadImages = async (images) => {
 };
 
 const postToFacebookGroup = async ({
-  message = "Test",
-  images = [
-    "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/c7aecd81-2acb-4d0a-9809-2553cd590365/1920x",
-    "https://avatars.mds.yandex.net/get-kinopoisk-image/1773646/0291fda2-ca34-46cf-9bdc-3754e16d25f9/1920x",
-  ],
+  content = "",
+  photos = [],
+  agentNickname,
 }) => {
+  content = content.replace(/[_*]/g, "");
+  content += `\nTelegram: https://t.me/${agentNickname}`;
+  photos = photos.map((p) => p[p.length - 1].link);
+
   try {
-    const media = await uploadImages(images);
+    const media = await uploadImages(photos);
     // return;
 
     const { endpoint, params } = await getQueryInitData("feed");
@@ -74,7 +86,7 @@ const postToFacebookGroup = async ({
     const response = await axios.post(
       endpoint,
       {
-        message,
+        message: content,
         attached_media: media,
       },
       { params }
@@ -87,7 +99,7 @@ const postToFacebookGroup = async ({
   }
 };
 
-module.exports = postToFacebookGroup;
+module.exports = { postToFacebookGroup, autoRefreshAccessTokenFacebook };
 
 // attached_media: [
 //   { media_fbid: "122113543580199485" },

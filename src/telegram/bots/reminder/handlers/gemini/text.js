@@ -1,8 +1,10 @@
 const chat = require("../../chat");
 const geminiService = require("../../../../../api/gemini/geminiService");
 const instructions = require("../../../../../models/instructions");
-const sendMessageToViber = require("../../../../../modules/sendMessageToViber");
-const postToFacebookGroup = require("../../../../../helpers/postToFacebookGroup");
+// const sendMessageToViber = require("../../../../../modules/sendMessageToViber");
+// const {
+//   postToFacebookGroup,
+// } = require("../../../../../helpers/postToFacebookGroup");
 
 const gTTS = require("gtts");
 const fs = require("fs");
@@ -10,7 +12,7 @@ const path = require("path");
 const util = require("util");
 
 module.exports = () => {
-  let chatHistory = {};
+  // let chatHistory = {};
 
   let settimeoutID;
   let lastMessage = "";

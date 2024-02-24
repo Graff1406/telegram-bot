@@ -1,7 +1,7 @@
 const chat = require("../../chat");
 
 const openService = require("../../../../../api/openai/openaiService");
-const geminiService = require("../../../../../api/gemini/geminiService");
+// const geminiService = require("../../../../../api/gemini/geminiService");
 
 const extractJsonSubstring = require("../../../../../helpers/extractJsonSubstring");
 const updateProperty = require("../../../../../helpers/updateProperty");
@@ -15,6 +15,9 @@ const filterAllowedTags = require("../../../../../helpers/filterAllowedTags");
 const instructions = require("../../../../../models/instructions");
 const sendMessageToViber = require("../../../../../modules/sendMessageToViber");
 const watchUser = require("../../../../../modules/watchUser");
+const {
+  postToFacebookGroup,
+} = require("../../../../../helpers/postToFacebookGroup");
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -136,26 +139,6 @@ module.exports = () => {
     }
   };
 
-  // const sendTelegramMessage = async ({id, title, text, options}) => {
-  //   await chat.sendMessage(
-  //     id,
-  //     `*${title}*\n${text}`,
-  //     {
-  //       parse_mode: 'Markdown',
-  //       reply_markup: {
-  //         inline_keyboard: [
-  //           [
-  //             {
-  //               text: translation.repeatLastActionButton.title,
-  //               callback_data: "repeat_last_action",
-  //             },
-  //           ],
-  //         ],
-  //       },
-  //     }
-  //   );
-  // }
-
   const sendMessageWithRepeat = (chatId, userMessage) => {
     const userData = getUserData(chatId);
     userData.lastUserMessage = userMessage;
@@ -177,16 +160,6 @@ module.exports = () => {
       }
     );
   };
-
-  // const publishOnGroup = async (chatId, message) => {
-  //   const media = await getMediaBasedLinks(userData.propertyPictureLinks);
-
-  //   await chat.sendMediaGroup(chatId, media);
-
-  //   chat.sendMessage(chatId, message, {
-  //     parse_mode: "Markdown",
-  //   });
-  // };
 
   const runConversation = async (chatId, userMessage, agent) => {
     const userData = getUserData(chatId);
@@ -213,33 +186,21 @@ module.exports = () => {
 
       const responseAssistant = await assistantInstance(userMessage);
 
-      userData.chatHistory.push(
-        {
-          role: "user",
-          parts: userMessage,
-        },
-        {
-          role: "model",
-          parts: "",
-        }
-      );
+      // userData.chatHistory.push(
+      //   {
+      //     role: "user",
+      //     parts: userMessage,
+      //   },
+      //   {
+      //     role: "model",
+      //     parts: "",
+      //   }
+      // );
 
       // const responseAssistant = await geminiService.generateChatText({
       //   userMessage,
       //   instructions: instructions.crm,
       //   chatHistory: userData.chatHistory,
-      // });
-
-      console.log(1111, responseAssistant);
-      // return;
-
-      // await new Promise((resolve, reject) => {
-      //   // Используем setTimeout для имитации задержки в 15 секунд
-      //   setTimeout(() => {
-      //     // После задержки, успешно выполняем промис
-      //     resolve("Прошло 15 секунд!");
-      //     userData.status = "completed";
-      //   }, 5000);
       // });
 
       userData.status = "completed";
@@ -250,20 +211,17 @@ module.exports = () => {
 
       try {
         const data = JSON.parse(extractJsonSubstring(responseAssistant));
-        // console.log(22222, data);
 
-        if (
-          Array.isArray(userData.chatHistory) &&
-          userData.chatHistory.length > 0 &&
-          data &&
-          typeof data.text === "string" &&
-          data.text.length > 0
-        ) {
-          userData.chatHistory[userData.chatHistory.length - 1].parts =
-            data.text;
-        }
-
-        // console.log(66666, data);
+        // if (
+        //   Array.isArray(userData.chatHistory) &&
+        //   userData.chatHistory.length > 0 &&
+        //   data &&
+        //   typeof data.text === "string" &&
+        //   data.text.length > 0
+        // ) {
+        //   userData.chatHistory[userData.chatHistory.length - 1].parts =
+        //     data.text;
+        // }
 
         // const data = {
         //   text: "текстовый ответ",
@@ -275,11 +233,15 @@ module.exports = () => {
         //   text: "текстовый ответ",
         //   property: {
         //     description:
-        //       "_Тип недвижимости:_ *Квартира*\n\n_Адрес:_ *ул. Галицкая, Ивано-Франковск*\n\n_Цена:_ *59 000 $ (2 289 200 грн, 434 $ за м²)*\n\n_Общая площадь:_*136 м²*_Этаж:_*5 из 6*\n\n_Материал стен:_ *Кирпич*\n\n_Состояние:_ *Вторичная недвижимость, 2-уровневая с ремонтом*\n\n_Комиссионные:_ *Без комиссионных*",
+        //       "_Тип недвижимости:_ *Квартира*\n_Адрес:_ *ул. Галицкая, Ивано-Франковск*\n_Цена:_ *59 000 $ (2 289 200 грн, 434 $ за м²)*\n_Общая площадь:_*136 м²*\n_Этаж:_*5 из 6*\n_Материал стен:_ *Кирпич*\n_Состояние:_ *Вторичная недвижимость, 2-уровневая с ремонтом*\n_Комиссионные:_ *Без комиссионных*",
         //     location: true,
+        //     minData: true,
         //   },
         //   list: false,
+        //   phoneNumbers: [],
         // };
+
+        // const responseAssistant = "";
 
         if (data === null && typeof responseAssistant === "string") {
           chat.sendMessage(chatId, responseAssistant);
@@ -299,6 +261,7 @@ module.exports = () => {
             typeof data.text === "string")
         ) {
           chat.sendMessage(chatId, data.text);
+          console.log(111);
           return;
         }
 
@@ -726,6 +689,7 @@ module.exports = () => {
     const agentNickname = query.from.username;
     const agentFirstName = query.from.first_name;
     const agentLanguageCode = query.from.language_code;
+    console.log("🚀 ~ chat.on ~ query:", agentNickname);
 
     updateLastInteractionTime(chatId);
     const userData = getUserData(chatId);
@@ -750,6 +714,14 @@ module.exports = () => {
         userData.propertyPictureLinks.length > 0 &&
         userData.propertyDescription.length > 0
       ) {
+        await postToFacebookGroup({
+          content: `${userData.propertyDescription}\n${agentPhoneNumbers.join(
+            "\n"
+          )}\n${agentFirstName}`,
+          photos: userData.propertyPictureLinks,
+          agentNickname,
+        });
+
         await sendMessageToViber(
           {
             type: "picture",
@@ -788,6 +760,13 @@ module.exports = () => {
         data === "publish_without_picture" &&
         userData.propertyDescription.length > 0
       ) {
+        await postToFacebookGroup({
+          content: `${userData.propertyDescription}\n${agentPhoneNumbers.join(
+            "\n"
+          )}\n${agentFirstName}`,
+          agentNickname,
+        });
+
         await sendMessageToViber(
           {
             type: "text",

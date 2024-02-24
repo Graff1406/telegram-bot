@@ -5,6 +5,9 @@ const telegramCRMBot = require("./telegram/bots/crm/chat");
 const telegramSearchBot = require("./telegram/bots/search/chat");
 const telegramReminderBot = require("./telegram/bots/reminder/chat");
 const setViberWebhook = require("./modules/setViberWebhook");
+const {
+  autoRefreshAccessTokenFacebook,
+} = require("./helpers/postToFacebookGroup");
 
 // Bots
 
@@ -13,10 +16,15 @@ const {
   watchingTelegramReminderBot,
 } = require("./telegram/bots/exports");
 
-// const telegramBotMessage = require("./telegram/handleMessage");
-
 // Modules
+
 const pingServer = require("./modules/pingServer");
+
+// API
+
+const {
+  createReadStreamFilesForOpenAIAssistant,
+} = require("./api/openai/openaiService");
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -83,13 +91,15 @@ watchingTelegramReminderBot();
 
 setInterval(pingServer, 270000); // 4,5 minutes
 
-const ngrok = "https://43ae-185-6-123-160.ngrok-free.app";
+const ngrok = "https://d57b-5-83-191-5.ngrok-free.app";
 const prod = "https://telegram-bot-denona.onrender.com";
 
 app.listen(port, () => {
   console.log(`The server is running on the port ${port}`);
 
   setViberWebhook(ngrok + viberChannel);
+  autoRefreshAccessTokenFacebook();
+  createReadStreamFilesForOpenAIAssistant();
 });
 
 const telegramCRMBotUrl = isDev

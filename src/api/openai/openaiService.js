@@ -1,34 +1,46 @@
 const openaiInstance = require("./config");
-const instructions = require("../../models/instructions");
 const extractJsonSubstring = require("../../helpers/extractJsonSubstring");
 const path = require("path");
 const fs = require("fs");
-const fsP = require("fs/promises");
+
+const fileIds = [];
+
+const createReadStreamFilesForOpenAIAssistant = async () => {
+  const patToFileByAgent = path.join(__dirname, "../../data/properties.json");
+  // const patToFileByParser = path.join(
+  //   __dirname,
+  //   "../../modules/parser/links.json"
+  // );
+
+  try {
+    console.log("Starting read files for OPENAI");
+
+    const [fileWithPropertiesByAgent, fileWithPropertiesByParser] =
+      await Promise.all([
+        openaiInstance.files.create({
+          file: fs.createReadStream(patToFileByAgent),
+          purpose: "assistants",
+        }),
+        // openaiInstance.files.create({
+        //   file: fs.createReadStream(patToFileByParser),
+        //   purpose: "assistants",
+        // }),
+      ]);
+
+    // fileIds.push(fileWithPropertiesByAgent.id, fileWithPropertiesByParser.id);
+    fileIds.push(fileWithPropertiesByAgent.id);
+
+    console.log("Successful read files for OPENAI");
+  } catch (error) {
+    console.log("🚀 ~ createReadStreamFilesForOpenAIAssistant ~ error:", error);
+  }
+};
 
 const createAssistantAndThread = async (
   instruction,
   readFile = false,
-  model = "gpt-4-0125-preview"
+  model = "gpt-3.5-turbo-0125"
 ) => {
-  let fileIds = [];
-
-  if (readFile) {
-    const filePath = path.join(__dirname, "../../data/properties.json");
-    const fileData = await fsP.readFile(filePath, "utf8");
-
-    const isEmptyFile =
-      !fileData || !fileData.trim() || fileData.trim() === "[]";
-
-    if (!isEmptyFile) {
-      const file = await openaiInstance.files.create({
-        file: fs.createReadStream(filePath),
-        purpose: "assistants",
-      });
-
-      fileIds = [file.id];
-    }
-  }
-
   const assistant = await openaiInstance.beta.assistants.create({
     name: "Denona",
     instructions: instruction,
@@ -38,8 +50,7 @@ const createAssistantAndThread = async (
       },
     ],
     model, // gpt-3.5-turbo-0125, gpt-3.5-turbo-1106 , gpt-4-1106-preview, gpt-4-0125-preview
-    file_ids: fileIds.length ? fileIds : undefined,
-    // response_format: { type: "json_object" },
+    file_ids: readFile && fileIds.length ? fileIds : undefined,
   });
 
   const thread = await openaiInstance.beta.threads.create();
@@ -173,4 +184,9 @@ async function vision(
   }
 }
 
-module.exports = { generateText, generateChatResponse, vision };
+module.exports = {
+  generateText,
+  generateChatResponse,
+  vision,
+  createReadStreamFilesForOpenAIAssistant,
+};
