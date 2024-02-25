@@ -8,6 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 src/modules/parser
+Voice.mp3
+my-mind.mp3
 
 node_modules
 .env
