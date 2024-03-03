@@ -3,7 +3,7 @@ const { processImage } = require("../../helpers/imageProcessor");
 
 const extractJsonSubstring = require("../../helpers/extractJsonSubstring");
 
-async function generateText(prompt, temperature = 0.9) {
+async function generateText(prompt, temperature = 2) {
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
   try {
@@ -20,7 +20,7 @@ async function generateText(prompt, temperature = 0.9) {
 async function generateChatText({
   userMessage = "",
   chatHistory = [],
-  temperature = 0.5,
+  temperature = 2,
   instructions = "",
 }) {
   const model = genAI.getGenerativeModel({

@@ -1,8 +1,11 @@
 const axios = require("axios");
 
-let accessToken;
+let accessToken = {
+  tbilisi: "",
+  batumi: "",
+};
 
-const getAccessToken = async () => {
+const getAccessToken = async (token) => {
   const res = await axios.get(
     "https://graph.facebook.com/v12.0/oauth/access_token",
     {
@@ -10,8 +13,7 @@ const getAccessToken = async () => {
         grant_type: "fb_exchange_token",
         client_id: process.env.FACEBOOK_APP_ID,
         client_secret: process.env.FACEBOOK_APP_SECRET,
-        fb_exchange_token:
-          accessToken || process.env.FACEBOOK_SHIRT_ACCESS_TOKEN,
+        fb_exchange_token: token,
       },
     }
   );
@@ -20,34 +22,39 @@ const getAccessToken = async () => {
 };
 
 const autoRefreshAccessTokenFacebook = async () => {
-  if (!accessToken) {
-    const { access_token, expires_in } = await getAccessToken();
-    accessToken = access_token;
+  const [
+    { access_token: tbilisiAccessToken, expires_in: tbilisiExpiresIn },
+    { access_token: batumiAccessToken, expires_in: batumiExpiresIn },
+  ] = await Promise.all([
+    getAccessToken(process.env.FACEBOOK_SHIRT_ACCESS_TOKEN_TBILISI_PAGE),
+    getAccessToken(process.env.FACEBOOK_SHIRT_ACCESS_TOKEN_BATUMI_PAGE),
+  ]);
 
-    const expiresIn = Math.max(expires_in - 100000, 0);
+  accessToken.tbilisi = tbilisiAccessToken;
+  accessToken.batumi = batumiAccessToken;
 
-    console.log(
-      "Access token for FB: ",
-      accessToken.substring(0, 10),
-      " ",
-      Date.now()
-    );
+  const minExpiresIn = Math.min(tbilisiExpiresIn, batumiExpiresIn);
 
-    setTimeout(autoRefreshAccessTokenFacebook, expiresIn);
-  }
+  const expiresIn = Math.max(minExpiresIn - 100000, 0);
+
+  setTimeout(autoRefreshAccessTokenFacebook, expiresIn);
 };
 
-const getQueryInitData = async (dir) => {
+const getQueryInitData = async (dir, pageID, location) => {
   return {
-    endpoint: `https://graph.facebook.com/v19.0/${process.env.FACEBOOK_DENONA_GROUP_ID}/${dir}`,
+    endpoint: `https://graph.facebook.com/v19.0/${pageID}/${dir}`,
     params: {
-      access_token: accessToken,
+      access_token: accessToken[location],
     },
   };
 };
 
-const uploadImages = async (images) => {
-  const { endpoint, params } = await getQueryInitData("photos");
+const uploadImages = async (images, pageID, location) => {
+  const { endpoint, params } = await getQueryInitData(
+    "photos",
+    pageID,
+    location
+  );
 
   const items = [];
 
@@ -72,16 +79,33 @@ const postToFacebookGroup = async ({
   content = "",
   photos = [],
   agentNickname,
+  location,
 }) => {
+  if (!location)
+    throw new Error("Did not passed a location to postToFacebookGroup");
+
+  const pageID =
+    location === "tbilisi"
+      ? process.env.FACEBOOK_TBILISI_PAGE_ID
+      : process.env.FACEBOOK_BATUMI_PAGE_ID;
+
   content = content.replace(/[_*]/g, "");
-  content += `\nTelegram: https://t.me/${agentNickname}`;
-  photos = photos.map((p) => p[p.length - 1].link);
+
+  if (agentNickname) content += `\nTelegram: https://t.me/${agentNickname}`;
+
+  photos =
+    Array.isArray(photos) && photos.length > 0 && Object.hasOwnProperty("link")
+      ? photos.map((p) => p[p.length - 1].link)
+      : photos;
 
   try {
-    const media = await uploadImages(photos);
-    // return;
+    const media = await uploadImages(photos, pageID, location);
 
-    const { endpoint, params } = await getQueryInitData("feed");
+    const { endpoint, params } = await getQueryInitData(
+      "feed",
+      pageID,
+      location
+    );
 
     const response = await axios.post(
       endpoint,

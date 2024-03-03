@@ -31,7 +31,8 @@ const isDev = process.env.NODE_ENV === "development";
 const telegramCRMBotDir = "/telegram-crm-bot";
 const telegramSearchBotDir = "/telegram-search-bot";
 const telegramReminderBotDir = "/telegram-reminder-bot";
-const viberChannel = "/viber-channel";
+const viberChannelTbilisi = "/viber-channel-tbilisi";
+const viberChannelBatumi = "/viber-channel-batumi";
 const facebookDenonaPage = "/facebook-denona-page";
 
 const app = express();
@@ -62,9 +63,11 @@ app.post(telegramReminderBotDir, (req, res) => {
   res.sendStatus(200);
 });
 
-app.post(viberChannel, (req, res) => {
-  const update = req.body;
-  // console.log("🚀 ~ app.post ~ update:", update);
+app.post(viberChannelTbilisi, (req, res) => {
+  res.sendStatus(200);
+});
+
+app.post(viberChannelBatumi, (req, res) => {
   res.sendStatus(200);
 });
 
@@ -91,13 +94,20 @@ watchingTelegramReminderBot();
 
 setInterval(pingServer, 270000); // 4,5 minutes
 
-const ngrok = "https://d57b-5-83-191-5.ngrok-free.app";
+const ngrok = "https://cbb0-108-59-2-196.ngrok-free.app";
 const prod = "https://telegram-bot-denona.onrender.com";
 
 app.listen(port, () => {
   console.log(`The server is running on the port ${port}`);
 
-  setViberWebhook(ngrok + viberChannel);
+  setViberWebhook(
+    ngrok + viberChannelTbilisi,
+    process.env.VIBER_CHANNEL_TBILISI_REAL_ESTATE
+  );
+  setViberWebhook(
+    ngrok + viberChannelBatumi,
+    process.env.VIBER_CHANNEL_BATUMI_REAL_ESTATE
+  );
   autoRefreshAccessTokenFacebook();
   createReadStreamFilesForOpenAIAssistant();
 });

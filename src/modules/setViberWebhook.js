@@ -1,18 +1,14 @@
 const axios = require("axios");
 
-const viberAuthToken = process.env.VIBER_CHANNEL_DENONA_SEARCH_TOKEN;
-
-const setViberWebhook = async (webhookUrl) => {
+const setViberWebhook = async (webhookUrl, authToken) => {
   const viberApiUrl = "https://chatapi.viber.com/pa/set_webhook";
 
   try {
-    const response = await axios.post(viberApiUrl, {
+    const res = await axios.post(viberApiUrl, {
       url: webhookUrl,
-      auth_token: viberAuthToken,
+      auth_token: authToken,
     });
-
-    // console.log("Webhook set:", response.data);
-    return response.data;
+    // console.log("🚀 ~ setViberWebhook ~ res:", res);
   } catch (error) {
     console.error(
       "Error setting webhook:",
