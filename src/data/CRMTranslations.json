@@ -86,7 +86,35 @@
         }
     }
   },
-
+  {
+    "name": "warningInvalidLink",
+    "body": {
+      "ru": {
+        "title": "К сожалению переданную вами ссылку я не могу обработать. Я принимаю ссылки лишь с сайта https://home.ss.ge и https://www.myhome.ge",
+        "text": ""
+      },
+      "uk": {
+        "title": "На жаль, передане вами посилання я не можу обробити. Я приймаю посилання лише з сайту https://home.ss.ge та https://www.myhome.ge",
+        "text": ""
+      },
+      "ge": {
+        "title": "ბოდიში, თქვენ მიერ გადაცემული ლინკი ვერ ვამუშავებ. მე შევინახავ ლინკებს მხოლოდ https://home.ss.ge და https://www.myhome.ge საიტებიდან",
+        "text": ""
+      },
+      "de": {
+        "title": "Leider kann ich den von Ihnen übermittelten Link nicht verarbeiten. Ich akzeptiere Links nur von den Websites https://home.ss.ge und https://www.myhome.ge",
+        "text": ""
+      },
+      "en": {
+        "title": "Unfortunately, I cannot process the link you provided. I only accept links from the websites https://home.ss.ge and https://www.myhome.ge",
+        "text": ""
+      },
+      "tr": {
+        "title": "Üzgünüm, sağladığınız bağlantıyı işleyemiyorum. Sadece https://home.ss.ge ve https://www.myhome.ge sitelerinden bağlantıları kabul ediyorum",
+        "text": ""
+      }
+    }
+  },
   {
     "name": "waitingForResponse",
     "body": {
