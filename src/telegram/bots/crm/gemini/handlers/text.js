@@ -262,26 +262,30 @@ module.exports = () => {
 
               await chat.sendMediaGroup(chatId, media);
 
-              chat.sendMessage(chatId, "Объявление готова для Публикации", {
-                reply_markup: {
-                  inline_keyboard: [
-                    [
-                      {
-                        text: translation.cancelActionButton.title,
-                        callback_data: "publish_ad_cancel",
-                      },
-                      {
-                        text: translation.publishActionButton.title,
-                        callback_data: "publish_with_picture",
-                      },
+              chat.sendMessage(
+                chatId,
+                translation.adReadyForPublication.title,
+                {
+                  reply_markup: {
+                    inline_keyboard: [
+                      [
+                        {
+                          text: translation.cancelActionButton.title,
+                          callback_data: "publish_ad_cancel",
+                        },
+                        {
+                          text: translation.publishActionButton.title,
+                          callback_data: "publish_with_picture",
+                        },
+                      ],
                     ],
-                  ],
-                },
-              });
+                  },
+                }
+              );
             } else {
               chat.sendMessage(
                 chatId,
-                "К сожалению я не могу разместить публикацию. Недвижимость не относится к Тбилиси или Аджарии"
+                translation.warningNotTbilisiOrAdjara.title
               );
             }
 
@@ -308,10 +312,7 @@ module.exports = () => {
             // }
           }
         } else {
-          chat.sendMessage(
-            chatId,
-            "К сожелению переданную вами ссылку я не могу обработать"
-          );
+          chat.sendMessage(chatId, translation.warningInvalidLink.title);
         }
       } else {
         userData.chatHistory.push(
@@ -393,6 +394,11 @@ module.exports = () => {
           `*${translation.adSuccessfullyPublished.title}*\n${translation.adSuccessfullyPublished.text}`,
           { parse_mode: "Markdown" }
         );
+      } else {
+        chat.answerCallbackQuery(query.id, {
+          text: translation.actionPreviouslyDone.title,
+          cache_time: 1,
+        });
       }
     } catch (error) {
       console.log("🚀 ~ chat.on ~ error:", error);

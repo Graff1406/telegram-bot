@@ -29,6 +29,65 @@
     }       
   },
   {
+    "name": "adReadyForPublication",
+    "body": {
+        "ru": {
+            "title": "Объявление готово к публикации",
+            "text": "Вы можете сейчас отправить фотографии в этот чат, и мы их добавим к данному объявлению и опубликуем все вместе, или можете опубликовать объявление без фотографии!"
+        },
+        "uk": {
+            "title": "Оголошення готове до публікації",
+            "text": "Ви можете зараз відправити фотографії в цей чат, і ми їх додамо до цього оголошення та опублікуємо все разом, або можете опублікувати оголошення без фотографії!"
+        },
+        "ge": {
+            "title": "განცხადება გამომზადებულია გამოქვეყნებაზე",
+            "text": "შეგიძლიათ ახლა გააგზავნოთ ფოტოები ამ ჩათში, და ჩვენ მათ დავამატებთ ამ განცხადებას და ვერაფერს გამოვაქვეყნებთ ერთად, ან შეგიძლიათ გამოაქვეყნოთ განცხადება უკაფაზოდ!"
+        },
+        "de": {
+            "title": "Anzeige bereit zur Veröffentlichung",
+            "text": "Sie können jetzt Fotos in diesen Chat senden, und wir fügen sie zu dieser Anzeige hinzu und veröffentlichen alles zusammen, oder Sie können die Anzeige ohne Foto veröffentlichen!"
+        },
+        "en": {
+            "title": "Ad Ready for Publication",
+            "text": "You can now send photos to this chat, and we will add them to this ad and publish everything together, or you can publish the ad without a photo!"
+        },
+        "tr": {
+            "title": "Yayınlanmaya Hazır İlan",
+            "text": "Şimdi bu sohbete fotoğraf gönderebilir ve onları bu ilana ekleriz ve her şeyi birlikte yayınlarız veya fotoğrafsız ilanı yayınlayabilirsiniz!"
+        }
+    }
+  },
+  {
+    "name": "warningNotTbilisiOrAdjara",
+    "body": {
+        "ru": {
+            "title": "Объявление не в Тбилиси или Аджарии",
+            "text": ""
+        },
+        "uk": {
+            "title": "Оголошення не у Тбілісі або Аджарії",
+            "text": ""
+        },
+        "ge": {
+            "title": "განცხადება არ არის თბილისში ან აჭარაში",
+            "text": ""
+        },
+        "de": {
+            "title": "Anzeige nicht in Tbilisi oder Adscharien",
+            "text": ""
+        },
+        "en": {
+            "title": "Ad not in Tbilisi or Adjara",
+            "text": ""
+        },
+        "tr": {
+            "title": "İlan Tiflis veya Acara'da değil",
+            "text": ""
+        }
+    }
+  },
+
+  {
     "name": "waitingForResponse",
     "body": {
       "ru": {

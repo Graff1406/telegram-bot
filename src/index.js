@@ -22,9 +22,9 @@ const pingServer = require("./modules/pingServer");
 
 // API
 
-const {
-  createReadStreamFilesForOpenAIAssistant,
-} = require("./api/openai/openaiService");
+// const {
+//   createReadStreamFilesForOpenAIAssistant,
+// } = require("./api/openai/openaiService");
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -94,7 +94,7 @@ watchingTelegramReminderBot();
 
 setInterval(pingServer, 270000); // 4,5 minutes
 
-const ngrok = "https://cbb0-108-59-2-196.ngrok-free.app";
+const ngrok = "https://5bf2-192-225-170-146.ngrok-free.app";
 const prod = "https://telegram-bot-denona.onrender.com";
 
 app.listen(port, () => {
@@ -109,7 +109,7 @@ app.listen(port, () => {
     process.env.VIBER_CHANNEL_BATUMI_REAL_ESTATE
   );
   autoRefreshAccessTokenFacebook();
-  createReadStreamFilesForOpenAIAssistant();
+  // createReadStreamFilesForOpenAIAssistant();
 });
 
 const telegramCRMBotUrl = isDev

@@ -35,7 +35,7 @@ const autoRefreshAccessTokenFacebook = async () => {
 
   const minExpiresIn = Math.min(tbilisiExpiresIn, batumiExpiresIn);
 
-  const expiresIn = Math.max(minExpiresIn - 100000, 0);
+  const expiresIn = Math.max(minExpiresIn - 300000, 0);
 
   setTimeout(autoRefreshAccessTokenFacebook, expiresIn);
 };
