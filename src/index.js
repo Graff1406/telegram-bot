@@ -42,6 +42,10 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get("/", (req, res) => {
+  res.sendStatus(200);
+});
+
 app.post(telegramCRMBotDir, (req, res) => {
   const update = req.body;
   // bot.processUpdate(update);
@@ -86,16 +90,16 @@ app.get(facebookDenonaPage, (req, res) => {
   }
 });
 
+const ngrok = "https://5bf2-192-225-170-146.ngrok-free.app";
+const prod = "https://telegram-bot-denona.onrender.com";
+
 watchingTelegramCRMBot();
 
 watchingTelegramReminderBot();
 
+pingServer(isDev ? ngrok : prod);
+
 // telegramBotMessage();
-
-setInterval(pingServer, 270000); // 4,5 minutes
-
-const ngrok = "https://5bf2-192-225-170-146.ngrok-free.app";
-const prod = "https://telegram-bot-denona.onrender.com";
 
 app.listen(port, () => {
   console.log(`The server is running on the port ${port}`);
