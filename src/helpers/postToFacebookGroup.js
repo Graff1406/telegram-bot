@@ -34,18 +34,23 @@ const autoRefreshAccessTokenFacebook = async () => {
     accessToken.tbilisi = tbilisiAccessToken;
     accessToken.batumi = batumiAccessToken;
 
-    const minExpiresIn = Math.min(tbilisiExpiresIn, batumiExpiresIn);
+    // const minExpiresIn = Math.min(tbilisiExpiresIn, batumiExpiresIn);
 
-    const expiresIn = Math.max(minExpiresIn - 300000, 0);
+    // const expiresIn = Math.max(minExpiresIn - 120000, 0);
 
-    setTimeout(autoRefreshAccessTokenFacebook, expiresIn);
+    setTimeout(autoRefreshAccessTokenFacebook, 120000);
+    console.log(
+      "Have got access token for FBL: ",
+      tbilisiAccessToken.substring(0, 5),
+      batumiAccessToken.substring(0, 5)
+    );
   } catch (error) {
     console.log("autoRefreshAccessTokenFacebook", error);
-    setTimeout(autoRefreshAccessTokenFacebook, expiresIn);
+    setTimeout(autoRefreshAccessTokenFacebook, 120000);
   }
 };
 
-const getQueryInitData = async (dir, pageID, location) => {
+const getQueryInitData = (dir, pageID, location) => {
   return {
     endpoint: `https://graph.facebook.com/v19.0/${pageID}/${dir}`,
     params: {
@@ -55,11 +60,7 @@ const getQueryInitData = async (dir, pageID, location) => {
 };
 
 const uploadImages = async (images, pageID, location) => {
-  const { endpoint, params } = await getQueryInitData(
-    "photos",
-    pageID,
-    location
-  );
+  const { endpoint, params } = getQueryInitData("photos", pageID, location);
 
   const items = [];
 
@@ -106,11 +107,7 @@ const postToFacebookGroup = async ({
   try {
     const media = await uploadImages(photos, pageID, location);
 
-    const { endpoint, params } = await getQueryInitData(
-      "feed",
-      pageID,
-      location
-    );
+    const { endpoint, params } = getQueryInitData("feed", pageID, location);
 
     const response = await axios.post(
       endpoint,
