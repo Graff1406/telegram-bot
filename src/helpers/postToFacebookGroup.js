@@ -22,22 +22,27 @@ const getAccessToken = async (token) => {
 };
 
 const autoRefreshAccessTokenFacebook = async () => {
-  const [
-    { access_token: tbilisiAccessToken, expires_in: tbilisiExpiresIn },
-    { access_token: batumiAccessToken, expires_in: batumiExpiresIn },
-  ] = await Promise.all([
-    getAccessToken(process.env.FACEBOOK_SHIRT_ACCESS_TOKEN_TBILISI_PAGE),
-    getAccessToken(process.env.FACEBOOK_SHIRT_ACCESS_TOKEN_BATUMI_PAGE),
-  ]);
+  try {
+    const [
+      { access_token: tbilisiAccessToken, expires_in: tbilisiExpiresIn },
+      { access_token: batumiAccessToken, expires_in: batumiExpiresIn },
+    ] = await Promise.all([
+      getAccessToken(process.env.FACEBOOK_SHIRT_ACCESS_TOKEN_TBILISI_PAGE),
+      getAccessToken(process.env.FACEBOOK_SHIRT_ACCESS_TOKEN_BATUMI_PAGE),
+    ]);
 
-  accessToken.tbilisi = tbilisiAccessToken;
-  accessToken.batumi = batumiAccessToken;
+    accessToken.tbilisi = tbilisiAccessToken;
+    accessToken.batumi = batumiAccessToken;
 
-  const minExpiresIn = Math.min(tbilisiExpiresIn, batumiExpiresIn);
+    const minExpiresIn = Math.min(tbilisiExpiresIn, batumiExpiresIn);
 
-  const expiresIn = Math.max(minExpiresIn - 300000, 0);
+    const expiresIn = Math.max(minExpiresIn - 300000, 0);
 
-  setTimeout(autoRefreshAccessTokenFacebook, expiresIn);
+    setTimeout(autoRefreshAccessTokenFacebook, expiresIn);
+  } catch (error) {
+    console.log("autoRefreshAccessTokenFacebook", error);
+    setTimeout(autoRefreshAccessTokenFacebook, expiresIn);
+  }
 };
 
 const getQueryInitData = async (dir, pageID, location) => {
