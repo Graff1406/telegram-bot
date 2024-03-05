@@ -34,11 +34,11 @@ const autoRefreshAccessTokenFacebook = async () => {
     accessToken.tbilisi = tbilisiAccessToken;
     accessToken.batumi = batumiAccessToken;
 
-    // const minExpiresIn = Math.min(tbilisiExpiresIn, batumiExpiresIn);
+    const minExpiresIn = Math.min(tbilisiExpiresIn, batumiExpiresIn);
 
-    // const expiresIn = Math.max(minExpiresIn - 120000, 0);
+    const expiresIn = Math.max(minExpiresIn - 120000, 0);
 
-    setTimeout(autoRefreshAccessTokenFacebook, 120000);
+    setTimeout(autoRefreshAccessTokenFacebook, expiresIn);
     console.log(
       "Have got access token for FBL: ",
       tbilisiAccessToken.substring(0, 5),
@@ -46,7 +46,6 @@ const autoRefreshAccessTokenFacebook = async () => {
     );
   } catch (error) {
     console.log("autoRefreshAccessTokenFacebook", error);
-    setTimeout(autoRefreshAccessTokenFacebook, 120000);
   }
 };
 
