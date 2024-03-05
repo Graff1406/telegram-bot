@@ -206,7 +206,6 @@ module.exports = () => {
 
         if (isAllowedDomain) {
           const result = await domain.parser(link);
-
           userData.images = result.images;
 
           if (result && result.text) {
@@ -247,7 +246,7 @@ module.exports = () => {
               (location === "tbilisi" && geminiRusResponse) ||
               (location === "batumi" && geminiRusResponse)
             ) {
-              geminiRusResponse += `\nTelegram: https://t.me/${agentNickname}\n${agentFirstName}`;
+              geminiRusResponse = `${link}\n${geminiRusResponse}\nTelegram: https://t.me/${agentNickname}\n${agentFirstName}`;
 
               userData.generatedByRus = geminiRusResponse;
 
