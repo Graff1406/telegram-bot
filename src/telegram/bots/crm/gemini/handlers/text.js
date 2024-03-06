@@ -6,6 +6,9 @@ const geminiService = require("../../../../../api/gemini/geminiService");
 const instructions = require("../../../../../models/instructions");
 const watchUser = require("../../../../../modules/watchUser");
 const getTranslation = require("../../../../../helpers/getTranslation");
+
+const { batumiLinks, tbilisiLinks } = require("../../../../../data/resource");
+
 // const createCollage = require("../../../../../helpers/createCollage");
 
 // Add post
@@ -392,7 +395,9 @@ module.exports = () => {
 
         chat.sendMessage(
           chatId,
-          `*${translation.adSuccessfullyPublished.title}*\n${translation.adSuccessfullyPublished.text}`,
+          `*${translation.adSuccessfullyPublished.title}*\n${
+            translation.adSuccessfullyPublished.text
+          }${userData.location === "tbilisi" ? tbilisiLinks : batumiLinks}`,
           { parse_mode: "Markdown" }
         );
       } else {

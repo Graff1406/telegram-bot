@@ -528,27 +528,27 @@
     "body": {
       "ru": {
         "title": "Объявление успешно опубликовано\n",
-        "text": "Чтобы увидеть опубликованное объявление, посетите следующие ссылки:\n\n{links}"
+        "text": "Чтобы увидеть опубликованное объявление, посетите следующие ссылки:\n\n"
       },
       "uk": {
         "title": "Оголошення успішно опубліковано\n",
-        "text": "Щоб переглянути опубліковане оголошення, відвідайте наступні посилання:\n\n{links}"
+        "text": "Щоб переглянути опубліковане оголошення, відвідайте наступні посилання:\n\n"
       },
       "ge": {
         "title": "განცხადება წარმატებით გამოქვეყნებულია\n",
-        "text": "განცხადების ნახვისას, გთხოვთ, შეეკეთეთ შემდეგი ბმულები:\n\n{links}"
+        "text": "განცხადების ნახვისას, გთხოვთ, შეეკეთეთ შემდეგი ბმულები:\n\n"
       },
       "de": {
         "title": "Anzeige erfolgreich veröffentlicht\n",
-        "text": "Um die veröffentlichte Anzeige zu sehen, besuchen Sie bitte die folgenden Links:\n\n{links}"
+        "text": "Um die veröffentlichte Anzeige zu sehen, besuchen Sie bitte die folgenden Links:\n\n"
       },
       "en": {
         "title": "Ad Successfully Published\n",
-        "text": "To view the published ad, please visit the following links:\n\n{links}"
+        "text": "To view the published ad, please visit the following links:\n\n"
       },
       "tr": {
         "title": "İlan Başarıyla Yayınlandı\n",
-        "text": "Yayınlanan ilanı görmek için lütfen aşağıdaki bağlantılara gidin:\n\n{links}"
+        "text": "Yayınlanan ilanı görmek için lütfen aşağıdaki bağlantılara gidin:\n\n"
       }
     }
   }
