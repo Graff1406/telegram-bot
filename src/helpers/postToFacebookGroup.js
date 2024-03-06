@@ -39,11 +39,6 @@ const autoRefreshAccessTokenFacebook = async () => {
     const expiresIn = Math.max(minExpiresIn - 120000, 0);
 
     setTimeout(autoRefreshAccessTokenFacebook, expiresIn);
-    console.log(
-      "Have got access token for FBL: ",
-      tbilisiAccessToken.substring(0, 5),
-      batumiAccessToken.substring(0, 5)
-    );
   } catch (error) {
     console.log("autoRefreshAccessTokenFacebook", error);
   }

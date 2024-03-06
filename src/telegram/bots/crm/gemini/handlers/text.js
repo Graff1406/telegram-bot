@@ -205,6 +205,8 @@ module.exports = () => {
         const { isAllowedDomain, domain } = hasDomain(link);
 
         if (isAllowedDomain) {
+          chat.sendMessage(chatId, translation.waitingForResponse.text);
+
           const result = await domain.parser(link);
           userData.images = result.images;
 
