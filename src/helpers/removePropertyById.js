@@ -1,26 +1,53 @@
 const fs = require("fs/promises");
 const path = require("path");
 
-const removePropertyById = async (agentId, propertyId) => {
-  const pathToFileProperty = path.join(__dirname, `../data/properties.json`);
-  const pathToFilePictures = path.join(__dirname, `../data/pictures.json`);
+// File paths
+const propertiesFilePath = path.join(__dirname, `../data/properties.json`);
+const picturesFilePath = path.join(__dirname, `../data/pictures.json`);
 
+// Helper functions
+const readFileData = async (filePath) => {
+  try {
+    const fileData = await fs.readFile(filePath, "utf8");
+    return JSON.parse(fileData);
+  } catch (error) {
+    console.error(`Error reading file ${filePath}: ${error}`);
+    throw error;
+  }
+};
+
+const writeFileData = async (filePath, data) => {
+  try {
+    const jsonData = JSON.stringify(data, null, 2);
+    await fs.writeFile(filePath, jsonData, { encoding: "utf8" });
+  } catch (error) {
+    console.error(`Error writing file ${filePath}: ${error}`);
+    throw error;
+  }
+};
+
+const findIndexByProperty = (array, property, value) => {
+  return array.findIndex((item) => item[property] === value);
+};
+
+const removePropertyById = async (agentId, propertyId) => {
   try {
     // Read data from the properties.json file
-    const dataJSON = await fs.readFile(pathToFileProperty, "utf8");
-
-    // Parse JSON into an array of objects
-    let properties = JSON.parse(dataJSON);
+    let properties = await readFileData(propertiesFilePath);
 
     // Find the agent by id
-    const agentIndex = properties.findIndex(
-      (agent) => agent.telegramAgentID === agentId
+    const agentIndex = findIndexByProperty(
+      properties,
+      "telegramAgentID",
+      agentId
     );
 
     if (agentIndex !== -1) {
       // Find the property by id within the agent
-      const propertyIndex = properties[agentIndex].properties.findIndex(
-        (property) => property.id === propertyId
+      const propertyIndex = findIndexByProperty(
+        properties[agentIndex].properties,
+        "id",
+        propertyId
       );
 
       if (propertyIndex !== -1) {
@@ -28,37 +55,24 @@ const removePropertyById = async (agentId, propertyId) => {
         properties[agentIndex].properties.splice(propertyIndex, 1);
 
         // Update data in the properties.json file
-        await fs.writeFile(
-          pathToFileProperty,
-          JSON.stringify(properties, null, 2),
-          "utf8"
-        );
+        await writeFileData(propertiesFilePath, properties);
 
         console.log(
           `Property with id ${propertyId} removed from the properties array.`
         );
 
         // Read data from the pictures.json file
-        const picturesJSON = await fs.readFile(pathToFilePictures, "utf8");
-
-        // Parse JSON into an array of objects
-        let pictures = JSON.parse(picturesJSON);
+        let pictures = await readFileData(picturesFilePath);
 
         // Find pictures by property id
-        const pictureIndex = pictures.findIndex(
-          (picture) => picture.id === propertyId
-        );
+        const pictureIndex = findIndexByProperty(pictures, "id", propertyId);
 
         if (pictureIndex !== -1) {
           // Remove pictures
           pictures.splice(pictureIndex, 1);
 
           // Update data in the pictures.json file
-          await fs.writeFile(
-            pathToFilePictures,
-            JSON.stringify(pictures, null, 2),
-            "utf8"
-          );
+          await writeFileData(picturesFilePath, pictures);
 
           console.log(`Pictures for property with id ${propertyId} removed.`);
         } else {

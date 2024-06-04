@@ -2,9 +2,42 @@ const fs = require("fs/promises");
 const path = require("path");
 
 // Helpers
-
 const generateRandomID = require("./generateRandomID");
 const filterAllowedTags = require("./filterAllowedTags");
+
+// Constants
+const DEFAULT_SOURCE_ID = "telegramAgentID";
+const DEFAULT_SOURCE_NICKNAME = "telegramNickname";
+const PROPERTY_FILE_NAME = "properties";
+const AGENT_FILE_NAME = "agents";
+
+// File paths
+const propertyFilePath = path.join(
+  __dirname,
+  `../data/${PROPERTY_FILE_NAME}.json`
+);
+const agentFilePath = path.join(__dirname, `../data/${AGENT_FILE_NAME}.json`);
+
+// Helper functions
+const readFileData = async (filePath) => {
+  try {
+    const fileData = await fs.readFile(filePath, "utf8");
+    return JSON.parse(fileData);
+  } catch (error) {
+    console.error(`Error reading file ${filePath}: ${error}`);
+    throw error;
+  }
+};
+
+const writeFileData = async (filePath, data) => {
+  try {
+    const jsonData = JSON.stringify(data, null, 2);
+    await fs.writeFile(filePath, jsonData, { encoding: "utf8" });
+  } catch (error) {
+    console.error(`Error writing file ${filePath}: ${error}`);
+    throw error;
+  }
+};
 
 const updateProperty = async ({
   agentID,
@@ -14,14 +47,11 @@ const updateProperty = async ({
   agentNickname,
   agentLanguageCode,
   agentPhoneNumbers,
-  sourceID = "telegramAgentID",
-  sourceNickname = "telegramNickname",
-  propertyFileName = "properties",
-  agentFileName = "agents",
+  sourceID = DEFAULT_SOURCE_ID,
+  sourceNickname = DEFAULT_SOURCE_NICKNAME,
 }) => {
-  const propertyPath = path.join(__dirname, `../data/${propertyFileName}.json`);
-  const agentPath = path.join(__dirname, `../data/${agentFileName}.json`);
   const randomID = generateRandomID();
+
   try {
     const property = {
       id: generateRandomID(),
@@ -29,15 +59,8 @@ const updateProperty = async ({
       createdAt: Date.now(),
     };
 
-    // Reading existing property data from the file
-    const propertyJSON = await fs.readFile(propertyPath, "utf8");
-    let existingPropertyData = [];
-    try {
-      existingPropertyData = JSON.parse(propertyJSON);
-    } catch (parseError) {
-      console.error("Error parsing property JSON:", parseError);
-      throw parseError;
-    }
+    // Read existing property data
+    const existingPropertyData = await readFileData(propertyFilePath);
 
     // Check if the provided property ID already exists
     const existingAgentProperty = existingPropertyData.find(
@@ -69,22 +92,11 @@ const updateProperty = async ({
       existingPropertyData.push(newAgentProperty);
     }
 
-    // Converting the updated property data back to JSON
-    const updatedPropertyJSON = JSON.stringify(existingPropertyData, null, 2);
+    // Write updated property data
+    await writeFileData(propertyFilePath, existingPropertyData);
 
-    // Writing the updated property data back to the file
-    await fs.writeFile(propertyPath, updatedPropertyJSON, { encoding: "utf8" });
-
-    // Now, update the agent data
-    // Reading existing agent data from the file
-    const agentJSON = await fs.readFile(agentPath, "utf8");
-    let existingAgentData = [];
-    try {
-      existingAgentData = JSON.parse(agentJSON);
-    } catch (parseError) {
-      console.error("Error parsing agent JSON:", parseError);
-      throw parseError;
-    }
+    // Read existing agent data
+    const existingAgentData = await readFileData(agentFilePath);
 
     // Check if the provided agent ID already exists
     const existingAgent = existingAgentData.find(
@@ -92,24 +104,16 @@ const updateProperty = async ({
     );
 
     if (existingAgent) {
-      // Update the agentNickname if it has changed
-      if (existingAgent.telegramNickname !== agentNickname) {
-        existingAgent.telegramNickname = agentNickname;
+      // Update agent data if changed
+      if (existingAgent[sourceNickname] !== agentNickname) {
+        existingAgent[sourceNickname] = agentNickname;
       }
 
       if (existingAgent.firstName !== agentFirstName) {
         existingAgent.firstName = agentFirstName;
       }
 
-      function arraysEqual(arr1, arr2) {
-        if (arr1.length !== arr2.length) return false;
-        for (let i = 0; i < arr1.length; i++) {
-          if (arr1[i] !== arr2[i]) return false;
-        }
-        return true;
-      }
-
-      if (!arraysEqual(existingAgent.phoneNumbers, agentPhoneNumbers)) {
+      if (!areArraysEqual(existingAgent.phoneNumbers, agentPhoneNumbers)) {
         existingAgent.phoneNumbers = agentPhoneNumbers;
       }
     } else {
@@ -126,25 +130,18 @@ const updateProperty = async ({
       existingAgentData.push(newAgent);
     }
 
-    // Converting the updated agent data back to JSON
-    const updatedAgentJSON = JSON.stringify(existingAgentData, null, 2);
-
-    // Writing the updated agent data back to the file
-    await fs.writeFile(agentPath, updatedAgentJSON, { encoding: "utf8" });
-
-    const JSON_A = await fs.readFile(agentPath, "utf8");
-    const a = JSON.parse(JSON_A);
-    const JSON_P = await fs.readFile(propertyPath, "utf8");
-    const p = JSON.parse(JSON_P);
+    // Write updated agent data
+    await writeFileData(agentFilePath, existingAgentData);
 
     console.log(
       "----------------------------------------------------------------"
     );
-    console.log("New AGENT: ", a.length);
+    console.log("New AGENT count:", existingAgentData.length);
     console.log(
-      "New PROPERTY: ",
-      p.map((pr) =>
-        pr && Array.isArray(pr.properties) ? pr.properties.length : 0
+      "New PROPERTY count:",
+      existingPropertyData.reduce(
+        (total, item) => total + (item.properties ? item.properties.length : 0),
+        0
       )
     );
 
@@ -153,6 +150,12 @@ const updateProperty = async ({
     console.error("Error:", error);
     throw error;
   }
+};
+
+// Helper function for array comparison
+const areArraysEqual = (arr1, arr2) => {
+  if (arr1.length !== arr2.length) return false;
+  return arr1.every((value, index) => value === arr2[index]);
 };
 
 module.exports = updateProperty;

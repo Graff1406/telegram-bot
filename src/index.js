@@ -4,10 +4,12 @@ const bodyParser = require("body-parser");
 const telegramCRMBot = require("./telegram/bots/crm/chat");
 const telegramSearchBot = require("./telegram/bots/search/chat");
 const telegramReminderBot = require("./telegram/bots/reminder/chat");
+const telegram365proBot = require("./telegram/bots/365pro/chat");
+
 const setViberWebhook = require("./modules/setViberWebhook");
-const {
-  autoRefreshAccessTokenFacebook,
-} = require("./helpers/postToFacebookGroup");
+// const {
+//   autoRefreshAccessTokenFacebook,
+// } = require("./helpers/postToFacebookGroup");
 
 // Bots
 
@@ -31,6 +33,7 @@ const isDev = process.env.NODE_ENV === "development";
 const telegramCRMBotDir = "/telegram-crm-bot";
 const telegramSearchBotDir = "/telegram-search-bot";
 const telegramReminderBotDir = "/telegram-reminder-bot";
+const telegram365proBotDir = "/telegram-365pro-bot";
 const viberChannelTbilisi = "/viber-channel-tbilisi";
 const viberChannelBatumi = "/viber-channel-batumi";
 const facebookDenonaPage = "/facebook-denona-page";
@@ -67,6 +70,14 @@ app.post(telegramReminderBotDir, (req, res) => {
   res.sendStatus(200);
 });
 
+app.post(telegram365proBotDir, (req, res) => {
+  const update = req.body;
+  // console.log("🚀 ~ app.post ~ update:", update);
+
+  telegram365proBot.processUpdate(update);
+  res.sendStatus(200);
+});
+
 app.post(viberChannelTbilisi, (req, res) => {
   res.sendStatus(200);
 });
@@ -90,12 +101,8 @@ app.get(facebookDenonaPage, (req, res) => {
   }
 });
 
-const ngrok = "https://5bf2-192-225-170-146.ngrok-free.app";
+const ngrok = "https://91c8-198-7-58-79.ngrok-free.app";
 const prod = "https://telegram-bot-denona.onrender.com";
-
-watchingTelegramCRMBot();
-
-watchingTelegramReminderBot();
 
 pingServer(isDev ? ngrok : prod);
 
@@ -112,7 +119,7 @@ app.listen(port, () => {
     ngrok + viberChannelBatumi,
     process.env.VIBER_CHANNEL_BATUMI_REAL_ESTATE
   );
-  autoRefreshAccessTokenFacebook();
+  // autoRefreshAccessTokenFacebook();
   // createReadStreamFilesForOpenAIAssistant();
 });
 
@@ -128,6 +135,10 @@ const telegramReminderBotUrl = isDev
   ? ngrok + telegramReminderBotDir
   : prod + telegramReminderBotDir;
 
+const telegram365proBotUrl = isDev
+  ? ngrok + telegram365proBotDir
+  : prod + telegram365proBotDir;
+
 telegramCRMBot.setWebHook(telegramCRMBotUrl).catch((error) => {
   console.error(error);
 });
@@ -139,3 +150,11 @@ telegramSearchBot.setWebHook(telegramSearchBotUrl).catch((error) => {
 telegramReminderBot.setWebHook(telegramReminderBotUrl).catch((error) => {
   console.error(error);
 });
+
+telegram365proBot.setWebHook(telegram365proBotUrl).catch((error) => {
+  console.error(error);
+});
+
+watchingTelegramCRMBot();
+
+watchingTelegramReminderBot();

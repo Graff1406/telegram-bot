@@ -10,6 +10,7 @@ lerna-debug.log*
 src/modules/parser
 Voice.mp3
 my-mind.mp3
+fb-key.json
 
 node_modules
 .env

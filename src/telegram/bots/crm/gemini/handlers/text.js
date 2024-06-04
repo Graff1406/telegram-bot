@@ -55,6 +55,10 @@ const updateLastInteractionTime = (chatId) => {
   }
 };
 
+const clearUserData = (chatId) => {
+  data[chatId] = setInitData();
+};
+
 const getUserData = (chatId) => {
   if (!data[chatId]) {
     data[chatId] = setInitData();
@@ -208,7 +212,9 @@ module.exports = () => {
         const { isAllowedDomain, domain } = hasDomain(link);
 
         if (isAllowedDomain) {
-          chat.sendMessage(chatId, translation.waitingForResponse.text);
+          setTimeout(() => {
+            chat.sendMessage(chatId, translation.waitingForResponse.text);
+          }, 2000);
 
           const result = await domain.parser(link);
           userData.images = result.images;
@@ -399,6 +405,15 @@ module.exports = () => {
             translation.adSuccessfullyPublished.text
           }${userData.location === "tbilisi" ? tbilisiLinks : batumiLinks}`,
           { parse_mode: "Markdown" }
+        );
+      } else if (query.data === "publish_ad_cancel") {
+        clearUserData(chatId);
+        chat.sendMessage(
+          chatId,
+          `*${translation.successfulPublishingAdCancellation.title}*\n${translation.successfulPublishingAdCancellation.text}`,
+          {
+            parse_mode: "Markdown",
+          }
         );
       } else {
         chat.answerCallbackQuery(query.id, {

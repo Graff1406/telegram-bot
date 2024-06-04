@@ -22,22 +22,26 @@ const getMediaBasedLinks = async (
 
   // return;
 
-  const media = await Promise.all(
-    tabletSizePictures.map(async (pic, i) => {
-      const { data } = await axios.get(pic.link, {
-        responseType: "arraybuffer",
-      });
-      const photoBuffer = Buffer.from(data, "binary");
-      return {
-        type: "photo",
-        media: photoBuffer,
-        caption: i <= addCaptionToIndex ? caption : "",
-        parse_mode: i <= addCaptionToIndex ? "Markdown" : "",
-      };
-    })
-  );
+  try {
+    const media = await Promise.all(
+      tabletSizePictures.map(async (pic, i) => {
+        const { data } = await axios.get(pic.link, {
+          responseType: "arraybuffer",
+        });
+        const photoBuffer = Buffer.from(data, "binary");
+        return {
+          type: "photo",
+          media: photoBuffer,
+          caption: i <= addCaptionToIndex ? caption : "",
+          parse_mode: i <= addCaptionToIndex ? "Markdown" : "",
+        };
+      })
+    );
 
-  return media;
+    return media;
+  } catch (err) {
+    console.log("🚀 ~ err:", err);
+  }
 };
 
 module.exports = getMediaBasedLinks;

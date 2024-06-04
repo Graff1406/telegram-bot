@@ -32,6 +32,7 @@
     "sharp": "^0.33.2"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "nodemon": "^3.1.2"
   }
 }

@@ -1,5 +1,520 @@
 [
   {
+    "name": "phoneNumberReceived",
+    "body": {
+      "ru": {
+        "title": "Ваш номер телефона получен",
+        "text": ""
+      },
+      "uk": {
+        "title": "Ваш номер телефону отримано",
+        "text": ""
+      },
+      "ge": {
+        "title": "თქვენი ტელეფონის ნომერი მიღებულია",
+        "text": ""
+      },
+      "de": {
+        "title": "Ihre Telefonnummer wurde erhalten",
+        "text": ""
+      },
+      "en": {
+        "title": "Your phone number has been received",
+        "text": ""
+      },
+      "tr": {
+        "title": "Telefon numaranız alındı",
+        "text": ""
+      }
+    }
+  },  
+  {
+    "name": "anketaPublishedNotification",
+    "body": {
+      "ru": {
+        "title": "Ваша анкета успешно опубликована в нашей группе для спциалистов.\n\n *Теперь вы доступны для выдачи в данном чате в качестве специалиста*",
+        "text": ""
+      },
+      "uk": {
+        "title": "Ваша анкета успішно опублікована в нашій групі для фахівців.\n\n*Тепер ви доступні для видачі в цьому чаті як спеціаліст*",
+        "text": ""
+      },
+      "ge": {
+        "title": "თქვენი პროფილი წარმატებით გამოქვეყნდა ჩვენს სპეციალისტთა ჯგუფში.\n\n *ახლა ხელმისაწვდომი ხართ ამ ჩეთში გამოსაქვეყნებლად, როგორც სპეციალისტი*",
+        "text": ""
+      },
+      "de": {
+        "title": "Ihr Profil wurde erfolgreich in unserer Gruppe für Spezialisten veröffentlicht.\n\n *Sie stehen jetzt zur Veröffentlichung in diesem Chat als Spezialist zur Verfügung*",
+        "text": ""
+      },
+      "en": {
+        "title": "Your profile has been successfully published in our group for specialists.\n\n *You are now available for publication in this chat as a specialist*",
+        "text": ""
+      },
+      "tr": {
+        "title": "Profiliniz uzmanlara yönelik grubumuzda başarıyla yayınlandı.\n\n *Artık bu sohbette uzman olarak yayınlanmaya hazırsınız*",
+        "text": ""
+      }
+    }
+  },  
+  {
+    "name": "keepAddingProfileData",
+    "body": {
+      "ru": {
+        "title": "Продолжайте добавлять данные анкеты",
+        "text": ""
+      },
+      "uk": {
+        "title": "Продовжуйте додавати дані анкети",
+        "text": ""
+      },
+      "ge": {
+        "title": "განაგრძეთ თქვენი პროფილის დეტალების დამატება",
+        "text": ""
+      },
+      "de": {
+        "title": "Machen Sie weiter mit der Profildaten Eingabe",
+        "text": ""
+      },
+      "en": {
+        "title": "Keep adding profile data",
+        "text": ""
+      },
+      "tr": {
+        "title": "Profil verileri eklemeye devam edin",
+        "text": ""
+      }
+    }
+  },  
+  {
+    "name": "yourProfileReadyForPublication",
+    "body": {
+      "ru": {
+        "title": "Ваша анкета готова к публикации",
+        "text": ""
+      },
+      "uk": {
+        "title": "Ваш профіль готовий до публікації",
+        "text": ""
+      },
+      "ge": {
+        "title": "თქვენი პროფილი მზად არის გამოსაქვეყნებლად",
+        "text": ""
+      },
+      "de": {
+        "title": "Ваша анкета готова к публикации",
+        "text": ""
+      },
+      "en": {
+        "title": "Your profile is ready for publication",
+        "text": ""
+      },
+      "tr": {
+        "title": "Profiliniz yayımlanmaya hazır",
+        "text": ""
+      }
+    }
+  },  
+  {
+    "name": "sendPhoneNumber",
+    "body": {
+      "ru": {
+        "title": "Отправить номер телефона",
+        "text": ""
+      },
+      "uk": {
+        "title": "Надіслати номер телефону",
+        "text": ""
+      },
+      "ge": {
+        "title": "ტელეფონის ნომრის გაგზავნა",
+        "text": ""
+      },
+      "de": {
+        "title": "Telefonnummer senden",
+        "text": ""
+      },
+      "en": {
+        "title": "Send phone number",
+        "text": ""
+      },
+      "tr": {
+        "title": "Telefon numarası gönder",
+        "text": ""
+      }
+    }
+  },  
+  {
+    "name": "provideYourPhoneNumber",
+    "body": {
+      "ru": {
+        "title": "Укажите свой номер телефона"
+      },
+      "uk": {
+        "title": "Вкажіть свій номер телефону"
+      },
+      "ge": {
+        "title": "Შეიყვანეთ თქვენი ტელეფონის ნომერი",
+        "text": ""
+      },
+      "de": {
+        "title": "Geben Sie Ihre Telefonnummer an",
+        "text": ""
+      },
+      "en": {
+        "title": "Provide Your Phone Number",
+        "text": ""
+      },
+      "tr": {
+        "title": "Telefon numaranızı girin",
+        "text": ""
+      }
+    }
+  },  
+  {
+    "name": "deleteSpecialist",
+    "body": {
+      "ru": {
+        "title": "Удалить специалиста",
+        "text": ""
+      },
+      "uk": {
+        "title": "Видалити спеціаліста",
+        "text": ""
+      },
+      "ge": {
+        "title": "სპეციალისტის მოცილება",
+        "text": ""
+      },
+      "de": {
+        "title": "Spezialisten löschen",
+        "text": ""
+      },
+      "en": {
+        "title": "Delete specialist",
+        "text": ""
+      },
+      "tr": {
+        "title": "Uzmanı sil",
+        "text": ""
+      }
+    }
+  },  
+  {
+    "name": "specialistProfileUpdate",
+    "body": {
+      "ru": {
+        "title": "",
+        "text": ""
+      },
+      "uk": {
+        "title": "Ваша анкета вже додана та доступна для пошуку як спеціаліст.\n\nЩоб *оновити* дані спеціаліста, вам необхідно видалити поточну анкету та додати її заново.",
+        "text": ""
+      },
+      "ge": {
+        "title": "Ihre Anfrage wurde bereits hinzugefügt und ist für die Suche nach einem Spezialisten verfügbar. Um die Daten des Spezialisten zu aktualisieren, müssen Sie die aktuelle Anfrage löschen und erneut hinzufügen.",
+        "text": ""
+      },
+      "de": {
+        "title": "თქვენი პროფილი უკვე დამატებულია და შესაძლებელია მოძებნოთ როგორც სპეციალისტი.\n\nთქვენი სპეციალისტის დეტალების *განახლებისთვის, უნდა წაშალოთ მიმდინარე პროფილი და ხელახლა დაამატოთ.",
+        "text": ""
+      },
+      "en": {
+        "title": "Your profile has already been added and is available for search as a specialist.\n\nTo *update* the specialist data, you need to delete the current profile and add it again.",
+        "text": ""
+      },
+      "tr": {
+        "title": "Profiliniz zaten eklenmiş ve uzman olarak aramaya uygun.\n\nUzman verilerini *güncellemek* için mevcut profili silmeniz ve tekrar eklemeniz gerekir.",
+        "text": ""
+      }
+    }
+  },  
+  {
+    "name": "searchSpecialistModeEnabled",
+    "body": {
+      "ru": {
+        "title": "Включен режим поиска специалиста",
+        "text": ""
+      },
+      "uk": {
+        "title": "Увімкнено режим пошуку спеціаліста",
+        "text": ""
+      },
+      "ge": {
+        "title": "გაქტიურებულია სპეციალისტის ძიების რეჟიმი",
+        "text": ""
+      },
+      "de": {
+        "title": "Spezialistensuche-Modus aktiviert",
+        "text": ""
+      },
+      "en": {
+        "title": "Specialist search mode enabled",
+        "text": ""
+      },
+      "tr": {
+        "title": "Uzman arama modu etkin",
+        "text": ""
+      }
+    }
+  },  
+  {
+    "name": "detailedTaskDescriptionRequest",
+    "body": {
+      "ru": {
+        "title": "Пожалуйста, более подробно опишите задачу, и я подберу новый список специалистов."
+      },
+      "uk": {
+        "title": "Будь ласка, детальніше опишіть завдання, і я підберу новий список спеціалістів."
+      },
+      "ge": {
+        "title": "გთხოვთ უფრო დეტალურად აღწეროთ დავალება და მე შევარჩევ ახალ სპეციალისტთა სიას."
+      },
+      "de": {
+        "title": "Bitte beschreiben Sie die Aufgabe ausführlicher, und ich werde eine neue Liste von Spezialisten zusammenstellen."
+      },
+      "en": {
+        "title": "Please describe the task in more detail, and I will select a new list of specialists."
+      },
+      "tr": {
+        "title": "Lütfen görevi daha ayrıntılı olarak açıklayın, yeni bir uzman listesi seçeceğim."
+      }
+    }
+  },  
+  {
+    "name": "noSpecialistsAvailable",
+    "body": {
+      "ru": {
+        "title": "К сожалению, нет специалистов для выполнения",
+        "text": ""
+      },
+      "uk": {
+        "title": "На жаль, немає спеціалістів для виконання",
+        "text": ""
+      },
+      "ge": {
+        "title": "სამწუხაროდ, სპეციალისტები არ არიან",
+        "text": ""
+      },
+      "de": {
+        "title": "Leider gibt es keine Spezialisten für die Ausführung",
+        "text": ""
+      },
+      "en": {
+        "title": "Unfortunately, no specialists available for the task",
+        "text": ""
+      },
+      "tr": {
+        "title": "Maalesef, görev için uzman yok",
+        "text": ""
+      }
+    }
+  },  
+  {
+    "name": "comments",
+    "body": {
+      "ru": {
+        "title": "Комментарии",
+        "text": ""
+      },
+      "uk": {
+        "title": "Коментарі",
+        "text": ""
+      },
+      "ge": {
+        "title": "კომენტარები",
+        "text": ""
+      },
+      "de": {
+        "title": "Kommentare",
+        "text": ""
+      },
+      "en": {
+        "title": "Comments",
+        "text": ""
+      },
+      "tr": {
+        "title": "Yorumlar",
+        "text": ""
+      }
+    }
+  },  
+  {
+    "name": "recommendedAddPhotoOrVideo",
+    "body": {
+      "ru": {
+        "title": "Рекомендация:",
+        "text": "Перед публикацией вашего профиля, настоятельно рекомендуем добавить следующие материалы:\n\n- Фото и видео ваших работ\n- Дипломы и сертификаты\n- Видео презентацию ваших услуг\n\nЭти материалы помогут вам лучше представить свои навыки и профессионализм, а также привлечь больше клиентов."
+      },
+      "uk": {
+        "title": "Рекомендація:",
+        "text": "Перед публікацією вашого профілю, настійно рекомендуємо додати наступні матеріали:\n\n- Фото і відео вашої роботи\n- Дипломи і сертифікати\n- Відео презентацію ваших послуг\n\nЦі матеріали допоможуть вам краще представити свої навички та професіоналізм, а також привернути більше клієнтів."
+      },
+      "ge": {
+        "title": "რეკომენდაცია:",
+        "text": "თქვენი პროფილის გამოქვეყნებამდე გირჩევთ დაამატოთ შემდეგი მასალები:\n\n- თქვენი ნამუშევრის ფოტოები და ვიდეოები\n- დიპლომები და სერთიფიკატები\n- თქვენი სერვისების ვიდეო პრეზენტაცია\n\nეს მასალები დაგეხმარებათ აჩვენოთ თქვენი უნარები და პროფესიონალიზმი უკეთ ასახავს და უფრო მეტ მომხმარებელს იზიდავს."
+      },
+      "de": {
+        "title": "Empfehlung:",
+        "text": "Vor der Veröffentlichung Ihres Profils empfehlen wir dringend, folgende Materialien hinzuzufügen:\n\n- Fotos und Videos Ihrer Arbeit\n- Diplome und Zertifikate\n- Video-Präsentation Ihrer Dienstleistungen\n\nDiese Materialien helfen Ihnen, Ihre Fähigkeiten und Professionalität besser darzustellen und mehr Kunden anzuziehen."
+      },
+      "en": {
+        "title": "Recommendation:",
+        "text": "Before publishing your profile, we strongly recommend adding the following materials:\n\n- Photos and videos of your work\n- Diplomas and certificates\n- Video presentation of your services\n\nThese materials will help you better showcase your skills and professionalism, as well as attract more clients."
+      },
+      "tr": {
+        "title": "Tavsiye:",
+        "text": "Profilinizi yayınlamadan önce, aşağıdaki materyalleri eklemenizi şiddetle tavsiye ederiz:\n\n- Çalışmalarınızın fotoğrafları ve videoları\n- Diplomalar ve sertifikalar\n- Hizmetlerinizin video sunumu\n\nBu materyaller, becerilerinizi ve profesyonelliğinizi daha iyi sergilemenize ve daha fazla müşteri çekmenize yardımcı olacaktır."
+      }
+    }
+  },
+  {
+    "name": "findSpecialist",
+    "body": {
+      "ru": {
+        "title": "Поиск специалиста",
+        "text": ""
+      },
+      "uk": {
+        "title": "Пошук спеціаліста",
+        "text": ""
+      },
+      "ge": {
+        "title": "სპეციალისტის ძიება",
+        "text": ""
+      },
+      "de": {
+        "title": "Suche nach einem Spezialisten",
+        "text": ""
+      },
+      "en": {
+        "title": "Find a specialist",
+        "text": ""
+      },
+      "tr": {
+        "title": "Bir uzmana bul",
+        "text": ""
+      }
+    }
+  },
+  {
+    "name": "forSpecialist",
+    "body": {
+      "ru": {
+        "title": "Для специалистов",
+        "text": "Найдите специалистов по своему профилю и получите помощь в решении задач."
+      },
+      "uk": {
+        "title": "Для спеціалістів",
+        "text": "Знайдіть спеціалістів за своїм профілем та отримайте допомогу у вирішенні завдань."
+      },
+      "ge": {
+        "title": "სპეციალისტებისთვის",
+        "text": "თქვენი პროფილის სპეციალისტები ნახოдите და დახმარებას მიიღეთ ამოЗадачиევს."
+      },
+      "de": {
+        "title": "Für Spezialisten",
+        "text": "Finden Sie Spezialisten in Ihrem Bereich und erhalten Sie Hilfe bei der Lösung von Aufgaben."
+      },
+      "en": {
+        "title": "For Professionals",
+        "text": "Find specialists in your field and get help with your tasks."
+      },
+      "tr": {
+        "title": "Uzmanlar için",
+        "text": "Alanınızdaki uzmanları bulun ve görevlerinizde yardım alın."
+      }
+    }
+  },  
+  {
+    "name": "helpSpecialist",
+    "body": {
+      "ru": {
+        "title": "Помощь/Жалоба",
+        "text": ""
+      },
+      "uk": {
+        "title": "Допомога/Скарга",
+        "text": ""
+      },
+      "ge": {
+        "title": "დახმარება/ჩანათვალი",
+        "text": ""
+      },
+      "de": {
+        "title": "Hilfe/Beschwerde",
+        "text": ""
+      },
+      "en": {
+        "title": "Support/Complaint",
+        "text": ""
+      },
+      "tr": {
+        "title": "Destek/Şikayet",
+        "text": ""
+      }
+    }
+  },  
+  {
+    "name": "specialistRegistration",
+    "body": {
+      "ru": {
+        "title": "Регистрация специалиста",
+        "text": "Для того чтобы мы добавили вас в базу специалистов и смогли рекомендовать клиентам, пожалуйста, предоставьте следующую информацию:\n\n*Ваше портретное фото.\nВаше полное имя и фамилию.\nВозраст.\nГород, в котором вы предоставляете услуги.\nПеречень услуг, которые вы можете предложить клиентам.\nВаши расценки на предлагаемые услуги.\nОпыт работы в указанной сфере (количество лет).\nОбразование и квалификация, подтверждающие вашу экспертизу.\nФотографии или портфолио выполненных работ (если применимо).\nСсылки на ваши аккаунты в социальных сетях (если есть).*\n\nЧем более полную и достоверную информацию вы предоставите, тем больше шансов, что клиенты выберут именно вас для выполнения заказов. \n\nМы тщательно проверяем данные специалистов перед публикацией.\n\nПожалуйста, присылайте запрашиваемые сведения в этот чат.\nВ случае возникновения вопросов - обязательно уточняйте.\n\nВаша заявка будет рассмотрена в кратчайшие сроки!"
+      },
+      "uk": {
+        "title": "Реєстрація фахівця",
+        "text": "Для того щоб ми додали вас в базу фахівців і змогли рекомендувати клієнтам, будь ласка, надайте наступну інформацію:\n\n*Ваше портретне фото.\nВаше повне ім'я та прізвище.\nВік.\nМісто, в якому ви надаєте послуги.\nПерелік послуг, які ви можете запропонувати клієнтам.\nВаші розцінки на пропоновані послуги.\nДосвід роботи в зазначеній сфері (кількість років).\nОсвіта та кваліфікація, що підтверджують вашу експертизу.\nФотографії або портфоліо виконаних робіт (якщо застосовно).\nПосилання на ваші акаунти в соціальних мережах (якщо є).*\n\nЧим більш повну та достовірну інформацію ви надасте, тим більше шансів, що клієнти оберуть саме вас для виконання замовлень. \n\nМи ретельно перевіряємо дані фахівців перед публікацією.\n\nБудь ласка, надсилайте запитувані відомості в цей чат.\nУ разі виникнення питань - обов'язково уточнюйте.\n\nВаша заявка буде розглянута найближчим часом!"
+      },
+      "ge": {
+        "title": "სპეციალისტის რეგისტრაცია",
+        "text": "იმისთვის, რომ ჩვენ შეგვიძლია შეგიტანოთ სპეციალისტების ბაზაში და გირჩიოთ კლიენტებს, გთხოვთ მოგვაწოდოთ შემდეგი ინფორმაცია:\n\n*თქვენი პორტრეტის ფოტო.\nთქვენი სრული სახელი და გვარი.\nასაკი.\nქალაქი, სადაც სთავაზობთ მომსახურებებს.\nმომსახურებების ჩამონათვალი, რომელსაც კლიენტებს შესთავაზებთ.\nთქვენი ფასები შემოთავაზებულ მომსახურებებზე.\nსამუშაო გამოცდილება მითითებულ სფეროში (წლებით).\nგანათლება და კვალიფიკაცია, რომელიც დაადასტურებს თქვენს ექსპერტიზას.\nშესრულებული სამუშაოების ფოტოები ან პორტფოლიო (თუ გამოიყენება).\nბმულები თქვენს სოციალური ქსელების ანგარიშებზე (თუ არის).*\n\nრაც უფრო სრულ და სანდო ინფორმაციას მოგვაწვდით, მით მეტი შანსია, რომ კლიენტები აირჩევენ სწორედ თქვენ შეკვეთების შესასრულებლად. \n\nჩვენ გულმოდგინეთ ვამოწმებთ სპეციალისტების მონაცემებს გამოქვეყნებამდე.\nგთხოვთ, გამოგვიგზავნოთ მოთხოვნილი მონაცემები ამ ჩათში.\n\nთუ კითხვები გაქვთ - აუცილებლად დაზუსტეთ.\n\nთქვენი განაცხადი მოკლე დროში განიხილება!"
+      },
+      "de": {
+        "title": "Registrierung als Spezialist",
+        "text": "Um Sie in unsere Datenbank aufzunehmen und den Kunden empfehlen zu können, bitten wir Sie, uns folgende Informationen zur Verfügung zu stellen:\n\n*Ihr Porträtfoto.\nIhr vollständiger Name.\nAlter.\nStadt, in der Sie Dienstleistungen anbieten.\nListe der Dienstleistungen, die Sie den Kunden anbieten können.\nIhre Preisgestaltung für die angebotenen Dienstleistungen.\nBerufserfahrung im angegebenen Bereich (Jahre).\nBildung und Qualifikationen, die Ihre Expertise bestätigen.\nFotos oder Portfolio der erledigten Arbeiten (falls zutreffend).\nLinks zu Ihren Social-Media-Profilen (falls vorhanden).*\n\nJe vollständiger und genauer Ihre Informationen sind, desto größer sind Ihre Chancen, von den Kunden für Aufträge ausgewählt zu werden. \n\nWir überprüfen sorgfältig die Daten der Spezialisten vor der Veröffentlichung.\n\nBitte senden Sie die angeforderten Informationen in diesem Chat.\nBei Fragen können Sie uns jederzeit kontaktieren.\n\nIhre Anfrage wird so schnell wie möglich bearbeitet!"
+      },
+      "en": {
+        "title": "Specialist Registration",
+        "text": "To add you to our database of specialists and recommend you to clients, please provide the following information:\n\n*Your portrait photo.\nYour full name.\nAge.\nCity where you provide services.\nList of services you can offer to clients.\nYour rates for the services offered.\nWork experience in the specified field (number of years).\nEducation and qualifications confirming your expertise.\nPhotos or portfolio of completed works (if applicable).\nLinks to your social media profiles (if available).*\n\nThe more complete and accurate the information you provide, the higher the chances that clients will choose you for their orders. \n\nWe carefully verify the data of specialists before publication.\n\nPlease send the requested information in this chat.\nIf you have any questions, feel free to ask.\n\nYour application will be reviewed as soon as possible!"
+      },
+      "tr": {
+        "title": "Uzman Kayıt",
+        "text": "Sizi uzmanlar veritabanımıza ekleyebilmemiz ve müşterilere önerebilmemiz için lütfen aşağıdaki bilgileri sağlayın:\n\n*Portre fotoğrafınız.\nTam adınız.\nYaşınız.\nHizmet verdiğiniz şehir.\nMüşterilere sunabileceğiniz hizmetlerin listesi.\nTeklif edilen hizmetler için fiyatlarınız.\nBelirtilen alanda çalışma deneyiminiz (yıl sayısı).\nUzmanlığınızı doğrulayan eğitim ve nitelikler.\nTamamlanmış çalışmaların fotoğrafları veya portföyü (uygulanabilir ise).\nSosyal medya profillerinizin bağlantıları (varsa).*\n\nNe kadar eksiksiz ve doğru bilgi sağlarsanız, müşterilerin sizi iş için seçme şansı o kadar yüksek olur. \n\nYayınlanmadan önce uzmanların verilerini dikkatlice kontrol ediyoruz.\n\nLütfen istenen bilgileri bu sohbete gönderin.\nHerhangi bir sorunuz varsa, sormaktan çekinmeyin.\n\nBaşvurunuz en kısa sürede incelenecektir!"
+      }
+    }       
+  },  
+  {
+    "name": "welcomeMessage",
+    "body": {
+      "ru": {
+        "title": "Добро пожаловать!",
+        "text": "Я чат-бот поиска специалистов для любых видов работ и услуг.\n\n*Просто опишите свою задачу или потребность*, и я быстро подберу из обширной базы наиболее подходящих *экспертов, фрилансеров и профессионалов*, готовых оперативно выполнить вашу работу на высоком уровне.\n\nБольше не нужно терять время на самостоятельные поиски - я сделаю это за вас! Достаточно ввести запрос в чат, и я предоставлю список релевантных исполнителей с их квалификацией, отзывами и расценками."
+      },
+      "uk": {
+        "title": "Ласкаво просимо!",
+        "text": "Я чат-бот пошуку фахівців для будь-яких видів робіт та послуг.\n\n*Просто опишіть своє завдання або потребу*, і я швидко підберу з обширної бази найбільш підходящих *експертів, фрилансерів та професіоналів*, готових оперативно виконати вашу роботу на високому рівні.\n\nБільше не потрібно витрачати час на самостійні пошуки - я зроблю це за вас! Достатньо ввести запит в чат, і я надам список релевантних виконавців з їх кваліфікацією, відгуками та розцінками."
+      },
+      "ge": {
+        "title": "მოგესალმებით!",
+        "text": "მე ვარ სპეციალისტების მოძიების ჩატბოტი ნებისმიერი სახის სამუშაოსა და მომსახურებისთვის.\n\n*უბრალოდ აღწერეთ თქვენი ამოცანა ან საჭიროება*, და მე სწრაფად შევარჩევ ფართო ბაზიდან ყველაზე შესაფერის *ექსპერტებს, ფრილანსერებს და პროფესიონალებს*, რომლებიც მზად არიან ოპერატიულად შეასრულონ თქვენი სამუშაო მაღალი დონის.\n\nაღარ არის საჭირო დროის დაკარგვა დამოუკიდებელ ძიებებში - მე ამას თქვენთვის გავაკეთებ! საკმარისია ჩატში მოთხოვნის შეყვანა და მე მოგაწვდით შესაბამის შემსრულებელთა სიას მათი კვალიფიკაციით, შეფასებებით და ფასებით."
+      },
+      "de": {
+        "title": "Willkommen!",
+        "text": "Ich bin ein Chat-Bot zur Suche von Spezialisten für alle Arten von Arbeiten und Dienstleistungen.\n\n*Beschreiben Sie einfach Ihre Aufgabe oder Ihren Bedarf*, und ich werde schnell aus einer umfangreichen Datenbank die am besten geeigneten *Experten, Freiberufler und Fachleute* auswählen, die bereit sind, Ihre Arbeit schnell und auf hohem Niveau zu erledigen.\n\nSie müssen keine Zeit mehr mit der eigenständigen Suche verschwenden - das mache ich für Sie! Geben Sie einfach eine Anfrage im Chat ein, und ich werde Ihnen eine Liste relevanter Dienstleister mit ihren Qualifikationen, Bewertungen und Preisen zur Verfügung stellen."
+      },
+      "en": {
+        "title": "Welcome!",
+        "text": "I am a specialist search chat-bot for all types of jobs and services.\n\n*Just describe your task or need*, and I will quickly select the most suitable *experts, freelancers, and professionals* from a vast database who are ready to promptly perform your work at a high level.\n\nNo more need to waste time searching on your own - I'll do it for you! Simply enter your request in the chat, and I will provide a list of relevant performers with their qualifications, reviews, and rates."
+      },
+      "tr": {
+        "title": "Hoş geldiniz!",
+        "text": "Her türlü iş ve hizmet için uzman arama sohbet botuyum.\n\n*Görevinizi veya ihtiyacınızı sadece tarif edin*, ve geniş veri tabanından en uygun *uzmanları, serbest çalışanları ve profesyonelleri* hızla seçerim, onlar işinizi yüksek seviyede hızlı bir şekilde yapmaya hazırdır.\n\nArtık kendi başınıza arama yaparak zaman kaybetmenize gerek yok - bunu sizin için yapacağım! Sohbete sadece bir istek girin, ve nitelikleri, yorumları ve ücretleriyle ilgili uzmanların bir listesini sunacağım."
+      }
+    }
+  }
+  ,  
+  {
     "name": "warningNoPhotos",
     "body": {
       "ru": {
