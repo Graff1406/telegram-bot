@@ -148,10 +148,12 @@
     "name": "provideYourPhoneNumber",
     "body": {
       "ru": {
-        "title": "Укажите свой номер телефона"
+        "title": "Укажите свой номер телефона",
+        "text": ""
       },
       "uk": {
-        "title": "Вкажіть свій номер телефону"
+        "title": "Вкажіть свій номер телефону",
+        "text": ""
       },
       "ge": {
         "title": "Შეიყვანეთ თქვენი ტელეფონის ნომერი",
@@ -204,7 +206,7 @@
     "name": "specialistProfileUpdate",
     "body": {
       "ru": {
-        "title": "",
+        "title": "Ваша анкета уже добавлена ​​и доступна для поиска как специалист.\n\nЧтобы *обновить* данные специалиста, вам необходимо удалить текущую анкету и добавить ее заново.",
         "text": ""
       },
       "uk": {
@@ -262,22 +264,28 @@
     "name": "detailedTaskDescriptionRequest",
     "body": {
       "ru": {
-        "title": "Пожалуйста, более подробно опишите задачу, и я подберу новый список специалистов."
+        "title": "Пожалуйста, более подробно опишите задачу, и я подберу новый список специалистов.",
+        "text": ""
       },
       "uk": {
-        "title": "Будь ласка, детальніше опишіть завдання, і я підберу новий список спеціалістів."
+        "title": "Будь ласка, детальніше опишіть завдання, і я підберу новий список спеціалістів.",
+        "text": ""
       },
       "ge": {
-        "title": "გთხოვთ უფრო დეტალურად აღწეროთ დავალება და მე შევარჩევ ახალ სპეციალისტთა სიას."
+        "title": "გთხოვთ უფრო დეტალურად აღწეროთ დავალება და მე შევარჩევ ახალ სპეციალისტთა სიას.",
+        "text": ""
       },
       "de": {
-        "title": "Bitte beschreiben Sie die Aufgabe ausführlicher, und ich werde eine neue Liste von Spezialisten zusammenstellen."
+        "title": "Bitte beschreiben Sie die Aufgabe ausführlicher, und ich werde eine neue Liste von Spezialisten zusammenstellen.",
+        "text": ""
       },
       "en": {
-        "title": "Please describe the task in more detail, and I will select a new list of specialists."
+        "title": "Please describe the task in more detail, and I will select a new list of specialists.",
+        "text": ""
       },
       "tr": {
-        "title": "Lütfen görevi daha ayrıntılı olarak açıklayın, yeni bir uzman listesi seçeceğim."
+        "title": "Lütfen görevi daha ayrıntılı olarak açıklayın, yeni bir uzman listesi seçeceğim.",
+        "text": ""
       }
     }
   },  
