@@ -3,37 +3,41 @@ const path = require("path");
 const { links } = require("../data/resource");
 
 const getTranslation = async (languageCode) => {
-  const pathToFile = path.join(__dirname, "../data/CRMTranslations.json");
-
   try {
-    // Read data from the file
+    // Собираем путь к файлу с помощью деструктуризации
+    const pathToFile = path.join(
+      __dirname,
+      "..",
+      "data",
+      "CRMTranslations.json"
+    );
+
+    // Читаем данные из файла
     const translationsJSON = await fs.readFile(pathToFile, "utf8");
 
-    // Parse JSON into an array of objects
+    // Парсим JSON в массив объектов
     const translationEntries = JSON.parse(translationsJSON);
 
-    // Create an object to store translations
+    // Создаем объект для хранения переводов
     const translations = {};
 
-    // Iterate through each entry and extract the translation for the specified language
+    // Итерируемся по каждой записи и извлекаем перевод для указанного языка
     translationEntries.forEach((entry) => {
-      let translation = entry.body[languageCode] || entry.body["en"];
+      // Проверяем наличие перевода для указанного языка, используя явную проверку
+      const translation = entry.body.hasOwnProperty(languageCode)
+        ? entry.body[languageCode]
+        : entry.body["en"];
 
-      // Replace {links} placeholder with actual links
-      translation = {
-        ...translation,
-        text: translation.text.replace(/\{links\}/g, links),
-      };
+      // Заменяем плейсхолдеры в тексте на реальные ссылки
+      const text = translation.text.replace(/\{links\}/g, links);
 
-      translations[entry.name] = translation;
+      translations[entry.name] = { ...translation, text };
     });
 
     return translations;
   } catch (error) {
-    console.error(
-      "Error reading or parsing CRMTranslations.json:",
-      error.message
-    );
+    // Более детальная обработка ошибок
+    console.error("Error reading or parsing CRMTranslations.json:", error);
     throw error;
   }
 };
