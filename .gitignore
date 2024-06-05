@@ -17,6 +17,7 @@ dist
 dev-dist
 dist-ssr
 *.local
+backup-repo.git
 
 # Editor directories and files
 .vscode/*
