@@ -235,14 +235,25 @@ module.exports = () => {
           parts: "",
         }
       );
-      const res = await geminiService.generateChatText({
-        userMessage: userMessage,
-        instructions: [instructions.pro365, instructions.pro365support],
-        chatHistory: userData.chatHistory,
-      });
+
+      let res = "";
+
+      const callAI = async () =>
+        (res = await geminiService.generateChatText({
+          userMessage: userMessage,
+          instructions: [instructions.pro365, instructions.pro365support],
+          chatHistory: userData.chatHistoryAddPro,
+        }));
+
+      try {
+        res = await callAI();
+      } catch (e) {
+        console.log("🚀 ~ chat.on ~ e:", e);
+        res = await callAI();
+      }
 
       const data = JSON.parse(extractJsonSubstring(res));
-      console.log("🚀 ~ chat.on ~ text:", data);
+      console.log(11111, data);
 
       if (
         Array.isArray(userData.chatHistory) &&
@@ -251,7 +262,7 @@ module.exports = () => {
         data.text.length > 0
       ) {
         userData.chatHistory[userData.chatHistory.length - 1].parts = data.text;
-
+        console.log(22222, userData.chatHistory);
         if (
           typeof data.city === "string" &&
           data.city.length > 0 &&
@@ -290,19 +301,33 @@ module.exports = () => {
               `${translation.noSpecialistsAvailable.title}: ${tags?.join(", ")}`
             );
 
-            chat.sendMessage(
+            await chat.sendMessage(
               chatId,
               translation.detailedTaskDescriptionRequest.title
             );
+
+            chat.sendMessage(
+              chatId,
+              `*${translation.addServicesAndStartReceivingOrders.title} ${menuCommands[2]}*`,
+              {
+                parse_mode: "Markdown",
+              }
+            );
           }
         } else {
-          chat.sendMessage(chatId, data.text);
+          chat.sendMessage(chatId, data.text, {
+            parse_mode: "Markdown",
+          });
         }
       } else if (typeof res === "string" && res.length === 0) {
         chat.sendMessage(chatId, translation.cannotUnderstandMessage.title);
       } else {
         userData.chatHistory[userData.chatHistory.length - 1].parts = res;
-        chat.sendMessage(chatId, res);
+        chat.sendMessage(chatId, res, {
+          parse_mode: "Markdown",
+        });
+
+        console.log(3333, userData.chatHistory);
       }
     } catch (error) {
       console.log("chat.on - text", error);
@@ -343,6 +368,14 @@ module.exports = () => {
           await chat.sendMessage(
             chatId,
             `*${translation.welcomeMessage.title}*\n\n${translation.welcomeMessage.text}`,
+            {
+              parse_mode: "Markdown",
+            }
+          );
+
+          chat.sendMessage(
+            chatId,
+            `*${translation.addServicesAndStartReceivingOrders.title} ${menuCommands[2]}*`,
             {
               parse_mode: "Markdown",
             }
@@ -462,11 +495,21 @@ module.exports = () => {
           }
         );
 
-        const res = await geminiService.generateChatText({
-          userMessage: userMessage,
-          instructions: [instructions.pro365AddUser],
-          chatHistory: userData.chatHistoryAddPro,
-        });
+        let res = "";
+
+        const callAI = async () =>
+          (res = await geminiService.generateChatText({
+            userMessage: userMessage,
+            instructions: [instructions.pro365AddUser],
+            chatHistory: userData.chatHistoryAddPro,
+          }));
+
+        try {
+          res = await callAI();
+        } catch (e) {
+          console.log("🚀 ~ chat.on ~ e:", e);
+          res = await callAI();
+        }
 
         const data = JSON.parse(extractJsonSubstring(res));
         console.log("🚀 ~ chat.on ~ message - 1:", data);
