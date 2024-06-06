@@ -268,13 +268,15 @@ module.exports = () => {
           );
 
           if (users?.length > 0) {
-            await chat.sendMessage(
+            const message = await chat.sendMessage(
               chatId,
               `*${translation.waitForResponse.title}*`,
               {
                 parse_mode: "Markdown",
               }
             );
+
+            await chat.deleteMessage(chatId, message.message_id);
 
             showProfessionals(
               chatId,
@@ -370,7 +372,7 @@ module.exports = () => {
             }
           );
         } else if (userData.currentPage === menuCommands[2]) {
-          await chat.sendMessage(
+          const message = await chat.sendMessage(
             chatId,
             `*${translation.waitForResponse.title}*`,
             {
@@ -379,6 +381,8 @@ module.exports = () => {
           );
 
           const user = await getDocumentById(chatId);
+
+          await chat.deleteMessage(chatId, message.message_id);
 
           if (user !== null) {
             await showProfessionals(chatId, [user], translation.comments.title);
@@ -771,6 +775,10 @@ module.exports = () => {
         userData.country = "";
         userData.city = "";
         userData.area = "";
+
+        userData.currentPage = menuCommands[0];
+
+        chat.sendMessage(chatId, translation.searchSpecialistModeEnabled.title);
       } else if (query.data === "delete") {
         deleteUser(chatId);
       } else {
@@ -789,7 +797,11 @@ module.exports = () => {
     const contact = msg.contact;
     const userData = getUserData(chatId);
 
-    userData.tel = contact.phone_number;
+    if (contact.phone_number && !contact.phone_number.startsWith("+")) {
+      userData.tel = "+" + contact.phone_number;
+    } else {
+      userData.tel = contact.phone_number;
+    }
 
     chat.sendMessage(chatId, translation.phoneNumberReceived.title, {
       reply_markup: {
