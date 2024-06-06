@@ -93,11 +93,13 @@ const getMediaBasedLink = async ({ link, type = "photo" }) => {
   }
 };
 
-const showProfessionals = async (chatId, users, linkLabel) => {
+const showProfessionals = async (chatId, users, linkLabel, tags = []) => {
   await Promise.all(
     users.map(async (user) => {
       const caption = `${user.data}${
-        user.tel ? `\n\n${user.tel}` : ""
+        user.tel
+          ? `\n\n[${user.tel}](tel:${user.tel})`
+          : `\n\n[@${user.telegramNickname}](@${user.telegramNickname})`
       }\n\n[${linkLabel}](https://t.me/pro365Services/${user.messageIds[0]})`;
 
       if (user?.mediaGroupLinks?.length) {
@@ -110,16 +112,25 @@ const showProfessionals = async (chatId, users, linkLabel) => {
           chatId,
           mediaGroup.map((media, i) =>
             i === 0 && !media.caption ? { ...media, caption } : media
-          )
+          ),
+          {
+            parse_mode: "Markdown",
+          }
         );
       } else {
-        await chat.sendMessage(chatId, caption);
+        await chat.sendMessage(chatId, caption, {
+          parse_mode: "Markdown",
+        });
+      }
+
+      if (user.id !== chatId.toString()) {
+        chat.sendMessage(chatId, translation.showedInSearchResult.title);
       }
     })
   );
 };
 
-function getMiddleSizedImage(images) {
+const getMiddleSizedImage = (images) => {
   if (images.length === 1) {
     return images[0];
   }
@@ -127,7 +138,31 @@ function getMiddleSizedImage(images) {
   const filteredImages = images.filter((image) => image.width <= 450);
 
   return filteredImages[filteredImages.length - 1];
-}
+};
+
+const deleteUser = async (chatId) => {
+  try {
+    const user = await getDocumentById(chatId);
+
+    await Promise.all(
+      user.messageIds?.map(
+        async (messageId) =>
+          await chat.deleteMessage(
+            process.env.TELEGRAM_CHANNEL_365_PRO_ID,
+            messageId
+          )
+      )
+    );
+
+    await deleteDocumentById(chatId);
+
+    await chat.sendMessage(chatId, translation.specialistRemoved.title);
+
+    chat.sendMessage(chatId, translation.searchSpecialistModeEnabled.title);
+  } catch (e) {
+    console.log("🚀 ~ chat.on ~ callback_query delete:", e);
+  }
+};
 
 module.exports = () => {
   chat.on("text", async (msg) => {
@@ -224,8 +259,13 @@ module.exports = () => {
             tags
           );
 
-          if (!users?.length > 0) {
-            showProfessionals(chatId, users, translation.comments.title);
+          if (users?.length > 0) {
+            showProfessionals(
+              chatId,
+              users,
+              translation.comments.title,
+              data?.tags
+            );
           } else {
             await chat.sendMessage(
               chatId,
@@ -240,6 +280,8 @@ module.exports = () => {
         } else {
           chat.sendMessage(chatId, data.text);
         }
+      } else if (typeof res === "string" && res.length === 0) {
+        chat.sendMessage(chatId, translation.cannotUnderstandMessage.title);
       } else {
         userData.chatHistory[userData.chatHistory.length - 1].parts = res;
         chat.sendMessage(chatId, res);
@@ -352,6 +394,15 @@ module.exports = () => {
           });
 
           return;
+        } else if (userData.currentPage === menuCommands[3]) {
+          // the manipulation for remove button "end phone"
+          const message = await chat.sendMessage(chatId, "...", {
+            reply_markup: {
+              remove_keyboard: true,
+            },
+          });
+
+          chat.deleteMessage(chatId, message.message_id);
         }
       }
 
@@ -360,8 +411,6 @@ module.exports = () => {
       console.log("--message--", 2222);
 
       if (msg.text) {
-        // Обработка текстового сообщения
-        // console.log("🚀 ~ Текстовое сообщение:", msg.text);
         userData.chatHistoryAddPro.push(
           {
             role: "user",
@@ -380,7 +429,7 @@ module.exports = () => {
         });
 
         const data = JSON.parse(extractJsonSubstring(res));
-        console.log("🚀 ~ chat.on ~ message:", data);
+        console.log("🚀 ~ chat.on ~ message - 1:", data);
 
         if (
           Array.isArray(userData.chatHistoryAddPro) &&
@@ -454,6 +503,8 @@ module.exports = () => {
           ].parts = res;
           chat.sendMessage(chatId, res);
         }
+
+        // console.log("🚀 ~ chat.on ~ message - 2:", userData.chatHistoryAddPro);
       }
 
       if (msg.photo) {
@@ -553,12 +604,14 @@ module.exports = () => {
         // console.log("🚀 ~ Фото URL:", fileLink);
       }
 
-      if (msg.video) {
+      if (msg.video || msg.video_note) {
         const index = userData.loadingMedia.length;
 
         userData.loadingMedia[index] = true;
 
-        const fileLink = await chat.getFileLink(msg.video.file_id);
+        const fileLink = await chat.getFileLink(
+          msg.video.file_id || msg.video_note.file_id
+        );
 
         const videoMedia = await getMediaBasedLink({
           link: fileLink,
@@ -614,18 +667,33 @@ module.exports = () => {
     try {
       await useTranslation(query.from.language_code);
 
+      const sortByVideoFirst = (items) =>
+        items.sort((a, b) => {
+          if (a.type === "video" && b.type !== "video") {
+            return -1;
+          } else if (a.type !== "video" && b.type === "video") {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+
       if (query.data === "publish") {
         let messages;
 
         const caption = `${userData.newProData}${
-          userData.tel ? "\n\n" + userData.tel : ""
+          userData.tel
+            ? `\n\n[${userData.tel}](tel:${userData.tel})`
+            : `\n\n[@${agentNickname}](@${agentNickname})`
         }`;
 
         if (userData.mediaGroup.length > 0) {
           messages = await chat.sendMediaGroup(
             process.env.TELEGRAM_CHANNEL_365_PRO_ID,
-            userData.mediaGroup.map((media, i) =>
-              i === 0 && !media.caption ? { ...media, caption } : media
+            sortByVideoFirst(
+              userData.mediaGroup.map((media, i) =>
+                i === 0 && !media.caption ? { ...media, caption } : media
+              )
             )
           );
         } else {
@@ -637,7 +705,6 @@ module.exports = () => {
             ),
           ];
         }
-        console.log("-----------message----------\n", messages);
 
         await addUser({
           data: userData.newProData,
@@ -649,7 +716,7 @@ module.exports = () => {
           chatID: chatId.toString(),
           telegramNickname: agentNickname,
           tel: userData.tel,
-          mediaGroupLinks: userData.mediaGroupLinks,
+          mediaGroupLinks: sortByVideoFirst(userData.mediaGroupLinks),
         });
 
         await chat.sendMessage(
@@ -668,28 +735,7 @@ module.exports = () => {
         userData.city = "";
         userData.area = "";
       } else if (query.data === "delete") {
-        try {
-          const user = await getDocumentById(chatId);
-
-          await Promise.all(
-            user.messageIds?.map(
-              async (messageId) =>
-                await chat.deleteMessage(
-                  process.env.TELEGRAM_CHANNEL_365_PRO_ID,
-                  messageId
-                )
-            )
-          );
-
-          await deleteDocumentById(chatId);
-
-          chat.sendMessage(
-            chatId,
-            translation.searchSpecialistModeEnabled.title
-          );
-        } catch (e) {
-          console.log("🚀 ~ chat.on ~ callback_query:", e);
-        }
+        deleteUser(chatId);
       } else {
         chat.answerCallbackQuery(query.id, {
           text: translation.actionPreviouslyDone.title,

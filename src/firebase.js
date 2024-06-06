@@ -27,43 +27,48 @@ const addUser = async (props) => {
 
 const searchUsersByLocationAndTags = async (location, tags, limit = 10) => {
   try {
-    // Запрос по локации
-    const locationQuery = await db
+    let locationQuery = db
       .collection("users")
       .where("country", "==", location.country)
-      .where("city", "==", location.city)
-      .where("area", "==", location.area)
-      .limit(limit)
-      .get();
+      .where("city", "==", location.city);
 
-    const locationDocs = locationQuery.docs.map((doc) => ({
+    if (location.area) {
+      locationQuery = locationQuery.where("area", "==", location.area);
+    }
+
+    locationQuery = locationQuery.limit(limit);
+    const locationSnapshot = await locationQuery.get();
+
+    const locationDocs = locationSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    // Запрос по тегам
-    const tagsQuery = await db
+    const tagsQuery = db
       .collection("users")
-      .where("tags", "array-contains-any", tags)
-      .get();
+      .where("tags", "array-contains-any", tags);
 
-    const tagsDocs = tagsQuery.docs.map((doc) => ({
+    const tagsSnapshot = await tagsQuery.get();
+    const tagsDocs = tagsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    // Объединяем результаты на стороне сервера
+    // Объединение результатов и фильтрация уникальных документов
     const combinedDocs = [...locationDocs, ...tagsDocs];
     const uniqueDocs = combinedDocs.filter(
       (doc, index, self) => index === self.findIndex((d) => d.id === doc.id)
     );
 
-    if (uniqueDocs.length === 0) {
+    // Ограничиваем результаты до limit
+    const limitedDocs = uniqueDocs.slice(0, limit);
+
+    if (limitedDocs.length === 0) {
       console.log("No matching documents.");
       return [];
     }
 
-    return uniqueDocs;
+    return limitedDocs;
   } catch (err) {
     console.log("🚀 ~ searchUsersByLocationAndTags ~ err:", err);
     throw err; // Перебрасываем ошибку, чтобы она могла быть обработана вызывающей стороной

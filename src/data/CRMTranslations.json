@@ -1,5 +1,92 @@
 [
   {
+    "name": "cannotUnderstandMessage",
+    "body": {
+      "ru": {
+        "title": "Сожалею, но я не смог определить, что вы мне написали. Это возможно связано с тем, что я пока, к сожалению, не полностью овладел знаниями языка, на котором вы прислали мне сообщение.",
+        "text": ""
+      },
+      "uk": {
+        "title": "Шкодую, але я не зміг визначити, що ви мені написали. Це, можливо, пов'язано з тим, що я поки що, на жаль, не повністю опанував знаннями мови, якою ви надіслали мені повідомлення.",
+        "text": ""
+      },
+      "ge": {
+        "title": "ვწუხვარ, მაგრამ ვერ გავიგე, რა დამიწერეთ. ეს შესაძლოა დაკავშირებულია იმასთან, რომ ჯერ კიდევ, სამწუხაროდ, სრულად არ ვფლობ იმ ენას, რომელზეც მომწერეთ.",
+        "text": ""
+      },
+      "de": {
+        "title": "Es tut mir leid, aber ich konnte nicht verstehen, was Sie mir geschrieben haben. Dies könnte daran liegen, dass ich die Sprache, in der Sie mir geschrieben haben, leider noch nicht vollständig beherrsche.",
+        "text": ""
+      },
+      "en": {
+        "title": "I apologize, but I couldn't understand what you wrote to me. This might be because, unfortunately, I have not yet fully mastered the language you used to send me the message.",
+        "text": ""
+      },
+      "tr": {
+        "title": "Üzgünüm, ama bana ne yazdığınızı anlayamadım. Bu, ne yazık ki, henüz gönderdiğiniz dili tam olarak öğrenmediğim için olabilir.",
+        "text": ""
+      }
+    }
+  },  
+  {
+    "name": "showedInSearchResult",
+    "body": {
+      "ru": {
+        "title": "Ваша анкета была показана пользователю чатбота в результате поиска по предоставляемым вами услугам",
+        "text": ""
+      },
+      "uk": {
+        "title": "Ваша анкета була показана користувачеві чат-бота в результаті пошуку за вашими послугами",
+        "text": ""
+      },
+      "ge": {
+        "title": "თქვენი ანკეტა ნაჩვენებია ჩათბოტის მომხმარებელს თქვენი მომსახურების მიხედვით მოძიების შედეგით",
+        "text": ""
+      },
+      "de": {
+        "title": "Ihr Profil wurde einem Chatbot-Benutzer als Ergebnis der Suche nach Ihren angebotenen Dienstleistungen angezeigt",
+        "text": ""
+      },
+      "en": {
+        "title": "Your profile has been shown to a chatbot user as a result of the search for the services you provide",
+        "text": ""
+      },
+      "tr": {
+        "title": "Profiliniz, sağladığınız hizmetlerin araması sonucunda bir sohbet robotu kullanıcısına gösterildi",
+        "text": ""
+      }
+    }
+  },
+  {
+    "name": "specialistRemoved",
+    "body": {
+      "ru": {
+        "title": "Специалист успешно удален из нашей базы",
+        "text": ""
+      },
+      "uk": {
+        "title": "Спеціаліста успішно видалено з нашої бази",
+        "text": ""
+      },
+      "ge": {
+        "title": "სპეციალისტი წარმატებით ამოიშალა ჩვენი ბაზიდან",
+        "text": ""
+      },
+      "de": {
+        "title": "Spezialist erfolgreich aus unserer Datenbank entfernt",
+        "text": ""
+      },
+      "en": {
+        "title": "Specialist successfully removed from our database",
+        "text": ""
+      },
+      "tr": {
+        "title": "Uzman veritabanımızdan başarıyla silindi",
+        "text": ""
+      }
+    }
+  },  
+  {
     "name": "phoneNumberReceived",
     "body": {
       "ru": {
@@ -468,7 +555,7 @@
     "body": {
       "ru": {
         "title": "Регистрация специалиста",
-        "text": "Для того чтобы мы добавили вас в базу специалистов и смогли рекомендовать клиентам, пожалуйста, предоставьте следующую информацию:\n\n*Ваше портретное фото.\nВаше полное имя и фамилию.\nВозраст.\nГород, в котором вы предоставляете услуги.\nПеречень услуг, которые вы можете предложить клиентам.\nВаши расценки на предлагаемые услуги.\nОпыт работы в указанной сфере (количество лет).\nОбразование и квалификация, подтверждающие вашу экспертизу.\nФотографии или портфолио выполненных работ (если применимо).\nСсылки на ваши аккаунты в социальных сетях (если есть).*\n\nЧем более полную и достоверную информацию вы предоставите, тем больше шансов, что клиенты выберут именно вас для выполнения заказов. \n\nМы тщательно проверяем данные специалистов перед публикацией.\n\nПожалуйста, присылайте запрашиваемые сведения в этот чат.\nВ случае возникновения вопросов - обязательно уточняйте.\n\nВаша заявка будет рассмотрена в кратчайшие сроки!"
+        "text": "Для того чтобы мы добавили вас в базу специалистов и смогли рекомендовать клиентам, пожалуйста, предоставьте следующую информацию:\n\n*Ваше полное имя и фамилию.\nСтрана, город, район.\nПеречень услуг с расценками(цена от).\nОпыт работы в указанной сфере (с какого года).\nОбразование и квалификация, подтверждающие вашу экспертизу.\n Место работы(дом, офис).\nФотографии или портфолио выполненных работ (если имеется).\n Другое.*\n\nЧем более полную и достоверную информацию вы предоставите, тем больше шансов, что клиенты выберут именно вас для выполнения заказов. \n\nМы тщательно проверяем данные специалистов перед публикацией.\n\nПожалуйста, присылайте запрашиваемые сведения в этот чат.\nВ случае возникновения вопросов - обязательно уточняйте.\n\nВаша заявка будет рассмотрена в кратчайшие сроки!"
       },
       "uk": {
         "title": "Реєстрація фахівця",
@@ -476,19 +563,19 @@
       },
       "ge": {
         "title": "სპეციალისტის რეგისტრაცია",
-        "text": "იმისთვის, რომ ჩვენ შეგვიძლია შეგიტანოთ სპეციალისტების ბაზაში და გირჩიოთ კლიენტებს, გთხოვთ მოგვაწოდოთ შემდეგი ინფორმაცია:\n\n*თქვენი პორტრეტის ფოტო.\nთქვენი სრული სახელი და გვარი.\nასაკი.\nქალაქი, სადაც სთავაზობთ მომსახურებებს.\nმომსახურებების ჩამონათვალი, რომელსაც კლიენტებს შესთავაზებთ.\nთქვენი ფასები შემოთავაზებულ მომსახურებებზე.\nსამუშაო გამოცდილება მითითებულ სფეროში (წლებით).\nგანათლება და კვალიფიკაცია, რომელიც დაადასტურებს თქვენს ექსპერტიზას.\nშესრულებული სამუშაოების ფოტოები ან პორტფოლიო (თუ გამოიყენება).\nბმულები თქვენს სოციალური ქსელების ანგარიშებზე (თუ არის).*\n\nრაც უფრო სრულ და სანდო ინფორმაციას მოგვაწვდით, მით მეტი შანსია, რომ კლიენტები აირჩევენ სწორედ თქვენ შეკვეთების შესასრულებლად. \n\nჩვენ გულმოდგინეთ ვამოწმებთ სპეციალისტების მონაცემებს გამოქვეყნებამდე.\nგთხოვთ, გამოგვიგზავნოთ მოთხოვნილი მონაცემები ამ ჩათში.\n\nთუ კითხვები გაქვთ - აუცილებლად დაზუსტეთ.\n\nთქვენი განაცხადი მოკლე დროში განიხილება!"
+        "text": "იმისათვის, რომ დაგვემატოთ სპეციალისტების მონაცემთა ბაზაში და შეგვეძლოს რეკომენდაცია მოგცეთ კლიენტებს, გთხოვთ მოგვაწოდოთ შემდეგი ინფორმაცია:\n\n*თქვენი სრული სახელი და გვარი.\nქვეყანა, ქალაქი, რაიონი.\nმომსახურების სია ფასები (ფასი საწყისიდან).\nმიუთითებულ სფეროში მუშაობის გამოცდილება (რომელი წლიდან).\nგანათლება და კვალიფიკაცია, რომელიც ადასტურებს თქვენს გამოცდილებას.\nსამუშაოს ადგილი (სახლი, ოფისი).\nდასრულებული სამუშაოს ფოტოები ან პორტფოლიო (თუ შესაძლებელია).\n nსხვა.*\n\nუფრო სრულ და სანდო ინფორმაციას მოგაწოდებთ, მით უფრო სავარაუდოა, რომ კლიენტები შეკვეთების შესასრულებლად აგირჩევენ თქვენ. \n\nჩვენ ყურადღებით ვამოწმებთ სპეციალისტების მონაცემებს გამოქვეყნებამდე.\n\nგთხოვთ, გამოაგზავნოთ მოთხოვნილი ინფორმაცია ამ ჩატში.\nთუ თქვენ გაქვთ რაიმე შეკითხვები, აუცილებლად დააზუსტეთ.\n\nთქვენი განაცხადი განიხილება რაც შეიძლება მალე!"
       },
       "de": {
         "title": "Registrierung als Spezialist",
-        "text": "Um Sie in unsere Datenbank aufzunehmen und den Kunden empfehlen zu können, bitten wir Sie, uns folgende Informationen zur Verfügung zu stellen:\n\n*Ihr Porträtfoto.\nIhr vollständiger Name.\nAlter.\nStadt, in der Sie Dienstleistungen anbieten.\nListe der Dienstleistungen, die Sie den Kunden anbieten können.\nIhre Preisgestaltung für die angebotenen Dienstleistungen.\nBerufserfahrung im angegebenen Bereich (Jahre).\nBildung und Qualifikationen, die Ihre Expertise bestätigen.\nFotos oder Portfolio der erledigten Arbeiten (falls zutreffend).\nLinks zu Ihren Social-Media-Profilen (falls vorhanden).*\n\nJe vollständiger und genauer Ihre Informationen sind, desto größer sind Ihre Chancen, von den Kunden für Aufträge ausgewählt zu werden. \n\nWir überprüfen sorgfältig die Daten der Spezialisten vor der Veröffentlichung.\n\nBitte senden Sie die angeforderten Informationen in diesem Chat.\nBei Fragen können Sie uns jederzeit kontaktieren.\n\nIhre Anfrage wird so schnell wie möglich bearbeitet!"
+        "text": "Damit wir Sie in die Fachdatenbank aufnehmen und Kunden weiterempfehlen können, geben Sie bitte folgende Informationen an:\n\n*Ihren vollständigen Vor- und Nachnamen.\nLand, Stadt, Landkreis.\nListe der Leistungen mit Preise (Preis ab).\nArbeitserfahrung im angegebenen Bereich (ab welchem ​​Jahr).\nAusbildung und Qualifikationen, die Ihr Fachwissen bestätigen.\nArbeitsort (Zuhause, Büro).\nFotos oder Portfolio abgeschlossener Arbeiten (falls verfügbar).\n Sonstiges.*\n\nJe mehr Sie vollständige und zuverlässige Informationen bereitstellen, desto wahrscheinlicher ist es, dass Kunden Sie für die Ausführung von Bestellungen auswählen. \n\nWir prüfen die Daten von Fachärzten vor der Veröffentlichung sorgfältig.\n\nBitte senden Sie die angeforderten Informationen an diesen Chat.\nWenn Sie Fragen haben, klären Sie diese bitte unbedingt.\n\nIhre Bewerbung wird so schnell wie möglich geprüft!"
       },
       "en": {
         "title": "Specialist Registration",
-        "text": "To add you to our database of specialists and recommend you to clients, please provide the following information:\n\n*Your portrait photo.\nYour full name.\nAge.\nCity where you provide services.\nList of services you can offer to clients.\nYour rates for the services offered.\nWork experience in the specified field (number of years).\nEducation and qualifications confirming your expertise.\nPhotos or portfolio of completed works (if applicable).\nLinks to your social media profiles (if available).*\n\nThe more complete and accurate the information you provide, the higher the chances that clients will choose you for their orders. \n\nWe carefully verify the data of specialists before publication.\n\nPlease send the requested information in this chat.\nIf you have any questions, feel free to ask.\n\nYour application will be reviewed as soon as possible!"
+        "text": "In order for us to add you to the database of specialists and be able to recommend you to clients, please provide the following information:\n\n*Your full name and surname.\nCountry, city, district.\nList of services with prices (price from).\nExperience work in the specified field (from what year).\nEducation and qualifications confirming your expertise.\nPlace of work (home, office).\nPhotos or portfolio of completed work (if available).\nOther.*\n\nMore You provide complete and reliable information, the more likely it is that customers will choose you to complete orders. \n\nWe carefully check the data of specialists before publication.\n\nPlease send the requested information to this chat.\nIf you have any questions, be sure to clarify.\n\nYour application will be reviewed as soon as possible!"
       },
       "tr": {
         "title": "Uzman Kayıt",
-        "text": "Sizi uzmanlar veritabanımıza ekleyebilmemiz ve müşterilere önerebilmemiz için lütfen aşağıdaki bilgileri sağlayın:\n\n*Portre fotoğrafınız.\nTam adınız.\nYaşınız.\nHizmet verdiğiniz şehir.\nMüşterilere sunabileceğiniz hizmetlerin listesi.\nTeklif edilen hizmetler için fiyatlarınız.\nBelirtilen alanda çalışma deneyiminiz (yıl sayısı).\nUzmanlığınızı doğrulayan eğitim ve nitelikler.\nTamamlanmış çalışmaların fotoğrafları veya portföyü (uygulanabilir ise).\nSosyal medya profillerinizin bağlantıları (varsa).*\n\nNe kadar eksiksiz ve doğru bilgi sağlarsanız, müşterilerin sizi iş için seçme şansı o kadar yüksek olur. \n\nYayınlanmadan önce uzmanların verilerini dikkatlice kontrol ediyoruz.\n\nLütfen istenen bilgileri bu sohbete gönderin.\nHerhangi bir sorunuz varsa, sormaktan çekinmeyin.\n\nBaşvurunuz en kısa sürede incelenecektir!"
+        "text": "Sizi uzman veritabanına ekleyebilmemiz ve müşterilerimize önerebilmemiz için lütfen aşağıdaki bilgileri sağlayın:\n\n*Tam adınız ve soyadınız.\nÜlke, şehir, ilçe.\nHizmetlerin listesi fiyatlar (fiyattan itibaren).\nBelirtilen alanda çalışma deneyimi (hangi yıldan itibaren).\nUzmanlığınızı doğrulayan eğitim ve nitelikler.\nİş yeri (ev, ofis).\nTamamlanan işin fotoğrafları veya portföyü (varsa).\nDiğer.*\n\nDaha Fazla Eksiksiz ve güvenilir bilgi sağlarsanız, müşterilerin siparişleri tamamlamak için sizi seçme olasılığı o kadar artar. \n\nYayınlanmadan önce uzmanların verilerini dikkatlice kontrol ediyoruz.\n\nLütfen istenen bilgileri bu sohbete gönderin.\nHerhangi bir sorunuz varsa, açıklığa kavuşturduğunuzdan emin olun.\n\nBaşvurunuz en kısa sürede incelenecektir!"
       }
     }       
   },  
