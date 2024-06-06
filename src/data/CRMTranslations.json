@@ -1,5 +1,34 @@
 [
   {
+    "name": "waitForResponse",
+    "body": {
+      "ru": {
+        "title": "Формирую ответ...",
+        "text": ""
+      },
+      "uk": {
+        "title": "Формую відповідь...",
+        "text": ""
+      },
+      "ge": {
+        "title": "მზადდება პასუხი...",
+        "text": ""
+      },
+      "de": {
+        "title": "Antwort wird vorbereitet...",
+        "text": ""
+      },
+      "en": {
+        "title": "Formulating a response...",
+        "text": ""
+      },
+      "tr": {
+        "title": "Yanıt hazırlanıyor...",
+        "text": ""
+      }
+    }
+  },  
+  {
     "name": "cannotUnderstandMessage",
     "body": {
       "ru": {
@@ -380,23 +409,23 @@
     "name": "noSpecialistsAvailable",
     "body": {
       "ru": {
-        "title": "К сожалению, нет специалистов для выполнения",
+        "title": "К сожалению, нет специалистов",
         "text": ""
       },
       "uk": {
-        "title": "На жаль, немає спеціалістів для виконання",
+        "title": "На жаль, немає спеціалістів",
         "text": ""
       },
       "ge": {
-        "title": "სამწუხაროდ, სპეციალისტები არ არიან",
+        "title": "სამწუხაროდ, სპეციალისტები",
         "text": ""
       },
       "de": {
-        "title": "Leider gibt es keine Spezialisten für die Ausführung",
+        "title": "Leider gibt es keine Spezialisten",
         "text": ""
       },
       "en": {
-        "title": "Unfortunately, no specialists available for the task",
+        "title": "Unfortunately, no specialists available",
         "text": ""
       },
       "tr": {

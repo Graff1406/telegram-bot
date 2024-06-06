@@ -100,7 +100,11 @@ const showProfessionals = async (chatId, users, linkLabel, tags = []) => {
         user.tel
           ? `\n\n[${user.tel}](tel:${user.tel})`
           : `\n\n[@${user.telegramNickname}](@${user.telegramNickname})`
-      }\n\n[${linkLabel}](https://t.me/pro365Services/${user.messageIds[0]})`;
+      }${
+        linkLabel
+          ? `\n\n[${linkLabel}](https://t.me/pro365Services/${user.messageIds[0]})`
+          : ""
+      }`;
 
       if (user?.mediaGroupLinks?.length) {
         const mediaGroup = await Promise.all(
@@ -214,7 +218,11 @@ module.exports = () => {
 
       // return;
 
-      if (userData.currentPage === menuCommands[2]) return;
+      if (
+        userMessage === menuCommands[0] ||
+        userData.currentPage === menuCommands[2]
+      )
+        return;
       console.log("-text-", 2222);
 
       userData.chatHistory.push(
@@ -260,6 +268,14 @@ module.exports = () => {
           );
 
           if (users?.length > 0) {
+            await chat.sendMessage(
+              chatId,
+              `*${translation.waitForResponse.title}*`,
+              {
+                parse_mode: "Markdown",
+              }
+            );
+
             showProfessionals(
               chatId,
               users,
@@ -322,13 +338,25 @@ module.exports = () => {
             },
           ]);
 
-          chat.sendMessage(
+          await chat.sendMessage(
             chatId,
             `*${translation.welcomeMessage.title}*\n\n${translation.welcomeMessage.text}`,
             {
               parse_mode: "Markdown",
             }
           );
+
+          // const user = await getDocumentById(chatId);
+
+          // await chat.sendMessage(
+          //   chatId,
+          //   `*${translation.waitForResponse.title}*`,
+          //   {
+          //     parse_mode: "Markdown",
+          //   }
+          // );
+
+          // showProfessionals(chatId, [user]);
 
           return;
         } else if (userData.currentPage === menuCommands[1]) {
@@ -342,6 +370,14 @@ module.exports = () => {
             }
           );
         } else if (userData.currentPage === menuCommands[2]) {
+          await chat.sendMessage(
+            chatId,
+            `*${translation.waitForResponse.title}*`,
+            {
+              parse_mode: "Markdown",
+            }
+          );
+
           const user = await getDocumentById(chatId);
 
           if (user !== null) {
@@ -605,6 +641,7 @@ module.exports = () => {
       }
 
       if (msg.video || msg.video_note) {
+        console.log("🚀 ~ chat.on ~ msg.video_note:", msg.video_note);
         const index = userData.loadingMedia.length;
 
         userData.loadingMedia[index] = true;
