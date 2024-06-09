@@ -282,6 +282,8 @@ module.exports = () => {
             tags
           );
 
+          console.log("USERS", users);
+
           if (users?.length > 0) {
             const message = await chat.sendMessage(
               chatId,
@@ -425,7 +427,7 @@ module.exports = () => {
 
             userData.currentPage = menuCommands[0];
 
-            chat.sendMessage(
+            await chat.sendMessage(
               chatId,
               translation.specialistProfileUpdate.title,
               {
@@ -441,6 +443,11 @@ module.exports = () => {
                   ],
                 },
               }
+            );
+
+            chat.sendMessage(
+              chatId,
+              translation.searchSpecialistModeEnabled.title
             );
 
             return;

@@ -27,6 +27,7 @@ const addUser = async (props) => {
 
 const searchUsersByLocationAndTags = async (location, tags, limit = 10) => {
   try {
+    // Запрос по локации
     let locationQuery = db
       .collection("users")
       .where("country", "==", location.country)
@@ -36,14 +37,13 @@ const searchUsersByLocationAndTags = async (location, tags, limit = 10) => {
       locationQuery = locationQuery.where("area", "==", location.area);
     }
 
-    locationQuery = locationQuery.limit(limit);
     const locationSnapshot = await locationQuery.get();
-
     const locationDocs = locationSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
+    // Запрос по тегам
     const tagsQuery = db
       .collection("users")
       .where("tags", "array-contains-any", tags);
@@ -60,8 +60,13 @@ const searchUsersByLocationAndTags = async (location, tags, limit = 10) => {
       (doc, index, self) => index === self.findIndex((d) => d.id === doc.id)
     );
 
+    // Фильтрация документов по тегам
+    const filteredDocs = uniqueDocs.filter((doc) =>
+      tags.some((tag) => doc.tags.includes(tag))
+    );
+
     // Ограничиваем результаты до limit
-    const limitedDocs = uniqueDocs.slice(0, limit);
+    const limitedDocs = filteredDocs.slice(0, limit);
 
     if (limitedDocs.length === 0) {
       console.log("No matching documents.");
