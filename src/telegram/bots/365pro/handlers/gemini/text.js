@@ -247,7 +247,7 @@ module.exports = () => {
             instructions.pro365support,
             `${instructions.pro365ResLang}: ${langCode}`,
           ],
-          chatHistory: userData.chatHistoryAddPro,
+          chatHistory: userData.chatHistory,
         }));
 
       try {
@@ -330,8 +330,6 @@ module.exports = () => {
         chat.sendMessage(chatId, res, {
           parse_mode: "Markdown",
         });
-
-        console.log(3333, userData.chatHistory);
       }
     } catch (error) {
       console.log("chat.on - text", error);
