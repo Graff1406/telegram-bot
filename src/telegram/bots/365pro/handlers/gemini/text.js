@@ -171,7 +171,8 @@ const deleteUser = async (chatId) => {
 module.exports = () => {
   chat.on("text", async (msg) => {
     try {
-      await useTranslation(msg.from.language_code);
+      const langCode = msg.from.language_code;
+      await useTranslation(langCode);
 
       const chatId = msg.chat.id;
       const userMessage = msg.text;
@@ -241,7 +242,11 @@ module.exports = () => {
       const callAI = async () =>
         (res = await geminiService.generateChatText({
           userMessage: userMessage,
-          instructions: [instructions.pro365, instructions.pro365support],
+          instructions: [
+            instructions.pro365,
+            instructions.pro365support,
+            `${instructions.pro365ResLang}: ${langCode}`,
+          ],
           chatHistory: userData.chatHistoryAddPro,
         }));
 
@@ -262,7 +267,6 @@ module.exports = () => {
         data.text.length > 0
       ) {
         userData.chatHistory[userData.chatHistory.length - 1].parts = data.text;
-        console.log(22222, userData.chatHistory);
         if (
           typeof data.city === "string" &&
           data.city.length > 0 &&
@@ -341,7 +345,8 @@ module.exports = () => {
     console.log("------------message------------");
 
     try {
-      await useTranslation(msg.from.language_code);
+      const langCode = msg.from.language_code;
+      await useTranslation(langCode);
 
       const userData = getUserData(chatId);
 
@@ -500,7 +505,10 @@ module.exports = () => {
         const callAI = async () =>
           (res = await geminiService.generateChatText({
             userMessage: userMessage,
-            instructions: [instructions.pro365AddUser],
+            instructions: [
+              instructions.pro365AddUser,
+              `${instructions.pro365ResLang}: ${langCode}`,
+            ],
             chatHistory: userData.chatHistoryAddPro,
           }));
 
