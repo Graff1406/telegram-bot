@@ -6,7 +6,7 @@ const extractJsonSubstring = require("../../helpers/extractJsonSubstring");
 const typeModel = "gemini-1.5-flash"; // "gemini-pro"
 
 async function generateText(prompt, temperature = 2) {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+  const model = genAI.getGenerativeModel({ model: typeModel });
 
   try {
     const result = await model.generateContent(prompt, { temperature });
@@ -65,7 +65,7 @@ async function vision(filePath) {
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+    const model = genAI.getGenerativeModel({ model: typeModel });
 
     const imageParts = [await fileToGenerativePart()];
 

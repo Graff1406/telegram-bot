@@ -87,7 +87,7 @@ const getMediaBasedLink = async ({ link, type = "photo" }) => {
       parse_mode: "Markdown",
     };
   } catch (e) {
-    console.log("🚀 ~ getMediaBasedLink ~ e:", e);
+    console.log("🚀 ~ getMediaBasedLink ~ response status:", e.response.status);
 
     return null;
   }
@@ -112,15 +112,20 @@ const showProfessionals = async (chatId, users, linkLabel, tags = []) => {
             getMediaBasedLink({ link, type })
           )
         );
-        await chat.sendMediaGroup(
-          chatId,
-          mediaGroup.map((media, i) =>
-            i === 0 && !media.caption ? { ...media, caption } : media
-          ),
-          {
-            parse_mode: "Markdown",
-          }
-        );
+        if (!mediaGroup.includes(null)) {
+          await chat.sendMediaGroup(
+            chatId,
+            mediaGroup.map((media, i) =>
+              i === 0 && !media?.caption ? { ...media, caption } : media
+            ),
+            {
+              parse_mode: "Markdown",
+            }
+          );
+        } else {
+          console.log("🚀 ~ users.map ~ mediaGroup:", mediaGroup);
+          return null;
+        }
       } else {
         await chat.sendMessage(chatId, caption, {
           parse_mode: "Markdown",
@@ -525,7 +530,7 @@ module.exports = () => {
         }
 
         const data = JSON.parse(extractJsonSubstring(res));
-        console.log("🚀 ~ chat.on ~ message - 1:", data);
+        // console.log("🚀 ~ chat.on ~ message - 1:", data);
 
         if (
           Array.isArray(userData.chatHistoryAddPro) &&
@@ -815,6 +820,8 @@ module.exports = () => {
           tel: userData.tel,
           mediaGroupLinks: sortByVideoFirst(userData.mediaGroupLinks),
         });
+
+        console.log(99999, messages);
 
         await chat.sendMessage(
           chatId,
