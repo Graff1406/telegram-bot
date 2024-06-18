@@ -75,24 +75,28 @@ const callAPI = async ({ chatId, userMessage }) => {
 
     userData.chatHistory[userData.chatHistory.length - 1].parts = data;
 
-    if (data?.length > 400) {
-      chat.sendMessage(chatId, data, {
-        parse_mode: "Markdown",
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: "Update",
-                callback_data: "update",
-              },
+    try {
+      if (data?.length > 400) {
+        chat.sendMessage(chatId, data, {
+          parse_mode: "Markdown",
+          reply_markup: {
+            inline_keyboard: [
+              [
+                {
+                  text: "Update",
+                  callback_data: "update",
+                },
+              ],
             ],
-          ],
-        },
-      });
-    } else {
-      chat.sendMessage(chatId, data, {
-        parse_mode: "Markdown",
-      });
+          },
+        });
+      } else {
+        chat.sendMessage(chatId, data, {
+          parse_mode: "Markdown",
+        });
+      }
+    } catch (e) {
+      chat.sendMessage(chatId, data);
     }
   } catch (error) {}
 };
