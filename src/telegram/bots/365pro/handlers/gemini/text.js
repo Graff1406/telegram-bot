@@ -93,50 +93,73 @@ const getMediaBasedLink = async ({ link, type = "photo" }) => {
   }
 };
 
+// const showProfessionals = async (chatId, users, linkLabel, tags = []) => {
+//   await Promise.all(
+//     users.map(async (user) => {
+//       const caption = `${user.data}${
+//         user.tel
+//           ? `\n\n[${user.tel}](tel:${user.tel})`
+//           : `\n\n[@${user.telegramNickname}](@${user.telegramNickname})`
+//       }${
+//         linkLabel
+//           ? `\n\n[${linkLabel}](https://t.me/pro365Services/${user.messageIds[0]})`
+//           : ""
+//       }`;
+
+//       if (user?.mediaGroupLinks?.length) {
+//         const mediaGroup = await Promise.all(
+//           user.mediaGroupLinks.map(async ({ link, type }) =>
+//             getMediaBasedLink({ link, type })
+//           )
+//         );
+//         if (!mediaGroup.includes(null)) {
+//           await chat.sendMediaGroup(
+//             chatId,
+//             mediaGroup.map((media, i) =>
+//               i === 0 && !media?.caption ? { ...media, caption } : media
+//             ),
+//             {
+//               parse_mode: "Markdown",
+//             }
+//           );
+//         } else {
+//           console.log("🚀 ~ users.map ~ mediaGroup:", mediaGroup);
+//           return null;
+//         }
+//       } else {
+//         await chat.sendMessage(chatId, caption, {
+//           parse_mode: "Markdown",
+//         });
+//       }
+
+//       if (user.id !== chatId.toString()) {
+//         chat.sendMessage(chatId, translation.showedInSearchResult.title);
+//       }
+//     })
+//   );
+// };
+
 const showProfessionals = async (chatId, users, linkLabel, tags = []) => {
-  await Promise.all(
-    users.map(async (user) => {
-      const caption = `${user.data}${
-        user.tel
-          ? `\n\n[${user.tel}](tel:${user.tel})`
-          : `\n\n[@${user.telegramNickname}](@${user.telegramNickname})`
-      }${
-        linkLabel
-          ? `\n\n[${linkLabel}](https://t.me/pro365Services/${user.messageIds[0]})`
-          : ""
-      }`;
-
-      if (user?.mediaGroupLinks?.length) {
-        const mediaGroup = await Promise.all(
-          user.mediaGroupLinks.map(async ({ link, type }) =>
-            getMediaBasedLink({ link, type })
-          )
+  try {
+    await Promise.all(
+      users.map(async (user) => {
+        await chat.forwardMessage(
+          chatId,
+          process.env.TELEGRAM_CHANNEL_365_PRO_ID,
+          user.messageIds[0],
+          {
+            parse_mode: "Markdown",
+          }
         );
-        if (!mediaGroup.includes(null)) {
-          await chat.sendMediaGroup(
-            chatId,
-            mediaGroup.map((media, i) =>
-              i === 0 && !media?.caption ? { ...media, caption } : media
-            ),
-            {
-              parse_mode: "Markdown",
-            }
-          );
-        } else {
-          console.log("🚀 ~ users.map ~ mediaGroup:", mediaGroup);
-          return null;
-        }
-      } else {
-        await chat.sendMessage(chatId, caption, {
-          parse_mode: "Markdown",
-        });
-      }
 
-      if (user.id !== chatId.toString()) {
-        chat.sendMessage(chatId, translation.showedInSearchResult.title);
-      }
-    })
-  );
+        if (user.id !== chatId.toString()) {
+          chat.sendMessage(chatId, translation.showedInSearchResult.title);
+        }
+      })
+    );
+  } catch (e) {
+    console.log("showProfessionals", e.response.text);
+  }
 };
 
 const getMiddleSizedImage = (images) => {
@@ -706,7 +729,6 @@ module.exports = () => {
       }
 
       if (msg.video || msg.video_note) {
-        console.log("🚀 ~ chat.on ~ msg.video_note:", msg.video_note);
         const index = userData.loadingMedia.length;
 
         userData.loadingMedia[index] = true;
