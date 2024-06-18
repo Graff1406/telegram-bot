@@ -68,10 +68,10 @@ const callAPI = async ({ chatId, userMessage }) => {
       chatHistory: userData.chatHistory,
     });
 
-    // console.log("-------------------------------");
-    // console.log(11111, res);
+    console.log("-------------------------------");
+    console.log(11111, res);
     const data = extractJsonSubstringForGemini(res);
-    // console.log(222222, data);
+    console.log(222222, data);
 
     userData.chatHistory[userData.chatHistory.length - 1].parts = data;
 
