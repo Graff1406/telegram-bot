@@ -47,12 +47,12 @@ const setInitData = (payload = {}) => {
 const clearInactiveUserData = () => {
   const currentTime = Date.now();
   for (const chatId in data) {
-    const userData = data[chatId];
-    if (currentTime - userData.lastInteractionTime > USER_DATA_TIMEOUT) {
+    if (currentTime - data[chatId].lastInteractionTime > USER_DATA_TIMEOUT) {
       delete data[chatId];
     }
   }
 };
+
 
 setInterval(clearInactiveUserData, USER_DATA_TIMEOUT);
 

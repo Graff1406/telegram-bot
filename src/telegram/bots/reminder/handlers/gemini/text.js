@@ -5,10 +5,15 @@ const extractJsonSubstringForGemini = require("../../../../../helpers/extractJso
 
 let data = {};
 const USER_DATA_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours
+const menu = {
+  values: "/values",
+  property: "/property",
+};
 
 const setInitData = (payload = {}) => {
   return {
     chatHistory: [],
+    currentPage: menu.values,
   };
 };
 
@@ -40,6 +45,12 @@ const getUserData = (chatId) => {
 const callAPI = async ({ chatId, userMessage }) => {
   const userData = getUserData(chatId);
 
+  let ins = [instructions.myself];
+
+  if (userData.currentPage === menu.property)
+    ins = [instructions.myself, instructions.property];
+  else ins = [instructions.myself, instructions.values];
+
   if (!userMessage) {
     userData.chatHistory = userData.chatHistory.filter(
       (_, i, arr) => i !== arr.length - 1
@@ -64,7 +75,7 @@ const callAPI = async ({ chatId, userMessage }) => {
   try {
     const res = await geminiService.generateChatText({
       userMessage: userMessage,
-      instructions: [instructions.myself],
+      instructions: ins,
       chatHistory: userData.chatHistory,
     });
 
@@ -108,7 +119,20 @@ module.exports = () => {
 
     updateLastInteractionTime(chatId);
 
-    callAPI({ userMessage, chatId });
+    if (userMessage !== menu.values && userMessage !== menu.property) {
+      callAPI({ userMessage, chatId });
+    }
+
+    // chat.setMyCommands([
+    //   {
+    //     command: "/values",
+    //     description: "Ценности",
+    //   },
+    //   {
+    //     command: "/property",
+    //     description: "Недвижимость",
+    //   },
+    // ]);
   });
 
   chat.on("callback_query", async (query) => {
@@ -122,5 +146,21 @@ module.exports = () => {
     } catch (error) {
       console.log("🚀 ~ chat.on ~ error:", error);
     }
+  });
+
+  chat.onText(/\/values/, (msg) => {
+    const chatId = msg.chat.id;
+    const userData = getUserData(chatId);
+    userData.currentPage = menu.values;
+    chat.sendMessage(chatId, "Вкл. Ценности");
+    return;
+  });
+
+  chat.onText(/\/property/, (msg) => {
+    const chatId = msg.chat.id;
+    const userData = getUserData(chatId);
+    userData.currentPage = menu.property;
+    chat.sendMessage(chatId, "Вкл. Недвижимость");
+    return;
   });
 };

@@ -101,7 +101,7 @@ app.get(facebookDenonaPage, (req, res) => {
   }
 });
 
-const ngrok = "https://e530-5-83-191-5.ngrok-free.app";
+const ngrok = "https://cf36-2a05-5800-5ac-5401-2d7e-4147-8d78-6130.ngrok-free.app";
 const prod = "https://telegram-bot-denona.onrender.com";
 
 pingServer(isDev ? ngrok : prod);
