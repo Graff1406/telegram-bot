@@ -1,6 +1,11 @@
+const fs = require("fs");
+const path = require("path");
+const axios = require("axios");
+const cron = require("node-cron");
+
 const chat = require("../../chat");
 const geminiService = require("../../../../../api/gemini/geminiService");
-const instructions = require("../../../../../models/instructions");
+const instructions = require("../../models");
 const extractJsonSubstringForGemini = require("../../../../../helpers/extractJsonSubstringForGemini");
 
 let data = {};
@@ -42,14 +47,15 @@ const getUserData = (chatId) => {
   return data[chatId];
 };
 
-const callAPI = async ({ chatId, userMessage }) => {
+const callAPI = async ({ chatId, userMessage, notification }) => {
   const userData = getUserData(chatId);
 
-  let ins = [instructions.myself];
+  let ins = [instructions.init];
 
   if (userData.currentPage === menu.property)
-    ins = [instructions.myself, instructions.property];
-  else ins = [instructions.myself, instructions.values];
+    ins = [instructions.init, instructions.property];
+  else if (notification) ins = [instructions.principals];
+  else ins = [instructions.init, instructions.principals];
 
   if (!userMessage) {
     userData.chatHistory = userData.chatHistory.filter(
@@ -87,7 +93,7 @@ const callAPI = async ({ chatId, userMessage }) => {
     userData.chatHistory[userData.chatHistory.length - 1].parts = data;
 
     try {
-      if (data?.length > 400) {
+      if (data?.length > 500) {
         chat.sendMessage(chatId, data, {
           parse_mode: "Markdown",
           reply_markup: {
@@ -111,6 +117,14 @@ const callAPI = async ({ chatId, userMessage }) => {
     }
   } catch (error) {}
 };
+
+cron.schedule("0 7-21 * * *", () => {
+  callAPI({
+    chatId: process.env.MY_TELEGRAM_ID,
+    userMessage: instructions.notification,
+    notification: true,
+  });
+});
 
 module.exports = () => {
   chat.on("text", (msg) => {
@@ -162,5 +176,54 @@ module.exports = () => {
     userData.currentPage = menu.property;
     chat.sendMessage(chatId, "Вкл. Недвижимость");
     return;
+  });
+
+  chat.on("message", async (msg) => {
+    const chatId = msg.chat.id;
+
+    // Проверка, есть ли в сообщении документ
+    if (msg.document) {
+      const fileName = msg.document.file_name;
+      const fileExtension = path.extname(fileName);
+
+      // Проверяем, является ли файл .md
+      if (fileExtension === ".md") {
+        try {
+          // Получаем file_id
+          const fileId = msg.document.file_id;
+
+          // Получаем ссылку на файл
+          const fileLink = await chat.getFileLink(fileId);
+
+          // Скачиваем и сохраняем файл
+          const response = await axios.get(fileLink, {
+            responseType: "stream",
+          });
+          const writer = fs.createWriteStream(
+            path.join(__dirname, "../../data", "principals.md")
+          );
+
+          response.data.pipe(writer);
+
+          // Дожидаемся завершения записи файла
+          writer.on("finish", () => {
+            chat.sendMessage(chatId, "Файл успешно сохранен как principals.md");
+          });
+          writer.on("error", (err) => {
+            console.error("Ошибка при сохранении файла:", err);
+            chat.sendMessage(chatId, "Ошибка при сохранении файла.");
+          });
+        } catch (error) {
+          console.error("Ошибка при обработке файла:", error);
+          chat.sendMessage(chatId, "Ошибка при обработке файла.");
+        }
+      } else {
+        // Отправляем сообщение о неправильном формате файла
+        chat.sendMessage(
+          chatId,
+          "Пожалуйста, отправьте файл с расширением .md"
+        );
+      }
+    }
   });
 };
