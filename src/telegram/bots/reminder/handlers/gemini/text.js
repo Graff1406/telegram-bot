@@ -47,14 +47,14 @@ const getUserData = (chatId) => {
   return data[chatId];
 };
 
-const callAPI = async ({ chatId, userMessage, notification }) => {
+const callAPI = async ({ chatId, userMessage, customInstructions }) => {
   const userData = getUserData(chatId);
 
   let ins = [instructions.init];
 
   if (userData.currentPage === menu.property)
     ins = [instructions.init, instructions.property];
-  else if (notification) ins = [instructions.principals];
+  else if (Array.isArray(customInstructions)) ins = customInstructions;
   else ins = [instructions.init, instructions.principals];
 
   if (!userMessage) {
@@ -118,11 +118,23 @@ const callAPI = async ({ chatId, userMessage, notification }) => {
   } catch (error) {}
 };
 
+// Random principal
 cron.schedule("0 7-21 * * *", () => {
+  // every one hour
   callAPI({
     chatId: process.env.MY_TELEGRAM_ID,
     userMessage: instructions.notification,
-    notification: true,
+    instructions: [instructions.principals],
+  });
+});
+
+// Find the flaws
+cron.schedule("0 10 * * *", () => {
+  // once per day
+  callAPI({
+    chatId: process.env.MY_TELEGRAM_ID,
+    userMessage: instructions.flaws,
+    instructions: [instructions.principals],
   });
 });
 
@@ -178,7 +190,7 @@ module.exports = () => {
     return;
   });
 
-  chat.on("message", async (msg) => {
+  chat.on("document", async (msg) => {
     const chatId = msg.chat.id;
 
     // Проверка, есть ли в сообщении документ
