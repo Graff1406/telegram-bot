@@ -119,7 +119,7 @@ const callAPI = async ({ chatId, userMessage, customInstructions }) => {
 };
 
 // Random principal
-cron.schedule("0 7-21 * * *", () => {
+cron.schedule("0,30 7-21 * * *", () => {
   // every one hour
   callAPI({
     chatId: process.env.MY_TELEGRAM_ID,
