@@ -9,7 +9,7 @@ const instructions = require("../../models");
 const extractJsonSubstringForGemini = require("../../../../../helpers/extractJsonSubstringForGemini");
 
 let data = {};
-const USER_DATA_TIMEOUT = 14 * 24 * 60 * 60 * 1000; // 24 hours
+const USER_DATA_TIMEOUT = 14 * 24 * 60 * 60 * 1000; // 14 days
 const menu = {
   values: "/values",
   property: "/property",
