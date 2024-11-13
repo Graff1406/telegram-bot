@@ -1,3 +1,4 @@
+const { SchemaType } = require("@google/generative-ai");
 const genAI = require("./config");
 const { processImage } = require("../../helpers/imageProcessor");
 
@@ -48,6 +49,35 @@ async function generateChatText({
     const response = await result.response;
     const text = response.text();
     return text;
+  } catch (error) {
+    console.error("Error generating response from Google Gemini:", error);
+    throw new Error("Failed to getGenerativeModel response");
+  }
+}
+
+async function generateChatTextBySchema(
+  { userMessage = "", chatHistory = [], temperature = 2 },
+  schema
+) {
+  const chatHistoryCopy = JSON.parse(JSON.stringify(chatHistory));
+  const model = genAI.getGenerativeModel({
+    model: typeModel,
+    generationConfig: schema
+      ? {
+          temperature,
+          responseMimeType: "application/json",
+          responseSchema: schema,
+        }
+      : { temperature },
+  });
+  try {
+    const chat = model.startChat({
+      history: chatHistoryCopy,
+    });
+
+    const result = await chat.sendMessage(userMessage);
+    const response = result.response.text();
+    return response;
   } catch (error) {
     console.error("Error generating response from Google Gemini:", error);
     throw new Error("Failed to getGenerativeModel response");
@@ -106,10 +136,66 @@ const generateEmbedContent = async () => {
     console.log("🚀 ~ generateEmbedContent ~ error:", error);
   }
 };
+const generateContentByAudio = async ({ text, base64AudioFile }, schema) => {
+  try {
+    // Инициализация модели
+    const model = genAI.getGenerativeModel({
+      model: typeModel,
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: schema,
+      },
+    });
+
+    // Проверка наличия текста и аудиофайла
+    if (!text || !base64AudioFile) {
+      throw new Error("Text and audio data are required.");
+    }
+
+    // Вызов модели для генерации контента
+    const result = await model.generateContent([
+      {
+        inlineData: {
+          mimeType: "audio/mp3",
+          data: base64AudioFile,
+        },
+      },
+      { text },
+    ]);
+
+    // Проверка ответа модели
+    if (!result || !result.response) {
+      throw new Error("No response from the generative model.");
+    }
+
+    // Возвращаем текстовый ответ
+    return result.response.text();
+  } catch (error) {
+    // Логирование ошибки
+    console.error("Error generating content by audio:", error.message);
+
+    // Дополнительная информация об ошибке (если есть)
+    if (error.response) {
+      console.error(
+        "Response Error:",
+        error.response.data || error.response.statusText
+      );
+    }
+
+    // Возвращаем ошибочный ответ или выбрасываем ошибку дальше
+    return {
+      success: false,
+      message: error.message || "An unexpected error occurred.",
+    };
+  }
+};
 
 module.exports = {
   generateText,
   generateChatText,
+  generateChatTextBySchema,
   vision,
   generateEmbedContent,
+  generateContentByAudio,
+  SchemaType,
 };

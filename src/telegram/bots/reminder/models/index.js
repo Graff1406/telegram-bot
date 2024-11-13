@@ -3,6 +3,7 @@ const principals = require("../models/principals");
 const property = require("../models/property");
 const notification = require("../models/notification");
 const flaws = require("../models/flaws");
+const english = require("../models/english");
 
 module.exports = {
   init,
@@ -10,4 +11,5 @@ module.exports = {
   property,
   notification,
   flaws,
+  english,
 };
