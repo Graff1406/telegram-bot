@@ -127,7 +127,6 @@ const callAPIv2 = async (
   ) {
     userData.chatHistory[0].parts.push({ text: userMessage });
   }
-  console.log(333333, userData);
 
   try {
     const jsonResponse = await geminiService.generateChatTextBySchema(
