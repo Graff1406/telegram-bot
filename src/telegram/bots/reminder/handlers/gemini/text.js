@@ -98,7 +98,7 @@ const callAPIv2 = async (
     chatId,
     initUserData = "",
     userMessage = "",
-    modelInstructions = [{ text: "" }],
+    modelInstructions = [{ text: "Строго следовать указаниям/инструкциям" }],
   },
   schema
 ) => {
@@ -137,12 +137,16 @@ const callAPIv2 = async (
       schema
     );
 
+    const data = JSON.parse(jsonResponse);
+    const combinedString = Object.values(data).join(" ");
+    console.log("🚀 ~ data:", data, combinedString);
+
     // console.log("-------------------------------");
     // console.log(11111, jsonResponse);
 
-    userData.chatHistory[1].parts.push({ text: jsonResponse });
+    userData.chatHistory[1].parts.push({ text: combinedString });
 
-    return JSON.parse(jsonResponse);
+    return data;
   } catch (error) {
     console.log("🚀 ~ error:", error);
     return null;
@@ -169,9 +173,9 @@ const transformTextToAudio = async ({ text, filePath, lang = "en" }) => {
 };
 
 // Random principal
-// "0,30 7-21 * * *"
+// "0,20 7-21 * * *"
 // '*/10 * * * * *'
-cron.schedule("0,20 7-21 * * *", async () => {
+cron.schedule("*/10 * * * * *", async () => {
   const schema = {
     type: geminiService.SchemaType.OBJECT,
     properties: {
@@ -228,14 +232,15 @@ cron.schedule("0,20 7-21 * * *", async () => {
   }
 });
 
+// "30 14 * * *"
 // Find the flaws
-cron.schedule("30 14 * * *", async () => {
+cron.schedule("0 10 * * *", async () => {
   // once per day
   const schema = {
     type: geminiService.SchemaType.OBJECT,
     properties: {
       response: {
-        description: "Твой ответ должен содержать максимум 5000 символов",
+        description: "Твой ответ",
         type: geminiService.SchemaType.STRING,
         nullable: false,
       },
@@ -263,13 +268,9 @@ cron.schedule("30 14 * * *", async () => {
   //   parse_mode: "Markdown",
   // });
 
-  chat.sendMessage(
-    process.env.MY_TELEGRAM_ID,
-    extractJsonSubstringForGemini(res.response),
-    {
-      parse_mode: "Markdown",
-    }
-  );
+  chat.sendMessage(process.env.MY_TELEGRAM_ID, res.response, {
+    parse_mode: "Markdown",
+  });
 });
 
 const runPrincipal = async (chatId, userMessage) => {
@@ -376,18 +377,7 @@ const getContentByAudio = async (fileId, schema) => {
     // Шаг 3: Генерация контента на основе аудио и текста
     const res = await geminiService.generateContentByAudio(
       {
-        text: `
-        Пожалуйста, прослушай предоставленный аудиофайл и выполни следующие задачи:
-
-Понимание содержания: Определи основной смысл сказанного в аудио и кратко перескажи его на английском языке.
-
-Произношение и дикция: Обрати внимание на произношение. Если в речи присутствуют ошибки или недостатки в дикции, укажи на них и подробно объясни, какие именно проблемы были замечены (например, неправильное произношение слов, ошибки в ударениях или интонациях). Предложи рекомендации по улучшению произношения.
-
-Коррекция текста: Если в аудио присутствуют грамматические или лексические ошибки, представь корректный вариант сказанного на английском языке.
-
-Ответ на содержание: На основе содержания аудио, предоставь релевантный и вежливый ответ на английском языке. Заверши свой ответ вопросом по теме, чтобы поддержать диалог.
-
-        `,
+        text: instructions.audio,
         base64AudioFile,
       },
       schema
