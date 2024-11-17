@@ -175,7 +175,7 @@ const transformTextToAudio = async ({ text, filePath, lang = "en" }) => {
 // Random principal
 // "0,20 7-21 * * *"
 // '*/10 * * * * *'
-cron.schedule("*/10 * * * * *", async () => {
+cron.schedule("0,20 7-21 * * *", async () => {
   const schema = {
     type: geminiService.SchemaType.OBJECT,
     properties: {
