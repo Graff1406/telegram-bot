@@ -186,6 +186,8 @@ const handleChatHistory = (
   ) {
     userData.chatHistory[0].parts.push({ text: userMessage });
   }
+
+  return userData;
 };
 
 const callAPIv2 = async (
@@ -197,7 +199,11 @@ const callAPIv2 = async (
   },
   schema
 ) => {
-  handleChatHistory(chatId, { userMessage, modelInstructions, initUserData });
+  const userData = handleChatHistory(chatId, {
+    userMessage,
+    modelInstructions,
+    initUserData,
+  });
 
   try {
     const jsonResponse = await geminiService.generateChatTextBySchema(
