@@ -323,7 +323,7 @@ cron.schedule("0,20 7-21 * * *", async () => {
 
 // "30 14 * * *"
 // Find the flaws
-cron.schedule("0 10 * * *", async () => {
+cron.schedule("0 7-22/3 * * *", async () => {
   // once per day
   const schema = {
     type: geminiService.SchemaType.OBJECT,
