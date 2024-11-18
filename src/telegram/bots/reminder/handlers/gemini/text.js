@@ -9,6 +9,7 @@ const geminiService = require("../../../../../api/gemini/geminiService");
 const instructions = require("../../models");
 const extractJsonSubstringForGemini = require("../../../../../helpers/extractJsonSubstringForGemini");
 
+let index = 0;
 let data = {};
 const USER_DATA_TIMEOUT = 14 * 24 * 60 * 60 * 1000; // 14 days
 const menu = {
@@ -91,6 +92,64 @@ const callAPI = async ({ chatId, userMessage, customInstructions }) => {
     console.log("🚀 ~ error:", error);
     return null;
   }
+};
+
+const convertMarkdownToJson = (markdownContent, outputFilePath) => {
+  if (!markdownContent || markdownContent.trim().length === 0) {
+    console.error("Пустое содержимое Markdown");
+    return [];
+  }
+
+  const lines = markdownContent.split("\n");
+  const result = [];
+  let currentItem = null;
+
+  console.log("Начало парсинга Markdown содержимого...");
+
+  for (let line of lines) {
+    line = line.trim();
+
+    // Пропускаем строки-заголовки (которые начинаются с # или ##)
+    if (line.startsWith("#")) continue;
+
+    // Пропускаем пустые строки
+    if (!line) continue;
+
+    // Если строка начинается с цифры и точки, это элемент списка
+    if (/^\d+\.\s/.test(line)) {
+      if (currentItem) {
+        result.push(currentItem);
+      }
+      currentItem = {
+        text: line.replace(/^\d+\.\s*/, ""),
+        lastEdited: new Date().toISOString(),
+      };
+    } else if (currentItem) {
+      // Добавляем дополнительный текст к текущему элементу
+      currentItem.text += " " + line;
+    } else {
+      result.push({ text: line, lastEdited: new Date().toISOString() });
+    }
+  }
+
+  // Добавляем последний элемент, если он существует
+  if (currentItem) {
+    result.push(currentItem);
+  }
+
+  // Проверяем, что результат не пустой
+  if (result.length === 0) {
+    console.error("Конвертированный результат пуст");
+    return [];
+  }
+
+  console.log("Парсинг завершён, результат:", result);
+
+  // Сохраняем результат в файл
+  fs.writeFileSync(outputFilePath, JSON.stringify(result, null, 2), "utf8");
+  console.log(`JSON успешно сохранён в ${outputFilePath}`);
+
+  return result;
 };
 
 const callAPIv2 = async (
@@ -176,6 +235,36 @@ const transformTextToAudio = async ({ text, filePath, lang = "en" }) => {
 // "0,20 7-21 * * *"
 // '*/10 * * * * *'
 cron.schedule("0,20 7-21 * * *", async () => {
+  try {
+    const data = fs.readFileSync(
+      path.join(__dirname, "../../data", "principals.json"),
+      "utf8"
+    );
+
+    const jsonData = JSON.parse(data);
+    if (jsonData.length === 0) {
+      console.log("Нет данных для отправки.");
+      return;
+    }
+
+    if (index < jsonData.length) {
+      const message = jsonData[index].text;
+      await chat.sendMessage(process.env.MY_TELEGRAM_ID, message, {
+        parse_mode: "Markdown",
+      }); // Отправляем сообщение
+      console.log(`Сообщение отправлено: ${message}`);
+      index++; // Увеличиваем индекс для следующего сообщения
+    } else {
+      console.log("Все сообщения отправлены. Начинаем с начала.");
+      index = 0; // Если все сообщения отправлены, начинаем с первого
+    }
+
+    return;
+  } catch (error) {
+    console.error("Ошибка при чтении JSON файла:", error);
+    return [];
+  }
+
   const schema = {
     type: geminiService.SchemaType.OBJECT,
     properties: {
@@ -479,27 +568,44 @@ module.exports = () => {
 
           // Получаем ссылку на файл
           const fileLink = await chat.getFileLink(fileId);
+          console.log("Ссылка на файл:", fileLink);
 
-          // Скачиваем и сохраняем файл
-          const response = await axios.get(fileLink, {
-            responseType: "stream",
-          });
-          const writer = fs.createWriteStream(
-            path.join(__dirname, "../../data", "principals.md")
+          // Скачиваем содержимое файла
+          const response = await axios.get(fileLink);
+          const markdownContent = response.data;
+
+          if (!markdownContent) {
+            throw new Error("Не удалось получить содержимое Markdown файла");
+          }
+
+          console.log("Markdown содержимое получено:", markdownContent);
+
+          // Путь для сохранения выходного JSON файла
+          const outputFilePath = path.join(
+            __dirname,
+            "../../data",
+            "principals.json"
           );
 
-          response.data.pipe(writer);
+          // Конвертируем содержимое .md файла в JSON и сохраняем
+          const jsonResult = convertMarkdownToJson(
+            markdownContent,
+            outputFilePath
+          );
 
-          // Дожидаемся завершения записи файла
-          writer.on("finish", () => {
-            chat.sendMessage(chatId, "Файл успешно сохранен как principals.md");
-          });
-          writer.on("error", (err) => {
-            console.error("Ошибка при сохранении файла:", err);
-            chat.sendMessage(chatId, "Ошибка при сохранении файла.");
-          });
+          if (!jsonResult || jsonResult.length === 0) {
+            throw new Error(
+              "Конвертация Markdown в JSON вернула пустой результат"
+            );
+          }
+
+          // Отправляем сообщение пользователю о том, что файл сохранён
+          chat.sendMessage(
+            chatId,
+            `Ваш JSON был успешно сохранён в файл: \`${outputFilePath}\``
+          );
         } catch (error) {
-          console.error("Ошибка при обработке файла:", error);
+          console.error("Ошибка при обработке файла:", error.message);
           chat.sendMessage(chatId, "Ошибка при обработке файла.");
         }
       } else {

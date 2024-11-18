@@ -25,6 +25,7 @@
     "firebase-admin": "^11.11.1",
     "form-data": "^3.0.1",
     "gtts": "^0.2.1",
+    "marked": "^15.0.1",
     "node-cron": "^3.0.3",
     "node-fetch": "^2.7.0",
     "node-telegram-bot-api": "^0.64.0",
