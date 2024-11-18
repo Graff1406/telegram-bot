@@ -48,49 +48,50 @@ const getUserData = (chatId) => {
   }
   return data[chatId];
 };
-
-const callAPI = async ({ chatId, userMessage, customInstructions }) => {
-  const userData = getUserData(chatId);
-
-  if (!userMessage) {
-    userData.chatHistory = userData.chatHistory.filter(
-      (_, i, arr) => i !== arr.length - 1
-    );
-    userData.chatHistory.push({
-      role: "model",
-      parts: "",
-    });
-  } else {
-    userData.chatHistory.push(
-      {
-        role: "user",
-        parts: userMessage,
-      },
-      {
-        role: "model",
-        parts: "",
-      }
-    );
-  }
-
+const saveTextToJson = async (text) => {
+  const filePath = path.join(__dirname, "../../data", "messages.json");
   try {
-    const res = await geminiService.generateChatText({
-      userMessage: userMessage,
-      instructions: customInstructions,
-      chatHistory: userData.chatHistory,
-    });
+    // Проверяем, существует ли файл
+    let data = [];
+    if (fs.existsSync(filePath)) {
+      // Читаем существующий файл
+      const fileContent = fs.readFileSync(filePath, "utf8");
+      data = JSON.parse(fileContent);
+    }
 
-    console.log("-------------------------------");
-    console.log(11111, res);
-    const data = extractJsonSubstringForGemini(res);
-    console.log(222222, data);
+    // Добавляем новый текст в массив
+    data.push({ text });
 
-    userData.chatHistory[userData.chatHistory.length - 1].parts = data;
+    // Сохраняем обновленный массив в файл
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 
-    return data;
+    console.log("Text saved successfully!");
   } catch (error) {
-    console.log("🚀 ~ error:", error);
-    return null;
+    console.error("Error saving text:", error);
+  }
+};
+
+const getTextFromJson = () => {
+  try {
+    const filePath = path.join(__dirname, "../../data", "messages.json");
+    // Проверяем, существует ли файл
+
+    if (!fs.existsSync(filePath)) {
+      console.log("File not found");
+      return "";
+    }
+
+    // Читаем и парсим JSON-файл
+    const fileContent = fs.readFileSync(filePath, "utf8");
+    const data = JSON.parse(fileContent);
+
+    // Преобразуем массив объектов в одну строку
+    const combinedText = data.map((item) => item.text).join(" ");
+
+    return combinedText;
+  } catch (error) {
+    console.error("Error reading or processing file:", error);
+    return "";
   }
 };
 
@@ -352,11 +353,12 @@ const runPrincipal = async (chatId, userMessage) => {
     },
     required: ["data"],
   };
+  const savedMessages = getTextFromJson();
   // every one hour
   const response = await callAPIv2(
     {
       chatId: chatId,
-      initUserData: `${instructions.init}\n\n${instructions.principals}`,
+      initUserData: `${instructions.init}\n\n${instructions.principals}\n\n${savedMessages}`,
       userMessage,
     },
     schema
@@ -370,8 +372,12 @@ const runPrincipal = async (chatId, userMessage) => {
           inline_keyboard: [
             [
               {
-                text: "Come Again",
+                text: "Again",
                 callback_data: "update",
+              },
+              {
+                text: "Save",
+                callback_data: "save",
               },
             ],
           ],
@@ -505,15 +511,17 @@ module.exports = () => {
     const chatId = query.message.chat.id;
     const button = query.data;
 
+    const userData = getUserData(chatId);
+    const lastUserMessage = userData.chatHistory
+      ?.filter((message) => message.role === "model")
+      ?.slice(-1)?.[0]
+      ?.parts?.slice(-1)?.[0]?.text;
+
     try {
       if (button === "update") {
-        const userData = getUserData(chatId);
-        const lastUserMessage = userData.chatHistory
-          ?.filter((message) => message.role === "model")
-          ?.slice(-1)?.[0]
-          ?.parts?.slice(-1)?.[0]?.text;
-
         if (lastUserMessage?.length > 0) runPrincipal(chatId, lastUserMessage);
+      } else if (button === "save") {
+        saveTextToJson(lastUserMessage);
       }
     } catch (error) {
       console.log("🚀 ~ chat.on ~ error:", error);
