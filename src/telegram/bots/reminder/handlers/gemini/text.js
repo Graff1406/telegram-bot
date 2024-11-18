@@ -370,7 +370,7 @@ const runPrincipal = async (chatId, userMessage) => {
           inline_keyboard: [
             [
               {
-                text: "Update",
+                text: "Come Again",
                 callback_data: "update",
               },
             ],
@@ -507,7 +507,13 @@ module.exports = () => {
 
     try {
       if (button === "update") {
-        callAPI({ chatId });
+        const userData = getUserData(chatId);
+        const lastUserMessage = userData.chatHistory
+          ?.filter((message) => message.role === "model")
+          ?.slice(-1)?.[0]
+          ?.parts?.slice(-1)?.[0]?.text;
+
+        if (lastUserMessage?.length > 0) runPrincipal(chatId, lastUserMessage);
       }
     } catch (error) {
       console.log("🚀 ~ chat.on ~ error:", error);
