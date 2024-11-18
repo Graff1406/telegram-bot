@@ -245,12 +245,18 @@ const transformTextToAudio = async ({ text, filePath, lang = "en" }) => {
 // Random principal
 // "0,20 7-21 * * *"
 // '*/10 * * * * *'
-cron.schedule("0,20 7-21 * * *", async () => {
+cron.schedule("0,15 7-21 * * *", async () => {
   try {
-    const data = fs.readFileSync(
-      path.join(__dirname, "../../data", "principals.json"),
-      "utf8"
-    );
+    const filePath = path.join(__dirname, "../../data", "principals.json");
+    const data = fs.readFileSync(filePath, "utf8");
+
+    const updateJsonFile = (data) => {
+      try {
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+      } catch (error) {
+        console.error("Ошибка при записи в JSON файл:", error);
+      }
+    };
 
     const jsonData = JSON.parse(data);
 
