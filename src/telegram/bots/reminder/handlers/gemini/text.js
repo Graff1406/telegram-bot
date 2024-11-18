@@ -492,7 +492,10 @@ module.exports = () => {
     if (userData.currentPage === menu.english) {
       runEnglish(chatId, userMessage);
     } else {
-      runPrincipal(chatId, userMessage);
+      runPrincipal(
+        chatId,
+        `${userMessage}\n\nВ Конце всегда задаватай user-у один вопрос который должен способствовать продолжению диалога по теме.}`
+      );
     }
 
     // chat.setMyCommands([
