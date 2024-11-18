@@ -122,13 +122,12 @@ const convertMarkdownToJson = (markdownContent, outputFilePath) => {
       }
       currentItem = {
         text: line.replace(/^\d+\.\s*/, ""),
-        lastEdited: new Date().toISOString(),
       };
     } else if (currentItem) {
       // Добавляем дополнительный текст к текущему элементу
       currentItem.text += " " + line;
     } else {
-      result.push({ text: line, lastEdited: new Date().toISOString() });
+      result.push({ text: line });
     }
   }
 
@@ -299,20 +298,21 @@ cron.schedule("0,20 7-21 * * *", async () => {
   }
 });
 
-// "30 14 * * *"
+// "0 7-22/3 * * *"
 // Find the flaws
 cron.schedule("0 7-22/3 * * *", async () => {
   // once per day
   const schema = {
     type: geminiService.SchemaType.OBJECT,
     properties: {
-      response: {
-        description: "Твой ответ",
+      text: {
+        description:
+          "Содержание текстового ответа не должно быть длинее 4000 символов",
         type: geminiService.SchemaType.STRING,
         nullable: false,
       },
     },
-    required: ["response"],
+    required: ["text"],
   };
 
   const res = await callAPIv2(
@@ -324,18 +324,18 @@ cron.schedule("0 7-22/3 * * *", async () => {
     schema
   );
 
-  if (!res.response) return;
+  if (res?.text?.length === 0) return;
 
   // const audioFilePath = await transformTextToAudio({
-  //   text: res.response,
+  //   text: res.text,
   //   lang: "ru",
   // });
   // chat.sendAudio(process.env.MY_TELEGRAM_ID, audioFilePath, {
-  //   caption: extractJsonSubstringForGemini(res.response),
+  //   caption: res.text,
   //   parse_mode: "Markdown",
   // });
 
-  chat.sendMessage(process.env.MY_TELEGRAM_ID, res.response, {
+  chat.sendMessage(process.env.MY_TELEGRAM_ID, res.text, {
     parse_mode: "Markdown",
   });
 });

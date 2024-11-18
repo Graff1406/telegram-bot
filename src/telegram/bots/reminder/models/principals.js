@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Проверим абсолютный путь к файлу principals.md
-const filePath = path.join(__dirname, "../data", "principals.md");
+const filePath = path.join(__dirname, "../data", "principals.json");
 
 console.log("Путь к файлу:", filePath); // Отладочный вывод для проверки пути
 
