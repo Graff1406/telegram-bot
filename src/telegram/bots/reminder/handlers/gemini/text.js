@@ -530,6 +530,7 @@ module.exports = () => {
     const chatId = msg.chat.id;
     const userData = getUserData(chatId);
     userData.currentPage = menu.values;
+    handleChatHistory(chatId, { userMessage: instructions.principals });
     chat.sendMessage(chatId, "Вкл. Ценности");
     return;
   });
