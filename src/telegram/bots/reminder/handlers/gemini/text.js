@@ -123,12 +123,13 @@ const convertMarkdownToJson = (markdownContent, outputFilePath) => {
       }
       currentItem = {
         text: line.replace(/^\d+\.\s*/, ""),
+        sent: false,
       };
     } else if (currentItem) {
       // Добавляем дополнительный текст к текущему элементу
       currentItem.text += " " + line;
     } else {
-      result.push({ text: line });
+      result.push({ text: line, sent: false });
     }
   }
 
@@ -143,7 +144,7 @@ const convertMarkdownToJson = (markdownContent, outputFilePath) => {
     return [];
   }
 
-  console.log("Парсинг завершён, результат:", result);
+  // console.log("Парсинг завершён, результат:", result);
 
   // Сохраняем результат в файл
   fs.writeFileSync(outputFilePath, JSON.stringify(result, null, 2), "utf8");
@@ -152,14 +153,13 @@ const convertMarkdownToJson = (markdownContent, outputFilePath) => {
   return result;
 };
 
-const callAPIv2 = async (
+const handleChatHistory = (
+  chatId,
   {
-    chatId,
     initUserData = "",
     userMessage = "",
     modelInstructions = [{ text: "Строго следовать указаниям/инструкциям" }],
-  },
-  schema
+  }
 ) => {
   const userData = getUserData(chatId);
 
@@ -186,6 +186,18 @@ const callAPIv2 = async (
   ) {
     userData.chatHistory[0].parts.push({ text: userMessage });
   }
+};
+
+const callAPIv2 = async (
+  {
+    chatId,
+    initUserData = "",
+    userMessage = "",
+    modelInstructions = [{ text: "Строго следовать указаниям/инструкциям" }],
+  },
+  schema
+) => {
+  handleChatHistory(chatId, { userMessage, modelInstructions, initUserData });
 
   try {
     const jsonResponse = await geminiService.generateChatTextBySchema(
@@ -234,20 +246,6 @@ const transformTextToAudio = async ({ text, filePath, lang = "en" }) => {
 // "0,20 7-21 * * *"
 // '*/10 * * * * *'
 cron.schedule("0,20 7-21 * * *", async () => {
-  const quoteSense =
-    "Лаконичное разяснение цитаты с глубоким смысалом. Обяснить как 15 летнему";
-
-  const schema = {
-    type: geminiService.SchemaType.OBJECT,
-    properties: {
-      detail: {
-        description: quoteSense,
-        type: geminiService.SchemaType.STRING,
-        nullable: false,
-      },
-    },
-    required: ["detail"],
-  };
   try {
     const data = fs.readFileSync(
       path.join(__dirname, "../../data", "principals.json"),
@@ -255,47 +253,38 @@ cron.schedule("0,20 7-21 * * *", async () => {
     );
 
     const jsonData = JSON.parse(data);
+
     if (jsonData.length === 0) {
       console.log("Нет данных для отправки.");
       return;
     }
 
-    if (index < jsonData.length) {
-      const message = jsonData[index].text;
+    // Найти первое сообщение, которое еще не отправлено
+    const messageToSend = jsonData.find((item) => !item.sent);
 
-      const res = await callAPIv2(
+    if (messageToSend) {
+      // Отправка сообщения
+      await chat.sendMessage(
+        process.env.MY_TELEGRAM_ID,
+        `*${messageToSend.text}*`,
         {
-          chatId: process.env.MY_TELEGRAM_ID,
-          initUserData: message,
-          userMessage: quoteSense,
-        },
-        schema
+          parse_mode: "Markdown",
+        }
       );
 
-      if (res?.detail?.length > 0) {
-        chat.sendMessage(
-          process.env.MY_TELEGRAM_ID,
-          `*${message}*\n\n${res.detail}`,
-          {
-            parse_mode: "Markdown",
-          }
-        );
-      } else {
-        await chat.sendMessage(process.env.MY_TELEGRAM_ID, `*${message}*`, {
-          parse_mode: "Markdown",
-        });
-      }
-
-      index++; // Увеличиваем индекс для следующего сообщения
+      // Обновление статуса отправки
+      messageToSend.sent = true;
+      updateJsonFile(jsonData);
+      console.log("Сообщение отправлено:", messageToSend.text);
     } else {
-      console.log("Все сообщения отправлены. Начинаем с начала.");
-      index = 0; // Если все сообщения отправлены, начинаем с первого
-    }
+      console.log("Все сообщения отправлены. Сбрасываем статус.");
 
-    return;
+      // Если все сообщения отправлены, сбрасываем статус на false
+      jsonData.forEach((item) => (item.sent = false));
+      updateJsonFile(jsonData);
+    }
   } catch (error) {
-    console.error("Ошибка при чтении JSON файла:", error);
-    return [];
+    console.error("Ошибка при чтении или отправке сообщений:", error);
   }
 });
 
@@ -573,7 +562,7 @@ module.exports = () => {
             throw new Error("Не удалось получить содержимое Markdown файла");
           }
 
-          console.log("Markdown содержимое получено:", markdownContent);
+          // console.log("Markdown содержимое получено:", markdownContent);
 
           // Путь для сохранения выходного JSON файла
           const outputFilePath = path.join(
