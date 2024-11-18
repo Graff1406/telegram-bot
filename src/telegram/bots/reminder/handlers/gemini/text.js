@@ -198,7 +198,6 @@ const callAPIv2 = async (
 
     const data = JSON.parse(jsonResponse);
     const combinedString = Object.values(data).join(" ");
-    console.log("🚀 ~ data:", data, combinedString);
 
     // console.log("-------------------------------");
     // console.log(11111, jsonResponse);
@@ -235,6 +234,20 @@ const transformTextToAudio = async ({ text, filePath, lang = "en" }) => {
 // "0,20 7-21 * * *"
 // '*/10 * * * * *'
 cron.schedule("0,20 7-21 * * *", async () => {
+  const quoteSense =
+    "Лаконичное разяснение цитаты с глубоким смысалом. Обяснить как 15 летнему";
+
+  const schema = {
+    type: geminiService.SchemaType.OBJECT,
+    properties: {
+      detail: {
+        description: quoteSense,
+        type: geminiService.SchemaType.STRING,
+        nullable: false,
+      },
+    },
+    required: ["detail"],
+  };
   try {
     const data = fs.readFileSync(
       path.join(__dirname, "../../data", "principals.json"),
@@ -249,10 +262,30 @@ cron.schedule("0,20 7-21 * * *", async () => {
 
     if (index < jsonData.length) {
       const message = jsonData[index].text;
-      await chat.sendMessage(process.env.MY_TELEGRAM_ID, message, {
-        parse_mode: "Markdown",
-      }); // Отправляем сообщение
-      console.log(`Сообщение отправлено: ${message}`);
+
+      const res = await callAPIv2(
+        {
+          chatId: process.env.MY_TELEGRAM_ID,
+          initUserData: message,
+          userMessage: quoteSense,
+        },
+        schema
+      );
+
+      if (res?.detail?.length > 0) {
+        chat.sendMessage(
+          process.env.MY_TELEGRAM_ID,
+          `*${message}*\n\n${res.detail}`,
+          {
+            parse_mode: "Markdown",
+          }
+        );
+      } else {
+        await chat.sendMessage(process.env.MY_TELEGRAM_ID, `*${message}*`, {
+          parse_mode: "Markdown",
+        });
+      }
+
       index++; // Увеличиваем индекс для следующего сообщения
     } else {
       console.log("Все сообщения отправлены. Начинаем с начала.");
@@ -263,61 +296,6 @@ cron.schedule("0,20 7-21 * * *", async () => {
   } catch (error) {
     console.error("Ошибка при чтении JSON файла:", error);
     return [];
-  }
-
-  const schema = {
-    type: geminiService.SchemaType.OBJECT,
-    properties: {
-      quote: {
-        description:
-          "Цитата, принцип, утверждение, ценность отвечать в полном ее объеме, то есть целиком без зжатии.",
-        type: geminiService.SchemaType.STRING,
-        nullable: false,
-      },
-      detail: {
-        description:
-          "Лаконичное разяснение смыслов цитаты чтобы понять глубину цитаты. Не должно повторять твой ответ из поля quote",
-        type: geminiService.SchemaType.STRING,
-        nullable: false,
-      },
-    },
-    required: ["quote", "detail"],
-  };
-  // every one hour
-  const res = await callAPIv2(
-    {
-      chatId: process.env.MY_TELEGRAM_ID,
-      initUserData: instructions.principals,
-      userMessage: instructions.notification,
-    },
-    schema
-  );
-
-  // Шаг 4: Парсинг и проверка ответа
-  if (!res) {
-    throw new Error("Empty response from AI model");
-  }
-
-  // Шаг 5: Преобразование массива в объект
-
-  if (res.quote) {
-    // const audioFilePath = await transformTextToAudio({
-    //   text: `${res.quote}\n\n${res.detail}`,
-    //   lang: "ru",
-    // });
-
-    // chat.sendAudio(process.env.MY_TELEGRAM_ID, audioFilePath, {
-    //   caption: `*${res.quote}*\n\n_${res.detail}_`,
-    //   parse_mode: "Markdown",
-    // });
-
-    chat.sendMessage(
-      process.env.MY_TELEGRAM_ID,
-      `*${res.quote}*\n\n${res.detail}`,
-      {
-        parse_mode: "Markdown",
-      }
-    );
   }
 });
 

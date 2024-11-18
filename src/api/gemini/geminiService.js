@@ -71,7 +71,7 @@ async function generateChatTextBySchema(
       : { temperature },
   });
   try {
-    console.log("🚀 ~ chatHistory:", chatHistoryCopy[1]);
+    // console.log("🚀 ~ chatHistory:", chatHistoryCopy[1]);
     const chat = model.startChat({
       history: chatHistoryCopy,
     });
