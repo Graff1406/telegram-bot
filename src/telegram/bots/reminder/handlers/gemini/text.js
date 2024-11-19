@@ -531,7 +531,7 @@ module.exports = () => {
 
     const userData = getUserData(chatId);
     const lastUserMessage = userData.chatHistory
-      ?.filter((message) => message.role === "model")
+      ?.filter((message) => message.role === "user")
       ?.slice(-1)?.[0]
       ?.parts?.slice(-1)?.[0]?.text;
 
