@@ -7,7 +7,7 @@ const gTTS = require("gtts");
 const chat = require("../../chat");
 const geminiService = require("../../../../../api/gemini/geminiService");
 const instructions = require("../../models");
-const extractJsonSubstringForGemini = require("../../../../../helpers/extractJsonSubstringForGemini");
+// const extractJsonSubstringForGemini = require("../../../../../helpers/extractJsonSubstringForGemini");
 
 let index = 0;
 let data = {};
@@ -15,6 +15,30 @@ const USER_DATA_TIMEOUT = 14 * 24 * 60 * 60 * 1000; // 14 days
 const menu = {
   values: "/values",
   english: "/english",
+};
+
+const sendMessage = async (chatId, text = "", ops = {}) => {
+  try {
+    await chat.sendMessage(chatId, text, {
+      parse_mode: "Markdown",
+      ...ops,
+    });
+  } catch (error) {
+    console.error("Error sending message:", error.message, "\nText:", text);
+    chat.sendMessage(chatId, error.message, {
+      parse_mode: "Markdown",
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: "Again",
+              callback_data: "fix",
+            },
+          ],
+        ],
+      },
+    });
+  }
 };
 
 const setInitData = (payload = {}) => {
@@ -224,8 +248,9 @@ const callAPIv2 = async (
 
     return data;
   } catch (error) {
-    console.log("🚀 ~ error:", error);
-    return null;
+    console.log("callAPIv2:", error);
+
+    throw new Error("callAPIv2");
   }
 };
 
@@ -276,13 +301,7 @@ cron.schedule("0,15 7-21 * * *", async () => {
 
     if (messageToSend) {
       // Отправка сообщения
-      await chat.sendMessage(
-        process.env.MY_TELEGRAM_ID,
-        `*${messageToSend.text}*`,
-        {
-          parse_mode: "Markdown",
-        }
-      );
+      await sendMessage(process.env.MY_TELEGRAM_ID, `*${messageToSend.text}*`);
 
       // Обновление статуса отправки
       messageToSend.sent = true;
@@ -337,9 +356,7 @@ cron.schedule("0 7-22/3 * * *", async () => {
   //   parse_mode: "Markdown",
   // });
 
-  chat.sendMessage(process.env.MY_TELEGRAM_ID, res.text, {
-    parse_mode: "Markdown",
-  });
+  sendMessage(process.env.MY_TELEGRAM_ID, res.text);
 });
 
 const runPrincipal = async (chatId, userMessage) => {
@@ -367,8 +384,7 @@ const runPrincipal = async (chatId, userMessage) => {
 
   try {
     if (response.data?.length > 500) {
-      chat.sendMessage(chatId, response.data, {
-        parse_mode: "Markdown",
+      sendMessage(chatId, response.data, {
         reply_markup: {
           inline_keyboard: [
             [
@@ -385,12 +401,10 @@ const runPrincipal = async (chatId, userMessage) => {
         },
       });
     } else {
-      chat.sendMessage(chatId, response.data, {
-        parse_mode: "Markdown",
-      });
+      sendMessage(chatId, response.data);
     }
   } catch (e) {
-    chat.sendMessage(chatId, response.data);
+    sendMessage(chatId, response.data);
   }
 };
 
@@ -525,6 +539,12 @@ module.exports = () => {
       if (button === "update") {
         if (lastUserMessage?.length > 0) runPrincipal(chatId, lastUserMessage);
       } else if (button === "save") {
+        if (lastUserMessage?.length > 0)
+          runPrincipal(
+            chatId,
+            `${lastUserMessage}\n\nТвой ответ не должен содержать абсолютно ничего из формата markdown`
+          );
+      } else if (button === "fix") {
         saveTextToJson(lastUserMessage);
       }
     } catch (error) {
@@ -537,7 +557,7 @@ module.exports = () => {
     const userData = getUserData(chatId);
     userData.currentPage = menu.values;
     handleChatHistory(chatId, { userMessage: instructions.principals });
-    chat.sendMessage(chatId, "Вкл. Ценности");
+    sendMessage(chatId, "Вкл. Ценности");
     return;
   });
 
@@ -545,7 +565,7 @@ module.exports = () => {
     const chatId = msg.chat.id;
     const userData = getUserData(chatId);
     userData.currentPage = menu.english;
-    chat.sendMessage(chatId, "Вкл. English");
+    sendMessage(chatId, "Вкл. English");
     return;
   });
 
@@ -597,20 +617,17 @@ module.exports = () => {
           }
 
           // Отправляем сообщение пользователю о том, что файл сохранён
-          chat.sendMessage(
+          sendMessage(
             chatId,
             `Ваш JSON был успешно сохранён в файл: \`${outputFilePath}\``
           );
         } catch (error) {
           console.error("Ошибка при обработке файла:", error.message);
-          chat.sendMessage(chatId, "Ошибка при обработке файла.");
+          sendMessage(chatId, "Ошибка при обработке файла.");
         }
       } else {
         // Отправляем сообщение о неправильном формате файла
-        chat.sendMessage(
-          chatId,
-          "Пожалуйста, отправьте файл с расширением .md"
-        );
+        sendMessage(chatId, "Пожалуйста, отправьте файл с расширением .md");
       }
     }
   });
@@ -664,9 +681,7 @@ module.exports = () => {
       if (corrected !== original) {
         const message = `*Corrected*\n${corrected}\n\n*Original*\n${original}\n\n*Explanation*\n${explanation}`;
 
-        await chat.sendMessage(chatId, message, {
-          parse_mode: "Markdown",
-        });
+        await sendMessage(chatId, message);
       }
 
       const audioFilePath = await transformTextToAudio({

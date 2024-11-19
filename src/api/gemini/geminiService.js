@@ -80,7 +80,6 @@ async function generateChatTextBySchema(
     const response = result.response.text();
     return response;
   } catch (error) {
-    console.error("Error generating response from Google Gemini:", error);
     throw new Error("Failed to getGenerativeModel response");
   }
 }
