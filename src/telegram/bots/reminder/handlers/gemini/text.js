@@ -31,7 +31,7 @@ const sendMessage = async (chatId, text = "", ops = {}) => {
         inline_keyboard: [
           [
             {
-              text: "Again",
+              text: "Fix",
               callback_data: "fix",
             },
           ],
@@ -539,13 +539,13 @@ module.exports = () => {
       if (button === "update") {
         if (lastUserMessage?.length > 0) runPrincipal(chatId, lastUserMessage);
       } else if (button === "save") {
+        saveTextToJson(lastUserMessage);
+      } else if (button === "fix") {
         if (lastUserMessage?.length > 0)
           runPrincipal(
             chatId,
             `${lastUserMessage}\n\nТвой ответ не должен содержать абсолютно ничего из формата markdown`
           );
-      } else if (button === "fix") {
-        saveTextToJson(lastUserMessage);
       }
     } catch (error) {
       console.log("🚀 ~ chat.on ~ error:", error);
